@@ -25,7 +25,11 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
+        viewBinding true
+    }
+
+    dataBinding {
+        enabled true
     }
 
     compileOptions {
@@ -49,4 +53,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation 'com.robotemi:sdk:1.131.0'
+    implementation 'com.google.code.gson:gson:2.9.0'
 }
