@@ -66,19 +66,19 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
 
         //Move button
         binding.moveBtn.setOnClickListener {
-            var xCoordinate = 0 // Robot's position wrt the Home Base [m]
-            var yCoordinate = 0 // Robot's position wrt the Home Base [m]
+            var xCoordinate: Float = 0.0F // Robot's position wrt the Home Base [m]
+            var yCoordinate: Float = 0.0F // Robot's position wrt the Home Base [m]
             val yaw = 0 // Robot's yaw-rotation wrt the Home Base [deg]
 
             // Convert input string to integer
             try {
-                xCoordinate = Integer.parseInt(binding.posX.text.toString());
+                xCoordinate = binding.posX.text.toString().toFloat()
             } catch (e: NumberFormatException ) {
                 e.printStackTrace();
             }
 
             try {
-                yCoordinate = Integer.parseInt(binding.posY.text.toString());
+                yCoordinate = binding.posY.text.toString().toFloat()
             } catch ( e: NumberFormatException) {
                 e.printStackTrace();
             }

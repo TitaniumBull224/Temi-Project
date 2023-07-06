@@ -33,7 +33,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.125" />
+            app:layout_constraintVertical_bias="0.75" />
 
         <Button
             android:id="@+id/speak_btn"
@@ -74,6 +74,7 @@
             tools:layout_editor_absoluteX="162dp"
             tools:layout_editor_absoluteY="297dp" />
 -->
+
         <EditText
             android:id="@+id/posX"
             android:layout_width="180dp"
@@ -81,10 +82,12 @@
             android:layout_marginTop="100dp"
             android:hint="posX (m)"
             android:inputType="text"
+            app:layout_constraintBottom_toTopOf="@+id/posY"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.875"
+            app:layout_constraintHorizontal_bias="0.75"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewPosition" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewPosition"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <EditText
             android:id="@+id/posY"
@@ -92,8 +95,8 @@
             android:layout_height="40dp"
             android:hint="posY (m)"
             android:inputType="text"
+            app:layout_constraintBottom_toTopOf="@+id/move_btn"
             app:layout_constraintEnd_toEndOf="@+id/posX"
-            app:layout_constraintHorizontal_bias="0.875"
             app:layout_constraintStart_toStartOf="@+id/posX"
             app:layout_constraintTop_toBottomOf="@+id/posX" />
 
@@ -104,10 +107,8 @@
             android:text="Move"
             app:layout_constraintBottom_toTopOf="@+id/exit_btn"
             app:layout_constraintEnd_toEndOf="@+id/posX"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/posX"
-            app:layout_constraintTop_toBottomOf="@+id/posY"
-            app:layout_constraintVertical_bias="0.1" />
+            app:layout_constraintTop_toBottomOf="@+id/posY"/>
 
         <TextView
             android:id="@+id/textViewPosition"
