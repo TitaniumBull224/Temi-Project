@@ -67,22 +67,22 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         binding.moveBtn.setOnClickListener {
             var xCoordinate = 0 // Robot's position wrt the Home Base [m]
             var yCoordinate = 0 // Robot's position wrt the Home Base [m]
-            var yaw = 0 // Robot's yaw-rotation wrt the Home Base [deg]
+            val yaw = 0 // Robot's yaw-rotation wrt the Home Base [deg]
 
             // Convert input string to integer
             try {
-                xCoordinate = Integer.parseInt(binding.posX.getText().toString());
+                xCoordinate = Integer.parseInt(binding.posX.text.toString());
             } catch (e: NumberFormatException ) {
                 e.printStackTrace();
             }
 
             try {
-                yCoordinate = Integer.parseInt(binding.posY.getText().toString());
+                yCoordinate = Integer.parseInt(binding.posY.text.toString());
             } catch ( e: NumberFormatException) {
                 e.printStackTrace();
             }
 
-            Log.i(TAG, "X: " + xCoordinate + " | Y: " + yCoordinate);
+            Log.i(TAG, "X: $xCoordinate | Y: $yCoordinate");
 
             // Send robot to the XY position
             mRobot.goToPosition(Position(xCoordinate.toFloat(), yCoordinate.toFloat(), yaw.toFloat(), 0));
@@ -95,6 +95,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.addOnRobotReadyListener(this)
         mRobot.addAsrListener(this)
         mRobot.addOnConversationStatusChangedListener(this)
+        mRobot.addOnCurrentPositionChangedListener(this)
 
     }
 
@@ -104,6 +105,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.removeOnRobotReadyListener(this)
         mRobot.removeAsrListener(this)
         mRobot.removeOnConversationStatusChangedListener(this)
+        mRobot.removeOnCurrentPositionChangedListener(this)
     }
 
     override fun onRobotReady(isReady: Boolean) {
@@ -162,9 +164,8 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
     }
 
     override fun onCurrentPositionChanged(position: Position) {
-        val textViewPosition = binding.textViewPosition
-        val str = "X: " + position.x + " Y: " + position.y
+        val str = "Current Position: X: " + position.x + " Y: " + position.y
         Log.i(TAG, str)
-        textViewPosition.text = str
+        binding.textViewPosition.text = str
     }
 }
