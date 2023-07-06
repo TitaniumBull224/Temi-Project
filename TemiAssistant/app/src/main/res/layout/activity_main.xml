@@ -5,6 +5,7 @@
     <data>
 
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,8 +15,8 @@
             android:id="@+id/title_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
             android:text="Hello! How are you"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,8 +41,10 @@
             android:text="Speak"
             app:layout_constraintBottom_toTopOf="@+id/exit_btn"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.269"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title_txt" />
+            app:layout_constraintTop_toBottomOf="@+id/title_txt"
+            app:layout_constraintVertical_bias="0.468" />
 
         <Button
             android:id="@+id/record_btn"
@@ -50,8 +53,10 @@
             android:text="Record"
             app:layout_constraintBottom_toTopOf="@+id/exit_btn"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.269"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/speak_btn" />
+            app:layout_constraintTop_toBottomOf="@+id/speak_btn"
+            app:layout_constraintVertical_bias="0.522" />
 
         <Button
             android:id="@+id/exit_btn"
@@ -61,8 +66,54 @@
             android:text="Exit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.269"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/posX"
+            android:layout_width="187dp"
+            android:layout_height="38dp"
+            android:ems="10"
+            android:inputType="text"
+            android:text="posX"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/speak_btn"
+            tools:layout_editor_absoluteY="425dp" />
+
+        <EditText
+            android:id="@+id/posY"
+            android:layout_width="189dp"
+            android:layout_height="38dp"
+            android:ems="10"
+            android:inputType="text"
+            android:text="posY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/speak_btn"
+            tools:layout_editor_absoluteY="495dp" />
+
+        <Button
+            android:id="@+id/move_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Move"
+            tools:layout_editor_absoluteX="237dp"
+            tools:layout_editor_absoluteY="623dp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Position"
+            tools:layout_editor_absoluteX="198dp"
+            tools:layout_editor_absoluteY="540dp" />
+
+        <TextView
+            android:id="@+id/textViewPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Postion Goes Here"
+            tools:layout_editor_absoluteX="198dp"
+            tools:layout_editor_absoluteY="582dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

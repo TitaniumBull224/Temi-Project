@@ -1,9 +1,11 @@
 package com.ibsystem.temiassistant
 
+import android.R
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.ibsystem.temiassistant.databinding.ActivityMainBinding
@@ -11,15 +13,16 @@ import com.robotemi.sdk.Robot
 import com.robotemi.sdk.TtsRequest
 import com.robotemi.sdk.listeners.OnConversationStatusChangedListener
 import com.robotemi.sdk.listeners.OnRobotReadyListener
+import com.robotemi.sdk.navigation.listener.OnCurrentPositionChangedListener
+import com.robotemi.sdk.navigation.model.Position
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.LinkedList
 import java.util.Queue
-import org.jetbrains.annotations.NotNull
 
 
 class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListener,
-    OnConversationStatusChangedListener  {
+    OnConversationStatusChangedListener, OnCurrentPositionChangedListener {
     private val TAG = MainActivity::class.java.simpleName
     private lateinit var binding: ActivityMainBinding
     private lateinit var mRobot: Robot
@@ -59,6 +62,31 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
 
         // Initialize record button
         binding.recordBtn.setOnClickListener { mRobot.askQuestion("Hello") }
+
+        //Move button
+        binding.moveBtn.setOnClickListener {
+            var xCoordinate = 0 // Robot's position wrt the Home Base [m]
+            var yCoordinate = 0 // Robot's position wrt the Home Base [m]
+            var yaw = 0 // Robot's yaw-rotation wrt the Home Base [deg]
+
+            // Convert input string to integer
+            try {
+                xCoordinate = Integer.parseInt(binding.posX.getText().toString());
+            } catch (e: NumberFormatException ) {
+                e.printStackTrace();
+            }
+
+            try {
+                yCoordinate = Integer.parseInt(binding.posY.getText().toString());
+            } catch ( e: NumberFormatException) {
+                e.printStackTrace();
+            }
+
+            Log.i(TAG, "X: " + xCoordinate + " | Y: " + yCoordinate);
+
+            // Send robot to the XY position
+            mRobot.goToPosition(Position(xCoordinate.toFloat(), yCoordinate.toFloat(), yaw.toFloat(), 0));
+        }
     }
 
     override fun onStart() {
@@ -131,5 +159,12 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
                 }
             }
         }
+    }
+
+    override fun onCurrentPositionChanged(position: Position) {
+        val textViewPosition = binding.textViewPosition
+        val str = "X: " + position.x + " Y: " + position.y
+        Log.i(TAG, str)
+        textViewPosition.text = str
     }
 }
