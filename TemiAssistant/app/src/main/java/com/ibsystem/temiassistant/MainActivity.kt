@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
                             mRobot.speak(
                                 TtsRequest.create(
                                     queue.remove(),
-                                    false
+                                    true
                                 )
                             ) // do not display text; uses Google Text-to-Speech
                         }
@@ -174,7 +174,6 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         }
     }
 
-
     @SuppressLint("SetTextI18n")
     override fun onAsrResult(asrResult: String) {
         Log.i(TAG, "ASR Result: $asrResult")
@@ -225,7 +224,6 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         return super.dispatchTouchEvent(ev)
     }
 
-
     override fun onDetectionStateChanged(state: Int) {
         val stateStr = when (state) {
             OnDetectionStateChangedListener.IDLE -> "IDLE" // No active detection and/or 10 seconds have passed since the last detection was lost
@@ -255,4 +253,6 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         Log.i(TAG, "User Interaction: $str")
         binding.userInteraction.text = "User Interaction: $str"
     }
+
+
 }
