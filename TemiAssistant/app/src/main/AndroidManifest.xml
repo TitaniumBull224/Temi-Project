@@ -37,11 +37,11 @@
                    com.robotemi.permission.map,
                    com.robotemi.permission.settings,
                    com.robotemi.permission.sequence" />
-        
 
         <meta-data
             android:name="@string/metadata_override_nlu"
             android:value="TRUE" />
+
         <meta-data
             android:name="@string/metadata_override_conversation_layer"
             android:value="TRUE" />
