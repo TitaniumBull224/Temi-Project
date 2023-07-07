@@ -178,6 +178,17 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
     override fun onAsrResult(asrResult: String) {
         Log.i(TAG, "ASR Result: $asrResult")
         binding.titleTxt.text = "ASR Result: $asrResult"
+        when {
+            asrResult.equals("こんにちは") -> {
+                mRobot.askQuestion("こんにちは、ご用件は?")
+            }
+            asrResult.contains("チャージ") -> {
+                mRobot.goTo("ホームベース")
+            }
+            else -> {
+                mRobot.askQuestion("すみませんが、適切なスキルが見つかりません")
+            }
+        }
 
         mRobot.finishConversation() // stop ASR listener
     }
