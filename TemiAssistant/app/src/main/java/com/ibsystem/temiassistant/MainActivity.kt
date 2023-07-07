@@ -226,7 +226,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         return super.dispatchTouchEvent(ev)
     }
 
-    @SuppressLint("SetTextI18n")
+
     override fun onDetectionStateChanged(state: Int) {
         val stateStr = when (state) {
             OnDetectionStateChangedListener.IDLE -> "IDLE" // No active detection and/or 10 seconds have passed since the last detection was lost
