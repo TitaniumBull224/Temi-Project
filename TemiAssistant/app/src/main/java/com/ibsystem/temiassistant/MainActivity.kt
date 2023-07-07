@@ -126,6 +126,10 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
                 mRobot.trackUserOn = true // Set tracking mode on
             }
         }
+
+        binding.testNlu.setOnClickListener{
+            mRobot.startDefaultNlu("Lower the volume")
+        }
     }
 
     override fun onStart() {
