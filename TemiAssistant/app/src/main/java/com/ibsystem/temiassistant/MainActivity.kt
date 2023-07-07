@@ -10,6 +10,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.ibsystem.temiassistant.databinding.ActivityMainBinding
+import com.robotemi.sdk.NlpResult
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.TtsRequest
 import com.robotemi.sdk.listeners.OnConversationStatusChangedListener
@@ -28,7 +29,8 @@ import java.util.Queue
 
 class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListener,
     OnConversationStatusChangedListener, OnCurrentPositionChangedListener,
-    OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener {
+    OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener,
+    Robot.NlpListener {
     private val TAG = MainActivity::class.java.simpleName
     private lateinit var binding: ActivityMainBinding
     private lateinit var mRobot: Robot
@@ -134,10 +136,10 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.addAsrListener(this)
         mRobot.addOnConversationStatusChangedListener(this)
         mRobot.addOnCurrentPositionChangedListener(this)
-
         mRobot.addOnDetectionStateChangedListener(this)
         mRobot.addOnDetectionDataChangedListener(this)
         mRobot.addOnUserInteractionChangedListener(this)
+        mRobot.addNlpListener(this)
 
     }
 
@@ -149,6 +151,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.removeAsrListener(this)
         mRobot.removeOnConversationStatusChangedListener(this)
         mRobot.removeOnCurrentPositionChangedListener(this)
+        mRobot.removeNlpListener(this)
 
         Log.i(TAG, "Set detection mode: OFF")
         mRobot.setDetectionModeOn(false, 2.0f) // Set detection mode off
@@ -187,6 +190,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
             }
             else -> {
                 mRobot.askQuestion("すみませんが、適切なスキルが見つかりません")
+
             }
         }
 
@@ -263,6 +267,20 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         // - Robot is moving
         Log.i(TAG, "User Interaction: $str")
         binding.userInteraction.text = "User Interaction: $str"
+    }
+
+    override fun onNlpCompleted(nlpResult: NlpResult) {
+        when (nlpResult.action) {
+            "home.welcome" -> mRobot.tiltAngle(23)
+            "home.dance" -> {
+                val t = System.currentTimeMillis()
+                val end = t + 5000
+                while (System.currentTimeMillis() < end) {
+                    mRobot.skidJoy(0f, 1f)
+                }
+            }
+            "home.sleep" -> mRobot.goTo("ホームベース")
+        }
     }
 
 
