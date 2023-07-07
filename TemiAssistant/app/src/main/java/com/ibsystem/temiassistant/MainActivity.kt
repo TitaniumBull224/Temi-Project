@@ -75,7 +75,10 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         }
 
         // Initialize record button
-        binding.recordBtn.setOnClickListener { mRobot.askQuestion("こんにちは") }
+        binding.recordBtn.setOnClickListener {
+            mRobot.askQuestion("起動しなす")
+        }
+
 
         // Move button
         binding.moveBtn.setOnClickListener {
@@ -100,12 +103,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
 
             // Send robot to the XY position
             mRobot.goToPosition(
-                Position(
-                    xCoordinate.toFloat(),
-                    yCoordinate.toFloat(),
-                    yaw.toFloat(),
-                    0
-                )
+                Position(xCoordinate, yCoordinate, yaw.toFloat(), 0)
             );
         }
 
@@ -128,7 +126,8 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         }
 
         binding.testNlu.setOnClickListener{
-            mRobot.startDefaultNlu("Lower the volume")
+            mRobot.startDefaultNlu("ホームベースに行く")
+            Log.i(TAG,"ホームベースに行く")
         }
     }
 
@@ -140,9 +139,11 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.addAsrListener(this)
         mRobot.addOnConversationStatusChangedListener(this)
         mRobot.addOnCurrentPositionChangedListener(this)
+
         mRobot.addOnDetectionStateChangedListener(this)
         mRobot.addOnDetectionDataChangedListener(this)
         mRobot.addOnUserInteractionChangedListener(this)
+
         mRobot.addNlpListener(this)
 
     }
@@ -155,7 +156,6 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.removeAsrListener(this)
         mRobot.removeOnConversationStatusChangedListener(this)
         mRobot.removeOnCurrentPositionChangedListener(this)
-        mRobot.removeNlpListener(this)
 
         Log.i(TAG, "Set detection mode: OFF")
         mRobot.setDetectionModeOn(false, 2.0f) // Set detection mode off
@@ -164,6 +164,8 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.removeOnDetectionStateChangedListener(this)
         mRobot.removeOnDetectionDataChangedListener(this)
         mRobot.removeOnUserInteractionChangedListener(this)
+
+        mRobot.removeNlpListener(this)
     }
 
     override fun onRobotReady(isReady: Boolean) {
@@ -183,22 +185,21 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
 
     @SuppressLint("SetTextI18n")
     override fun onAsrResult(asrResult: String) {
+        mRobot.finishConversation() // stop ASR listener
         Log.i(TAG, "ASR Result: $asrResult")
         binding.titleTxt.text = "ASR Result: $asrResult"
-        when {
-            asrResult.equals("こんにちは") -> {
-                mRobot.askQuestion("こんにちは、ご用件は?")
-            }
-            asrResult.contains("チャージ") -> {
-                mRobot.goTo("ホームベース")
-            }
-            else -> {
-                mRobot.askQuestion("すみませんが、適切なスキルが見つかりません")
-
-            }
-        }
-
-        mRobot.finishConversation() // stop ASR listener
+//        when {
+//            asrResult.equals("こんにちは") -> {
+//                mRobot.askQuestion("こんにちは、ご用件は?")
+//            }
+//            asrResult.contains("チャージ") -> {
+//                mRobot.goTo("ホームベース")
+//            }
+//            else -> {
+//                mRobot.askQuestion("すみませんが、適切なスキルが見つかりません")
+//            }
+//        }
+        mRobot.startDefaultNlu(asrResult)
     }
 
     @SuppressLint("SetTextI18n")
@@ -274,6 +275,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
     }
 
     override fun onNlpCompleted(nlpResult: NlpResult) {
+        Log.i(TAG, "onNlpCompleted")
         when (nlpResult.action) {
             "home.welcome" -> mRobot.tiltAngle(23)
             "home.dance" -> {
@@ -283,7 +285,10 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
                     mRobot.skidJoy(0f, 1f)
                 }
             }
-            "home.sleep" -> mRobot.goTo("ホームベース")
+            "home.sleep" -> {
+                Log.i(TAG, "Home Sweat Home baby!")
+                mRobot.goTo("ホームベース")
+            }
         }
     }
 

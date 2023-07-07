@@ -50,7 +50,7 @@
 
         <meta-data
             android:name="@string/metadata_override_nlu"
-            android:value="FALSE" />
+            android:value="TRUE" />
 
         <meta-data
             android:name="@string/metadata_override_stt"
