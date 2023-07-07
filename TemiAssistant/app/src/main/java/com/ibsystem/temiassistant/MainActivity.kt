@@ -109,13 +109,12 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
 
         // Detection button
         binding.detectionBtn.setOnClickListener {
-            if (mRobot.detectionModeOn) {
+            if (mRobot.detectionModeOn || mRobot.trackUserOn) {
                 Log.i(TAG, "Set detection mode: OFF")
                 mRobot.setDetectionModeOn(false, 2.0f) // Set detection mode off
                 Log.i(TAG, "Set track user: OFF")
                 mRobot.trackUserOn = false // Set tracking mode off
-                binding.userInteraction.text = "User Interaction Mode: OFF"
-                binding.detectionState.text = "Detection Mode: OFF"
+                binding.userInteraction.text = "User Interaction: OFF"
                 binding.detectionData.text = "Detection Data: No DATA"
                 // Note: When exiting the application, track user will still be enabled unless manually disabled
             } else {
@@ -234,26 +233,26 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
             OnDetectionStateChangedListener.DETECTED -> "DETECTED" // Human is detected
             else -> "UNKNOWN" // This should not happen
         }
-        Log.i(TAG, "OnDetectionStateChanged: $stateStr")
-        binding.detectionState.text = "OnDetectionStateChanged: $stateStr"
+        Log.i(TAG, "Detection State: $stateStr")
+        binding.detectionState.text = "Detection State: $stateStr"
     }
 
     @SuppressLint("SetTextI18n")
     override fun onDetectionDataChanged(detectionData: DetectionData) {
         if (detectionData.isDetected) {
-            binding.detectionData.text = "OnDetectionDataChanged: " + detectionData.distance + " m"
-            Log.i(TAG, "OnDetectionDataChanged: " + detectionData.distance + " m")
+            binding.detectionData.text = "Detection Data: " + detectionData.distance + " m"
+            Log.i(TAG, "Detection Data: " + detectionData.distance + " m")
         }
     }
 
     @SuppressLint("SetTextI18n")
     override fun onUserInteraction(isInteracting: Boolean) {
-        val str = if (isInteracting) "TRUE" else "FALSE"
+        val str = if (isInteracting) "ON" else "OFF"
         // User is interacting with the robot:
         // - User is detected
         // - User is interacting by touch, voice, or in telepresence-mode
         // - Robot is moving
-        Log.i(TAG, "OnUserInteraction: $str")
-        binding.userInteraction.text = "OnUserInteraction: $str"
+        Log.i(TAG, "User Interaction: $str")
+        binding.userInteraction.text = "User Interaction: $str"
     }
 }

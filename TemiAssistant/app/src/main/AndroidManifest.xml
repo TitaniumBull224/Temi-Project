@@ -37,6 +37,7 @@
                    com.robotemi.permission.map,
                    com.robotemi.permission.settings,
                    com.robotemi.permission.sequence" />
+        
 
         <meta-data
             android:name="@string/metadata_override_nlu"
