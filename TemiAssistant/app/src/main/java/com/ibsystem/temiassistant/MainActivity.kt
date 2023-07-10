@@ -1,13 +1,19 @@
 package com.ibsystem.temiassistant
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import androidx.annotation.CheckResult
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import com.ibsystem.temiassistant.databinding.ActivityMainBinding
 import com.robotemi.sdk.NlpResult
@@ -18,9 +24,11 @@ import com.robotemi.sdk.listeners.OnDetectionDataChangedListener
 import com.robotemi.sdk.listeners.OnDetectionStateChangedListener
 import com.robotemi.sdk.listeners.OnRobotReadyListener
 import com.robotemi.sdk.listeners.OnUserInteractionChangedListener
+import com.robotemi.sdk.map.MapModel
 import com.robotemi.sdk.model.DetectionData
 import com.robotemi.sdk.navigation.listener.OnCurrentPositionChangedListener
 import com.robotemi.sdk.navigation.model.Position
+import com.robotemi.sdk.permission.Permission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.LinkedList
@@ -291,6 +299,145 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
             }
         }
     }
+
+    // Map related fun
+
+    override fun onLoadMapStatusChanged(status: Int, requestId: String) {
+        Log.i(TAG, "load map status: $status, requestId: $requestId")
+    }
+
+    private var mapList: List<MapModel> = ArrayList()
+    private fun getMapList() {
+        if (requestPermissionIfNeeded(Permission.MAP, REQUEST_CODE_GET_MAP_LIST)) {
+            return
+        }
+        mapList = mRobot.getMapList()
+    }
+
+    private fun loadMap(
+        reposeRequired: Boolean,
+        position: Position?,
+        offline: Boolean = false,
+        withoutUI: Boolean = false
+    ) {
+        if (mapList.isEmpty()) {
+            getMapList()
+        }
+        if (mRobot.checkSelfPermission(Permission.MAP) != Permission.GRANTED) {
+            return
+        }
+        val mapListString: MutableList<String> = ArrayList()
+        for (i in mapList.indices) {
+            mapListString.add(mapList[i].name)
+        }
+        val mapListAdapter = ArrayAdapter(this, R.layout.item_dialog_row, R.id.name, mapListString)
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Click item to load specific map")
+        builder.setAdapter(mapListAdapter, null)
+        val dialog = builder.create()
+        dialog.listView.onItemClickListener =
+            AdapterView.OnItemClickListener { _, _, pos: Int, _ ->
+                val requestId =
+                    mRobot.loadMap(
+                        mapList[pos].id,
+                        reposeRequired,
+                        position,
+                        offline = offline,
+                        withoutUI = withoutUI
+                    )
+                Log.i(TAG, "Loading map: ${mapList[pos]}, request id $requestId, reposeRequired $reposeRequired, position $position, offline $offline, withoutUI $withoutUI")
+                dialog.dismiss()
+            }
+        dialog.show()
+    }
+
+    private fun loadMapToCache() {
+        if (mapList.isEmpty()) {
+            getMapList()
+        }
+        if (mRobot.checkSelfPermission(Permission.MAP) != Permission.GRANTED) {
+            return
+        }
+        val mapListString: MutableList<String> = ArrayList()
+        for (i in mapList.indices) {
+            mapListString.add(mapList[i].name)
+        }
+        val mapListAdapter = ArrayAdapter(this, R.layout.item_dialog_row, R.id.name, mapListString)
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Click item to load specific map")
+        builder.setAdapter(mapListAdapter, null)
+        val dialog = builder.create()
+        dialog.listView.onItemClickListener =
+            AdapterView.OnItemClickListener { _, _, pos: Int, _ ->
+                val requestId = mRobot.loadMapToCache(mapList[pos].id)
+                Log.i(TAG, "Loading map to cache: " + mapList[pos] + " request id " + requestId)
+                dialog.dismiss()
+            }
+        dialog.show()
+    }
+
+    private fun getMapListBtn() {
+        getMapList()
+        for (mapModel in mapList) {
+            Log.i(TAG, "Map: $mapModel")
+        }
+    }
+
+    private fun loadMap() {
+        loadMap(false, null)
+    }
+
+    // PERMISSION CHECK
+    @CheckResult
+    private fun requestPermissionIfNeeded(permission: Permission, requestCode: Int): Boolean {
+        if (mRobot.checkSelfPermission(permission) == Permission.GRANTED) {
+            return false
+        }
+        mRobot.requestPermissions(listOf(permission), requestCode)
+        return true
+    }
+
+    companion object {
+        const val ACTION_HOME_WELCOME = "home.welcome"
+        const val ACTION_HOME_DANCE = "home.dance"
+        const val ACTION_HOME_SLEEP = "home.sleep"
+        const val HOME_BASE_LOCATION = "home base"
+
+        // Storage Permissions
+        private const val REQUEST_EXTERNAL_STORAGE = 1
+        private const val REQUEST_CODE_NORMAL = 0
+        private const val REQUEST_CODE_FACE_START = 1
+        private const val REQUEST_CODE_FACE_STOP = 2
+        private const val REQUEST_CODE_MAP = 3
+        private const val REQUEST_CODE_SEQUENCE_FETCH_ALL = 4
+        private const val REQUEST_CODE_SEQUENCE_PLAY = 5
+        private const val REQUEST_CODE_START_DETECTION_WITH_DISTANCE = 6
+        private const val REQUEST_CODE_SEQUENCE_PLAY_WITHOUT_PLAYER = 7
+        private const val REQUEST_CODE_GET_MAP_LIST = 8
+        private const val REQUEST_CODE_GET_ALL_FLOORS = 9
+        private val PERMISSIONS_STORAGE = arrayOf(
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+
+        /**
+         * Checks if the app has permission to write to device storage
+         * If the app does not has permission then the user will be prompted to grant permissions
+         */
+        fun verifyStoragePermissions(activity: Activity?) {
+            // Check if we have write permission
+            val permission = ActivityCompat.checkSelfPermission(
+                activity!!,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+
+            )
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                // We don't have permission so prompt the user
+                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE)
+            }
+        }
+    }
+
 
 
 }
