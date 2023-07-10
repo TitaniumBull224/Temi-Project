@@ -2,6 +2,7 @@ package com.ibsystem.temiassistant
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -19,12 +20,14 @@ import com.ibsystem.temiassistant.databinding.ActivityMainBinding
 import com.robotemi.sdk.NlpResult
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.TtsRequest
+import com.robotemi.sdk.constants.Page
 import com.robotemi.sdk.listeners.OnConversationStatusChangedListener
 import com.robotemi.sdk.listeners.OnDetectionDataChangedListener
 import com.robotemi.sdk.listeners.OnDetectionStateChangedListener
 import com.robotemi.sdk.listeners.OnRobotReadyListener
 import com.robotemi.sdk.listeners.OnUserInteractionChangedListener
 import com.robotemi.sdk.map.MapModel
+import com.robotemi.sdk.map.OnLoadMapStatusChangedListener
 import com.robotemi.sdk.model.DetectionData
 import com.robotemi.sdk.navigation.listener.OnCurrentPositionChangedListener
 import com.robotemi.sdk.navigation.model.Position
@@ -35,11 +38,12 @@ import java.util.LinkedList
 import java.util.Queue
 
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListener,
     OnConversationStatusChangedListener, OnCurrentPositionChangedListener,
     OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener,
-    Robot.NlpListener {
-    private val TAG = MainActivity::class.java.simpleName
+    Robot.NlpListener, OnLoadMapStatusChangedListener {
+    private val tag = MainActivity::class.java.simpleName
     private lateinit var binding: ActivityMainBinding
     private lateinit var mRobot: Robot
     @SuppressLint("SetTextI18n")
@@ -65,7 +69,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
             // Register TTS listener
             mRobot.addTtsListener(object : Robot.TtsListener {
                 override fun onTtsStatusChanged(ttsRequest: TtsRequest) {
-                    Log.i(TAG, "Status:" + ttsRequest.status)
+                    Log.i(tag, "Status:" + ttsRequest.status)
                     if (ttsRequest.status == TtsRequest.Status.COMPLETED) {
                         if (!queue.isEmpty()) {
                             mRobot.speak(
@@ -90,59 +94,59 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
 
         // Move button
         binding.moveBtn.setOnClickListener {
-            var xCoordinate: Float = 0.0F // Robot's position wrt the Home Base [m]
-            var yCoordinate: Float = 0.0F // Robot's position wrt the Home Base [m]
+            var xCoordinate = 0.0F // Robot's position wrt the Home Base [m]
+            var yCoordinate = 0.0F // Robot's position wrt the Home Base [m]
             val yaw = 0 // Robot's yaw-rotation wrt the Home Base [deg]
 
             // Convert input string to integer
             try {
                 xCoordinate = binding.posX.text.toString().toFloat()
             } catch (e: NumberFormatException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
 
             try {
                 yCoordinate = binding.posY.text.toString().toFloat()
             } catch (e: NumberFormatException) {
-                e.printStackTrace();
+                e.printStackTrace()
             }
 
-            Log.i(TAG, "X: $xCoordinate | Y: $yCoordinate");
+            Log.i(tag, "X: $xCoordinate | Y: $yCoordinate")
 
             // Send robot to the XY position
             mRobot.goToPosition(
                 Position(xCoordinate, yCoordinate, yaw.toFloat(), 0)
-            );
+            )
         }
 
         // Detection button
         binding.detectionBtn.setOnClickListener {
             if (mRobot.detectionModeOn || mRobot.trackUserOn) {
-                Log.i(TAG, "Set detection mode: OFF")
+                Log.i(tag, "Set detection mode: OFF")
                 mRobot.setDetectionModeOn(false, 2.0f) // Set detection mode off
-                Log.i(TAG, "Set track user: OFF")
+                Log.i(tag, "Set track user: OFF")
                 mRobot.trackUserOn = false // Set tracking mode off
                 binding.userInteraction.text = "User Interaction: OFF"
                 binding.detectionData.text = "Detection Data: No DATA"
                 // Note: When exiting the application, track user will still be enabled unless manually disabled
             } else {
-                Log.i(TAG, "Set detection mode: ON")
+                Log.i(tag, "Set detection mode: ON")
                 mRobot.setDetectionModeOn(true, 2.0f) // Set detection mode on; set detection distance to be 2.0 m
-                Log.i(TAG, "Set track user: ON")
+                Log.i(tag, "Set track user: ON")
                 mRobot.trackUserOn = true // Set tracking mode on
             }
         }
 
         binding.testNlu.setOnClickListener{
-            mRobot.startDefaultNlu("ホームベースに行く")
-            Log.i(TAG,"ホームベースに行く")
+            val intent = Intent(this, MapActivity::class.java)
+            startActivity(intent)
         }
     }
 
     override fun onStart() {
         super.onStart()
         // Add robot event listeners
-        Log.i(TAG, "Robot: OnStart")
+        Log.i(tag, "Robot: OnStart")
         mRobot.addOnRobotReadyListener(this)
         mRobot.addAsrListener(this)
         mRobot.addOnConversationStatusChangedListener(this)
@@ -153,38 +157,39 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.addOnUserInteractionChangedListener(this)
 
         mRobot.addNlpListener(this)
+        mRobot.addOnLoadMapStatusChangedListener(this)
 
     }
 
     override fun onStop() {
         super.onStop()
         // Remove robot event listeners
-        Log.i(TAG, "Robot: OnStop")
+        Log.i(tag, "Robot: OnStop")
         mRobot.removeOnRobotReadyListener(this)
         mRobot.removeAsrListener(this)
         mRobot.removeOnConversationStatusChangedListener(this)
         mRobot.removeOnCurrentPositionChangedListener(this)
 
-        Log.i(TAG, "Set detection mode: OFF")
+        Log.i(tag, "Set detection mode: OFF")
         mRobot.setDetectionModeOn(false, 2.0f) // Set detection mode off
-        Log.i(TAG, "Set track user: OFF")
+        Log.i(tag, "Set track user: OFF")
         mRobot.trackUserOn = false // Set tracking mode off
         mRobot.removeOnDetectionStateChangedListener(this)
         mRobot.removeOnDetectionDataChangedListener(this)
         mRobot.removeOnUserInteractionChangedListener(this)
 
         mRobot.removeNlpListener(this)
+        mRobot.removeOnLoadMapStatusChangedListener(this)
     }
 
     override fun onRobotReady(isReady: Boolean) {
         if (isReady) {
-            Log.i(TAG, "Robot: OnRobotReady")
+            Log.i(tag, "Robot: OnRobotReady")
             try {
                 // Hide temi's ActivityBar and pull-down bar
                 val activityInfo = packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA)
                 mRobot.onStart(activityInfo)
                 mRobot.hideTopBar()
-
             } catch (e: PackageManager.NameNotFoundException) {
                 e.printStackTrace()
             }
@@ -194,7 +199,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
     @SuppressLint("SetTextI18n")
     override fun onAsrResult(asrResult: String) {
         mRobot.finishConversation() // stop ASR listener
-        Log.i(TAG, "ASR Result: $asrResult")
+        Log.i(tag, "ASR Result: $asrResult")
         binding.titleTxt.text = "ASR Result: $asrResult"
 //        when {
 //            asrResult.equals("こんにちは") -> {
@@ -212,7 +217,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
 
     @SuppressLint("SetTextI18n")
     override fun onConversationStatusChanged(status: Int, text: String) {
-        Log.i(TAG, "Status: START")
+        Log.i(tag, "Status: START")
 
         lifecycleScope.launch(Dispatchers.Main) {
             val statusStr = when (status) {
@@ -222,14 +227,14 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
                 OnConversationStatusChangedListener.SPEAKING -> "SPEAKING"
                 else -> "UNKNOWN"
             }
-            Log.i(TAG, "Status: $statusStr | Text: $text")
+            Log.i(tag, "Status: $statusStr | Text: $text")
             binding.statusTxt.text = "Status: $statusStr | Text: $text"
         }
     }
 
     override fun onCurrentPositionChanged(position: Position) {
         val str = "Current Position: X: " + position.x + " Y: " + position.y
-        Log.i(TAG, str)
+        Log.i(tag, str)
         binding.textViewPosition.text = str
     }
 
@@ -252,6 +257,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         return super.dispatchTouchEvent(ev)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onDetectionStateChanged(state: Int) {
         val stateStr = when (state) {
             OnDetectionStateChangedListener.IDLE -> "IDLE" // No active detection and/or 10 seconds have passed since the last detection was lost
@@ -259,7 +265,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
             OnDetectionStateChangedListener.DETECTED -> "DETECTED" // Human is detected
             else -> "UNKNOWN" // This should not happen
         }
-        Log.i(TAG, "Detection State: $stateStr")
+        Log.i(tag, "Detection State: $stateStr")
         binding.detectionState.text = "Detection State: $stateStr"
     }
 
@@ -267,7 +273,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
     override fun onDetectionDataChanged(detectionData: DetectionData) {
         if (detectionData.isDetected) {
             binding.detectionData.text = "Detection Data: " + detectionData.distance + " m"
-            Log.i(TAG, "Detection Data: " + detectionData.distance + " m")
+            Log.i(tag, "Detection Data: " + detectionData.distance + " m")
         }
     }
 
@@ -278,12 +284,12 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         // - User is detected
         // - User is interacting by touch, voice, or in telepresence-mode
         // - Robot is moving
-        Log.i(TAG, "User Interaction: $str")
+        Log.i(tag, "User Interaction: $str")
         binding.userInteraction.text = "User Interaction: $str"
     }
 
     override fun onNlpCompleted(nlpResult: NlpResult) {
-        Log.i(TAG, "onNlpCompleted")
+        Log.i(tag, "onNlpCompleted")
         when (nlpResult.action) {
             "home.welcome" -> mRobot.tiltAngle(23)
             "home.dance" -> {
@@ -294,16 +300,16 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
                 }
             }
             "home.sleep" -> {
-                Log.i(TAG, "Home Sweat Home baby!")
+                Log.i(tag, "Home Sweat Home baby!")
                 mRobot.goTo("ホームベース")
             }
         }
     }
 
-    // Map related fun
+    // MAP RELATED FUNCTION
 
     override fun onLoadMapStatusChanged(status: Int, requestId: String) {
-        Log.i(TAG, "load map status: $status, requestId: $requestId")
+        Log.i(tag, "load map status: $status, requestId: $requestId")
     }
 
     private var mapList: List<MapModel> = ArrayList()
@@ -345,7 +351,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
                         offline = offline,
                         withoutUI = withoutUI
                     )
-                Log.i(TAG, "Loading map: ${mapList[pos]}, request id $requestId, reposeRequired $reposeRequired, position $position, offline $offline, withoutUI $withoutUI")
+                Log.i(tag, "Loading map: ${mapList[pos]}, request id $requestId, reposeRequired $reposeRequired, position $position, offline $offline, withoutUI $withoutUI")
                 dialog.dismiss()
             }
         dialog.show()
@@ -370,7 +376,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         dialog.listView.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, pos: Int, _ ->
                 val requestId = mRobot.loadMapToCache(mapList[pos].id)
-                Log.i(TAG, "Loading map to cache: " + mapList[pos] + " request id " + requestId)
+                Log.i(tag, "Loading map to cache: " + mapList[pos] + " request id " + requestId)
                 dialog.dismiss()
             }
         dialog.show()
@@ -379,7 +385,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
     private fun getMapListBtn() {
         getMapList()
         for (mapModel in mapList) {
-            Log.i(TAG, "Map: $mapModel")
+            Log.i(tag, "Map: $mapModel")
         }
     }
 
