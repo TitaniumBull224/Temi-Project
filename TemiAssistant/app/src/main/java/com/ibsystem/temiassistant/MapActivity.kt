@@ -10,13 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ibsystem.temiassistant.databinding.ActivityMapBinding
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.map.MapDataModel
+import kotlinx.coroutines.delay
+import java.lang.Thread.sleep
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.math.roundToInt
 
 
 class MapActivity : AppCompatActivity() {
-
     @Volatile
     private var bitmap: Bitmap? = null
 
@@ -28,6 +29,7 @@ class MapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMapBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         binding.ibBack.setOnClickListener { finish() }
         binding.textViewMapElements.setOnClickListener { refreshMap() }
         binding.textViewMapElements.movementMethod = ScrollingMovementMethod()
@@ -36,7 +38,7 @@ class MapActivity : AppCompatActivity() {
 
     private fun refreshMap() {
         binding.progressBar.visibility = View.VISIBLE
-        singleThreadExecutor.execute {
+        this.singleThreadExecutor.execute {
             mapDataModel = Robot.getInstance().getMapData() ?: return@execute
             val mapImage = mapDataModel!!.mapImage
             Log.i("Map-mapImage", mapDataModel!!.mapImage.typeId)

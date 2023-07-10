@@ -137,7 +137,8 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
             }
         }
 
-        binding.testNlu.setOnClickListener{
+        // Map button
+        binding.mapBtn.setOnClickListener{
             val intent = Intent(this, MapActivity::class.java)
             startActivity(intent)
         }

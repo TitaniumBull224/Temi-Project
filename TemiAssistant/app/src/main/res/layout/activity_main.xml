@@ -137,8 +137,8 @@
         <EditText
             android:id="@+id/posX"
             android:layout_width="180dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="100dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="80dp"
             android:hint="posX (m)"
             android:inputType="text"
             app:layout_constraintBottom_toTopOf="@+id/posY"
@@ -151,7 +151,8 @@
         <EditText
             android:id="@+id/posY"
             android:layout_width="180dp"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
             android:hint="posY (m)"
             android:inputType="text"
             app:layout_constraintBottom_toTopOf="@+id/move_btn"
@@ -171,12 +172,12 @@
             app:layout_constraintTop_toBottomOf="@+id/posY" />
 
         <Button
-            android:id="@+id/testNlu"
+            android:id="@+id/map_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
             android:layout_marginBottom="11dp"
-            android:text="NLUTest"
+            android:text="Map"
             app:layout_constraintBottom_toTopOf="@+id/exit_btn"
             app:layout_constraintEnd_toEndOf="@+id/move_btn"
             app:layout_constraintStart_toStartOf="@+id/move_btn"
