@@ -43,6 +43,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mRobot = Robot.getInstance()
         setContent {
             ComposeUiTempletesTheme() {
                 // A surface container using the 'background' color from the theme
