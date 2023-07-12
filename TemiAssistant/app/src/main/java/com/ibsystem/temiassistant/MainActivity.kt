@@ -40,8 +40,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     Robot.NlpListener {
     private val tag = MainActivity::class.java.simpleName
     private lateinit var mRobot: Robot
-    @ExperimentalFoundationApi
-    @ExperimentalMaterialApi
+    @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

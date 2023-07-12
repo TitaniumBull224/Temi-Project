@@ -26,8 +26,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MapActivity" />
-
         <meta-data
             android:name="@string/metadata_permissions"
             android:value="com.robotemi.permission.face_recognition,
