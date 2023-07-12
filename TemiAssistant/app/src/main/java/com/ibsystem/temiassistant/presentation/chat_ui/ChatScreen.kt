@@ -1,5 +1,6 @@
 package com.ibsystem.temiassistant.presentation.chat_ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,10 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -139,8 +142,12 @@ fun ChatSection(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
+@Preview
 @Composable
 fun MessageSection() {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -164,6 +171,7 @@ fun MessageSection() {
                     modifier = Modifier.clickable {
                         chats.add(Chat(message.value, "10:00 PM", true))
                         message.value = ""
+                        keyboardController?.hide()
                     }
                 )
 
