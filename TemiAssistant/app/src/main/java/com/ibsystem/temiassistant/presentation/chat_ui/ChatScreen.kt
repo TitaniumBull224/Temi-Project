@@ -48,8 +48,8 @@ val chats = mutableStateListOf<Chat>(
     Chat("I am good", "10:11 pm", false),
 )
 
-const val username = "Gojo Satoru"
-val profile = R.drawable.gojo
+const val username = "Chatbot"
+val profile = R.drawable.ic_final_icon
 const val isOnline = true
 @Composable
 fun ChatScreen(navController: NavController) {
