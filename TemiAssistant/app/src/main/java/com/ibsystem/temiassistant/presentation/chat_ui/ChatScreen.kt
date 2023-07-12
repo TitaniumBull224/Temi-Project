@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,21 +53,37 @@ val chats = mutableStateListOf<Chat>(
 const val username = "Gojo Satoru"
 val profile = R.drawable.gojo
 const val isOnline = true
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ChatScreen(navController: NavController) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+    val keyboardController = LocalSoftwareKeyboardController.current
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        keyboardController?.hide()
+                        tryAwaitRelease()
+                    }
+                )
+            }
     ) {
-        TopBarSection(
-            username = username,
-            profile = painterResource(id = profile),
-            isOnline = isOnline,
-            onBack = { navController.navigateUp() }
-        )
-        ChatSection(Modifier.weight(1f))
-        MessageSection()
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            TopBarSection(
+                username = username,
+                profile = painterResource(id = profile),
+                isOnline = isOnline,
+                onBack = { navController.navigateUp() }
+            )
+            ChatSection(Modifier.weight(1f))
+            MessageSection()
+        }
     }
+
 }
 
 @Composable
@@ -142,12 +160,9 @@ fun ChatSection(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Preview
 @Composable
 fun MessageSection() {
-    val keyboardController = LocalSoftwareKeyboardController.current
-
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -171,7 +186,6 @@ fun MessageSection() {
                     modifier = Modifier.clickable {
                         chats.add(Chat(message.value, "10:00 PM", true))
                         message.value = ""
-                        keyboardController?.hide()
                     }
                 )
 
