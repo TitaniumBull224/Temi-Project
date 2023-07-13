@@ -1,13 +1,9 @@
 package com.ibsystem.temiassistant
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.CheckResult
@@ -39,10 +35,10 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListener,
+@Suppress("DEPRECATION")
+class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListener, // Robot.NlpListener,
     OnConversationStatusChangedListener, OnCurrentPositionChangedListener,
-    OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener,
-    Robot.NlpListener {
+    OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener {
     private val tag = MainActivity::class.java.simpleName
     lateinit var mRobot: Robot
     @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -73,7 +69,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.addOnDetectionDataChangedListener(this)
         mRobot.addOnUserInteractionChangedListener(this)
 
-        mRobot.addNlpListener(this)
+        // mRobot.addNlpListener(this)
 
     }
 
@@ -94,7 +90,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.removeOnDetectionDataChangedListener(this)
         mRobot.removeOnUserInteractionChangedListener(this)
 
-        mRobot.removeNlpListener(this)
+        // mRobot.removeNlpListener(this)
     }
 
     override fun onRobotReady(isReady: Boolean) {
@@ -122,8 +118,6 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     }
 
     override fun onConversationStatusChanged(status: Int, text: String) {
-        Log.i(tag, "Status: START")
-
         lifecycleScope.launch(Dispatchers.Main) {
             val statusStr = when (status) {
                 OnConversationStatusChangedListener.IDLE -> "IDLE"
@@ -133,8 +127,23 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
                 else -> "UNKNOWN"
             }
             Log.i(tag, "Status: $statusStr | Text: $text")
+            if (statusStr == "SPEAKING" && text != "") {
+                val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
+                chats.add(Chat(text, formattedTime, false))
+            }
         }
     }
+
+//    override fun onNlpCompleted(nlpResult: NlpResult) {
+//        Log.i(tag, "onNlpCompleted")
+//        val currentTime = Calendar.getInstance().time
+//        val formatter = SimpleDateFormat("h:mm a", Locale.getDefault())
+//        val formattedTime = formatter.format(currentTime)
+//        val response = nlpResult.params["response"].toString()
+//        if (response != "") {
+//            chats.add(Chat(response, formattedTime, false))
+//        }
+//    }
 
     override fun onCurrentPositionChanged(position: Position) {
         val str = "Current Position: X: " + position.x + " Y: " + position.y
@@ -151,14 +160,12 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         Log.i(tag, "Detection State: $stateStr")
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onDetectionDataChanged(detectionData: DetectionData) {
         if (detectionData.isDetected) {
             Log.i(tag, "Detection Data: " + detectionData.distance + " m")
         }
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onUserInteraction(isInteracting: Boolean) {
         val str = if (isInteracting) "ON" else "OFF"
         // User is interacting with the robot:
@@ -166,24 +173,6 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         // - User is interacting by touch, voice, or in telepresence-mode
         // - Robot is moving
         Log.i(tag, "User Interaction: $str")
-    }
-
-    override fun onNlpCompleted(nlpResult: NlpResult) {
-        Log.i(tag, "onNlpCompleted")
-        when (nlpResult.action) {
-            "home.welcome" -> mRobot.tiltAngle(23)
-            "home.dance" -> {
-                val t = System.currentTimeMillis()
-                val end = t + 5000
-                while (System.currentTimeMillis() < end) {
-                    mRobot.skidJoy(0f, 1f)
-                }
-            }
-            "home.sleep" -> {
-                Log.i(tag, "Home Sweat Home baby!")
-                mRobot.goTo("ホームベース")
-            }
-        }
     }
 
     // PERMISSION CHECK
@@ -197,23 +186,23 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     }
 
     companion object {
-        const val ACTION_HOME_WELCOME = "home.welcome"
-        const val ACTION_HOME_DANCE = "home.dance"
-        const val ACTION_HOME_SLEEP = "home.sleep"
-        const val HOME_BASE_LOCATION = "home base"
+//        const val ACTION_HOME_WELCOME = "home.welcome"
+//        const val ACTION_HOME_DANCE = "home.dance"
+//        const val ACTION_HOME_SLEEP = "home.sleep"
+//        const val HOME_BASE_LOCATION = "home base"
 
         // Storage Permissions
         private const val REQUEST_EXTERNAL_STORAGE = 1
-        private const val REQUEST_CODE_NORMAL = 0
-        private const val REQUEST_CODE_FACE_START = 1
-        private const val REQUEST_CODE_FACE_STOP = 2
-        private const val REQUEST_CODE_MAP = 3
-        private const val REQUEST_CODE_SEQUENCE_FETCH_ALL = 4
-        private const val REQUEST_CODE_SEQUENCE_PLAY = 5
-        private const val REQUEST_CODE_START_DETECTION_WITH_DISTANCE = 6
-        private const val REQUEST_CODE_SEQUENCE_PLAY_WITHOUT_PLAYER = 7
-        private const val REQUEST_CODE_GET_MAP_LIST = 8
-        private const val REQUEST_CODE_GET_ALL_FLOORS = 9
+//        private const val REQUEST_CODE_NORMAL = 0
+//        private const val REQUEST_CODE_FACE_START = 1
+//        private const val REQUEST_CODE_FACE_STOP = 2
+//        private const val REQUEST_CODE_MAP = 3
+//        private const val REQUEST_CODE_SEQUENCE_FETCH_ALL = 4
+//        private const val REQUEST_CODE_SEQUENCE_PLAY = 5
+//        private const val REQUEST_CODE_START_DETECTION_WITH_DISTANCE = 6
+//        private const val REQUEST_CODE_SEQUENCE_PLAY_WITHOUT_PLAYER = 7
+//        private const val REQUEST_CODE_GET_MAP_LIST = 8
+//        private const val REQUEST_CODE_GET_ALL_FLOORS = 9
         private val PERMISSIONS_STORAGE = arrayOf(
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE

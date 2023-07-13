@@ -48,15 +48,14 @@ data class Chat(
 
 val message = mutableStateOf("")
 
-val chats = mutableStateListOf(
+val chats = mutableStateListOf<Chat>(
 //    Chat("Hi", "10:00 pm", true),
 //    Chat("Hello", "10:00 pm", false),
 //    Chat("What's up", "10:02 pm", false),
 //    Chat("I am fine", "10:02 pm", true),
 //    Chat("How are you doing", "10:06 pm", true),
 //    Chat("I am good", "10:11 pm", false),
-    Chat("刮目せよ！", "10:00 pm", false),
-    Chat("Hi", "10:00 pm", true),
+//    Chat("刮目せよ！", "10:00 pm", false)
 )
 
 const val username = "Chatbot"
@@ -199,11 +198,11 @@ fun MessageSection() {
                         contentDescription = null,
                         tint = MaterialTheme.colors.primary,
                         modifier = Modifier.clickable {
-                            val currentTime = Calendar.getInstance().time
-                            val formatter = SimpleDateFormat("h:mm a", Locale.getDefault())
-                            val formattedTime = formatter.format(currentTime)
+                            val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
                             chats.add(Chat(message.value, formattedTime, true))
                             message.value = ""
+
+                            mRobot.startDefaultNlu(message.value)
                         }
                     )
                 },

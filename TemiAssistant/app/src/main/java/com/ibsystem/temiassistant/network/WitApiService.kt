@@ -1,7 +1,7 @@
 package com.ibsystem.temiassistant.network
 
-import retrofit2.http.POST
+//import retrofit2.http.POST
 
-interface WitApiService {
-    @POST()
-}
+//interface WitApiService {
+//    @POST()
+//}
