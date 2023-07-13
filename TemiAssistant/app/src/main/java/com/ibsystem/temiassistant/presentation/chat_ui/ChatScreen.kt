@@ -51,29 +51,12 @@ import kotlin.reflect.KProperty
     val message: String,
     val time: String,
     val isOutgoing: Boolean
-)*/
+)
+
+val chats = mutableStateListOf<Chat>()
+*/
 
 val message = mutableStateOf("")
-
-<<<<<<< Updated upstream
-val chats = mutableStateListOf<Chat>(
-=======
-/*val chats = mutableStateListOf(
->>>>>>> Stashed changes
-//    Chat("Hi", "10:00 pm", true),
-//    Chat("Hello", "10:00 pm", false),
-//    Chat("What's up", "10:02 pm", false),
-//    Chat("I am fine", "10:02 pm", true),
-//    Chat("How are you doing", "10:06 pm", true),
-//    Chat("I am good", "10:11 pm", false),
-<<<<<<< Updated upstream
-//    Chat("刮目せよ！", "10:00 pm", false)
-)
-=======
-    Chat("刮目せよ！", "10:00 pm", false),
-    Chat("Hi", "10:00 pm", true),
-)*/
->>>>>>> Stashed changes
 
 const val username = "Chatbot"
 val profile = R.drawable.ic_final_icon
@@ -220,29 +203,18 @@ fun MessageSection(viewModel: MainActivityViewModel) {
                         contentDescription = null,
                         tint = MaterialTheme.colors.primary,
                         modifier = Modifier.clickable {
-<<<<<<< Updated upstream
-                            val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
-                            chats.add(Chat(message.value, formattedTime, true))
-                            message.value = ""
+//                            val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
+//                            chats.add(Chat(message.value, formattedTime, true))
+//                            message.value = ""
+//
+//                            mRobot.startDefaultNlu(message.value)
 
-                            mRobot.startDefaultNlu(message.value)
-=======
-                            /*val currentTime = Calendar.getInstance().time
-                            val formatter = SimpleDateFormat("h:mm a", Locale.getDefault())
-                            val formattedTime = formatter.format(currentTime)
-                            chats.add(Chat(message.value, formattedTime, true))
-                            message.value = ""*/
                             if(viewModel._connectivityState.value) {
                                 viewModel.messageToWit(MessageBody("message", message.value))
-
-                            }
-                            else
-                            {
+                            } else {
                                 Toast.makeText(context, "Please check your internet", Toast.LENGTH_LONG).show()
                             }
->>>>>>> Stashed changes
                         }
-
                     )
                 },
                 modifier = Modifier

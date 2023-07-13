@@ -15,8 +15,9 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.ibsystem.temiassistant.mainscreen.Navigation
-import com.ibsystem.temiassistant.presentation.chat_ui.Chat
-import com.ibsystem.temiassistant.presentation.chat_ui.chats
+import com.ibsystem.temiassistant.network.Message
+import com.ibsystem.temiassistant.network.MessageBody
+import com.ibsystem.temiassistant.presentation.chat_ui.message
 import com.ibsystem.temiassistant.ui.theme.ComposeUiTempletesTheme
 import com.robotemi.sdk.NlpResult
 import com.robotemi.sdk.Robot
@@ -41,6 +42,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener {
     private val tag = MainActivity::class.java.simpleName
     lateinit var mRobot: Robot
+    val viewModel: MainActivityViewModel = MainActivityViewModel()
     @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,12 +111,13 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 
     override fun onAsrResult(asrResult: String) {
         mRobot.finishConversation() // stop ASR listener
-        val currentTime = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("h:mm a", Locale.getDefault())
-        val formattedTime = formatter.format(currentTime)
-        chats.add(Chat(asrResult, formattedTime, true))
+//        val currentTime = Calendar.getInstance().time
+//        val formatter = SimpleDateFormat("h:mm a", Locale.getDefault())
+//        val formattedTime = formatter.format(currentTime)
+//        chats.add(Chat(asrResult, formattedTime, true))
+        viewModel.messageToWit(MessageBody(message = asrResult))
         Log.i(tag, "ASR Result: $asrResult")
-        mRobot.startDefaultNlu(asrResult)
+//        mRobot.startDefaultNlu(asrResult)
     }
 
     override fun onConversationStatusChanged(status: Int, text: String) {
@@ -128,8 +131,9 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
             }
             Log.i(tag, "Status: $statusStr | Text: $text")
             if (statusStr == "SPEAKING" && text != "") {
-                val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
-                chats.add(Chat(text, formattedTime, false))
+//                val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
+//                chats.add(Chat(text, formattedTime, false))
+                viewModel.addMessage(Message(message_body = MessageBody(message = text), isOut = false))
             }
         }
     }
