@@ -2,6 +2,9 @@
 
 package com.ibsystem.temiassistant.presentation.chat_ui
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,37 +37,55 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ibsystem.temiassistant.MainActivity
+import com.ibsystem.temiassistant.MainActivityViewModel
 import com.ibsystem.temiassistant.R
+import com.ibsystem.temiassistant.network.Message
+import com.ibsystem.temiassistant.network.MessageBody
+import okhttp3.internal.wait
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import kotlin.reflect.KProperty
 
-data class Chat(
+/*data class Chat(
     val message: String,
     val time: String,
     val isOutgoing: Boolean
-)
+)*/
 
 val message = mutableStateOf("")
 
+<<<<<<< Updated upstream
 val chats = mutableStateListOf<Chat>(
+=======
+/*val chats = mutableStateListOf(
+>>>>>>> Stashed changes
 //    Chat("Hi", "10:00 pm", true),
 //    Chat("Hello", "10:00 pm", false),
 //    Chat("What's up", "10:02 pm", false),
 //    Chat("I am fine", "10:02 pm", true),
 //    Chat("How are you doing", "10:06 pm", true),
 //    Chat("I am good", "10:11 pm", false),
+<<<<<<< Updated upstream
 //    Chat("刮目せよ！", "10:00 pm", false)
 )
+=======
+    Chat("刮目せよ！", "10:00 pm", false),
+    Chat("Hi", "10:00 pm", true),
+)*/
+>>>>>>> Stashed changes
 
 const val username = "Chatbot"
 val profile = R.drawable.ic_final_icon
 const val isOnline = true
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ChatScreen(navController: NavController) {
+fun ChatScreen(navController: NavController, viewModel: MainActivityViewModel = MainActivityViewModel()) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val context = LocalContext.current
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetwork = connectivityManager.activeNetworkInfo
+    viewModel.changeConnectivityState(activeNetwork != null && activeNetwork.isConnected )
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -87,8 +108,8 @@ fun ChatScreen(navController: NavController) {
                 isOnline = isOnline,
                 onBack = { navController.navigateUp() }
             )
-            ChatSection(Modifier.weight(1f))
-            MessageSection()
+            ChatSection(Modifier.weight(1f), viewModel)
+            MessageSection(viewModel)
         }
     }
 
@@ -147,21 +168,22 @@ fun TopBarSection(
     }
 }
 
-@Preview
+
 @Composable
 fun ChatSection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: MainActivityViewModel
 ) {
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
     ) {
-        items(chats) { chat ->
+        items(viewModel.messages) { message ->
             MessageItem(
-                chat.message,
-                chat.time,
-                chat.isOutgoing
+                message.message_body.message,
+                message.time.toString(),
+                message.isOut
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -169,7 +191,7 @@ fun ChatSection(
 }
 
 @Composable
-fun MessageSection() {
+fun MessageSection(viewModel: MainActivityViewModel) {
     val context = LocalContext.current
     val mRobot = (context as MainActivity).mRobot
 
@@ -198,12 +220,29 @@ fun MessageSection() {
                         contentDescription = null,
                         tint = MaterialTheme.colors.primary,
                         modifier = Modifier.clickable {
+<<<<<<< Updated upstream
                             val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
                             chats.add(Chat(message.value, formattedTime, true))
                             message.value = ""
 
                             mRobot.startDefaultNlu(message.value)
+=======
+                            /*val currentTime = Calendar.getInstance().time
+                            val formatter = SimpleDateFormat("h:mm a", Locale.getDefault())
+                            val formattedTime = formatter.format(currentTime)
+                            chats.add(Chat(message.value, formattedTime, true))
+                            message.value = ""*/
+                            if(viewModel._connectivityState.value) {
+                                viewModel.messageToWit(MessageBody("message", message.value))
+
+                            }
+                            else
+                            {
+                                Toast.makeText(context, "Please check your internet", Toast.LENGTH_LONG).show()
+                            }
+>>>>>>> Stashed changes
                         }
+
                     )
                 },
                 modifier = Modifier
