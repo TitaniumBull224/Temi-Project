@@ -1,16 +1,5 @@
 package com.ibsystem.temiassistant.network
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-//import retrofit2.http.POST
-
-//interface WitApiService {
-//    @POST()
-//}
-=======
-=======
-import android.os.Bundle
->>>>>>> Stashed changes
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -48,13 +37,7 @@ var witApiService = retrofit.create(WitApiService::class.java)
 
 interface WitApiService {
     @POST("/event")
-<<<<<<< Updated upstream
-    suspend fun sendMessage(
-        @Body message: Message
-    ): Response<SnapshotStateList<Message>>
-}
->>>>>>> 080b3ee47a35dbf9aed3b7ee576b76deb2d5893d
-=======
+
     suspend fun sendMessage(@Query("session_id") session_id: String = "test1",
                             @Body message: MessageBody
     ): Response<SnapshotStateList<ResponseMessage>>
@@ -83,4 +66,3 @@ private fun initializeHttpClient() {
         .header("Content-Type", "audio/raw")
         .header("Transfer-Encoding", "chunked")
 }*/
->>>>>>> Stashed changes
