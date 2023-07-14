@@ -2,6 +2,7 @@
 
 package com.ibsystem.temiassistant.presentation.chat_ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,8 +17,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -32,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import com.ibsystem.temiassistant.MainActivity
 import com.ibsystem.temiassistant.R
@@ -58,12 +63,11 @@ val chats = mutableStateListOf<Chat>(
 //    Chat("刮目せよ！", "10:00 pm", false)
 )
 
-const val username = "Chatbot"
-val profile = R.drawable.ic_final_icon
-const val isOnline = true
+// val viewModel: ChatScreenViewModel = ChatScreenViewModel()
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ChatScreen(navController: NavController) {
+fun ChatScreen(navController: NavController, viewModel: ChatScreenViewModel) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Box(
         modifier = Modifier
@@ -81,14 +85,16 @@ fun ChatScreen(navController: NavController) {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            TopBarSection(
-                username = username,
-                profile = painterResource(id = profile),
-                isOnline = isOnline,
-                onBack = { navController.navigateUp() }
-            )
-            ChatSection(Modifier.weight(1f))
-            MessageSection()
+            viewModel.connectivityState.value?.let {
+                TopBarSection(
+                    username = "Chatbot",
+                    profile = painterResource(id = R.drawable.ic_final_icon),
+                    isOnline = it,
+                    onBack = { navController.navigateUp() }
+                )
+            }
+            ChatSection(Modifier.weight(1f), viewModel)
+            MessageSection(viewModel)
         }
     }
 
@@ -147,21 +153,23 @@ fun TopBarSection(
     }
 }
 
-@Preview
+
 @Composable
 fun ChatSection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel : ChatScreenViewModel
 ) {
+    val messages: List<Message> by viewModel.messageList.observeAsState(emptyList())
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
     ) {
-        items(chats) { chat ->
+        items(messages.orEmpty()) { message ->
             MessageItem(
-                chat.message,
-                chat.time,
-                chat.isOutgoing
+                message.message_body.message,
+                message.isOut,
+                message.time
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -169,9 +177,10 @@ fun ChatSection(
 }
 
 @Composable
-fun MessageSection() {
+fun MessageSection(viewModel: ChatScreenViewModel) {
     val context = LocalContext.current
     val mRobot = (context as MainActivity).mRobot
+    val message = remember { mutableStateOf("") }
 
     Card(
         modifier = Modifier
@@ -198,11 +207,12 @@ fun MessageSection() {
                         contentDescription = null,
                         tint = MaterialTheme.colors.primary,
                         modifier = Modifier.clickable {
-                            val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
-                            chats.add(Chat(message.value, formattedTime, true))
+                            if(viewModel.connectivityState.value == true) {
+                                viewModel.messageToWit(MessageBody(message.value))
+                            } else {
+                                Toast.makeText(context, "Please check your internet", Toast.LENGTH_LONG).show()
+                            }
                             message.value = ""
-
-                            mRobot.startDefaultNlu(message.value)
                         }
                     )
                 },
@@ -223,8 +233,8 @@ fun MessageSection() {
 @Composable
 fun MessageItem(
     messageText: String,
-    time: String,
-    isOut: Boolean
+    isOut: Boolean,
+    time: String
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),

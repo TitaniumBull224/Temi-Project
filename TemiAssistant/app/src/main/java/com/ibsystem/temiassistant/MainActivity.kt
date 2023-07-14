@@ -16,7 +16,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.ibsystem.temiassistant.mainscreen.Navigation
 import com.ibsystem.temiassistant.presentation.chat_ui.Chat
+import com.ibsystem.temiassistant.presentation.chat_ui.ChatScreenViewModel
+import com.ibsystem.temiassistant.presentation.chat_ui.Message
+import com.ibsystem.temiassistant.presentation.chat_ui.MessageBody
 import com.ibsystem.temiassistant.presentation.chat_ui.chats
+import com.ibsystem.temiassistant.presentation.chat_ui.message
 import com.ibsystem.temiassistant.ui.theme.ComposeUiTempletesTheme
 import com.robotemi.sdk.NlpResult
 import com.robotemi.sdk.Robot
@@ -41,16 +45,18 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener {
     private val tag = MainActivity::class.java.simpleName
     lateinit var mRobot: Robot
+    lateinit var viewModel: ChatScreenViewModel
     @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mRobot = Robot.getInstance()
+        viewModel = ChatScreenViewModel()
         setContent {
             ComposeUiTempletesTheme() {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     val navController = rememberNavController()
-                    Navigation(navController)
+                    Navigation(navController, viewModel)
                 }
             }
         }
@@ -109,8 +115,8 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 
     override fun onAsrResult(asrResult: String) {
         mRobot.finishConversation() // stop ASR listener
-        val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
-        chats.add(Chat(asrResult, formattedTime, true))
+        // chats.add(Chat(asrResult, formattedTime, true))
+        viewModel.addMessage(Message(MessageBody(asrResult), true))
         Log.i(tag, "ASR Result: $asrResult")
         mRobot.startDefaultNlu(asrResult)
     }

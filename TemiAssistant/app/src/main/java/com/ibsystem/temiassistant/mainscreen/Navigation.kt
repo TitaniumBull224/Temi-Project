@@ -8,11 +8,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ibsystem.temiassistant.presentation.chat_ui.ChatScreen
+import com.ibsystem.temiassistant.presentation.chat_ui.ChatScreenViewModel
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun Navigation(navController: NavHostController){
+fun Navigation(navController: NavHostController, viewModel: ChatScreenViewModel){
     NavHost(
         navController = navController,
         startDestination = Screen.MainScreen.route
@@ -22,7 +23,7 @@ fun Navigation(navController: NavHostController){
         }
 
         composable(route = Screen.ChatScreen.route){
-            ChatScreen(navController = navController)
+            ChatScreen(navController = navController, viewModel = viewModel)
         }
     }
 }
