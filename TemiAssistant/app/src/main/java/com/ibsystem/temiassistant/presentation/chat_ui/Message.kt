@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-
+@JsonClass(generateAdapter = true)
 data class Message(
     val message_body: MessageBody,
     val isOut: Boolean,
@@ -22,7 +22,7 @@ data class MessageBody(
 )
 
 ///////////////
-
+@JsonClass(generateAdapter = true)
 data class ResponseMessage(
     val contextMap: ContextMap,
     val expectsInput: Boolean,
@@ -30,16 +30,16 @@ data class ResponseMessage(
     val response: ResponseBody,
     val isOut: Boolean
 )
-
+@JsonClass(generateAdapter = true)
 data class ContextMap(
     val name: String,
 )
-
+@JsonClass(generateAdapter = true)
 data class ResponseBody(
     val speech: Speech,
     val text: String,
 )
-
+@JsonClass(generateAdapter = true)
 data class Speech(
     val q: String,
     val voice: String,

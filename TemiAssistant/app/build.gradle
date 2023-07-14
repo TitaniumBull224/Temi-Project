@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+apply plugin: 'kotlin-kapt'
+
 android {
     namespace 'com.ibsystem.temiassistant'
     compileSdk 33
@@ -98,5 +100,6 @@ dependencies {
 
     //Moshi
     implementation "com.squareup.moshi:moshi:1.14.0"
-    implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
+    implementation "com.squareup.moshi:moshi-kotlin:1.14.0"
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.14.0'
 }
