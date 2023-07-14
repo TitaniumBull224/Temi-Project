@@ -2,6 +2,8 @@
 
 package com.ibsystem.temiassistant.presentation.chat_ui
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -69,6 +71,11 @@ val chats = mutableStateListOf<Chat>(
 @Composable
 fun ChatScreen(navController: NavController, viewModel: ChatScreenViewModel) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val context = LocalContext.current
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetwork = connectivityManager.activeNetworkInfo
+    viewModel._connectivityState.value = activeNetwork != null && activeNetwork.isConnected
     Box(
         modifier = Modifier
             .fillMaxSize()

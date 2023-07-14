@@ -13,7 +13,7 @@ class ChatScreenViewModel: ViewModel() {
     private val _messageList = MutableLiveData<List<Message>>(emptyList())
     val messageList: LiveData<List<Message>> = _messageList
 
-    private val _connectivityState = MutableLiveData<Boolean>()
+    val _connectivityState = MutableLiveData<Boolean>()
     val connectivityState: LiveData<Boolean> = _connectivityState
 
     fun addMessage(message: Message) {
