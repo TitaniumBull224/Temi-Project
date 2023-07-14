@@ -34,21 +34,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ibsystem.temiassistant.MainActivity
+import com.ibsystem.temiassistant.MainActivityViewModel
 import com.ibsystem.temiassistant.R
+import com.ibsystem.temiassistant.network.MessageModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import kotlin.reflect.KProperty
 
-data class Chat(
-    val message: String,
-    val time: String,
-    val isOutgoing: Boolean
-)
+
 
 val message = mutableStateOf("")
 
-val chats = mutableStateListOf<Chat>(
+val chats = mutableStateListOf<MessageModel>(
 //    Chat("Hi", "10:00 pm", true),
 //    Chat("Hello", "10:00 pm", false),
 //    Chat("What's up", "10:02 pm", false),
@@ -63,7 +60,7 @@ val profile = R.drawable.ic_final_icon
 const val isOnline = true
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ChatScreen(navController: NavController) {
+fun ChatScreen(navController: NavController, viewModel: MainActivityViewModel = MainActivityViewModel()) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Box(
         modifier = Modifier
@@ -88,7 +85,9 @@ fun ChatScreen(navController: NavController) {
                 onBack = { navController.navigateUp() }
             )
             ChatSection(Modifier.weight(1f))
-            MessageSection()
+            if (viewModel != null) {
+                MessageSection(viewModel)
+            }
         }
     }
 
@@ -169,7 +168,7 @@ fun ChatSection(
 }
 
 @Composable
-fun MessageSection() {
+fun MessageSection(viewModel: MainActivityViewModel) {
     val context = LocalContext.current
     val mRobot = (context as MainActivity).mRobot
 
@@ -199,7 +198,7 @@ fun MessageSection() {
                         tint = MaterialTheme.colors.primary,
                         modifier = Modifier.clickable {
                             val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
-                            chats.add(Chat(message.value, formattedTime, true))
+                            viewModel.addMessage(MessageModel(message.value, formattedTime, true))
                             message.value = ""
 
                             mRobot.startDefaultNlu(message.value)

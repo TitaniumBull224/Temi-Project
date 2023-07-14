@@ -15,7 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.ibsystem.temiassistant.mainscreen.Navigation
-import com.ibsystem.temiassistant.presentation.chat_ui.Chat
+import com.ibsystem.temiassistant.network.MessageModel
 import com.ibsystem.temiassistant.presentation.chat_ui.chats
 import com.ibsystem.temiassistant.ui.theme.ComposeUiTempletesTheme
 import com.robotemi.sdk.NlpResult
@@ -110,7 +110,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     override fun onAsrResult(asrResult: String) {
         mRobot.finishConversation() // stop ASR listener
         val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
-        chats.add(Chat(asrResult, formattedTime, true))
+        chats.add(MessageModel(asrResult, formattedTime, true))
         Log.i(tag, "ASR Result: $asrResult")
         mRobot.startDefaultNlu(asrResult)
     }
@@ -127,7 +127,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
             Log.i(tag, "Status: $statusStr | Text: $text")
             if (statusStr == "SPEAKING" && text != "") {
                 val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
-                chats.add(Chat(text, formattedTime, false))
+                chats.add(MessageModel(text, formattedTime, false))
             }
         }
     }
