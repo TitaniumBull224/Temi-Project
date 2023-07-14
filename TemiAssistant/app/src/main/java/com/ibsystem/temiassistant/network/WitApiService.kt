@@ -3,6 +3,8 @@ package com.ibsystem.temiassistant.network
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.ibsystem.temiassistant.presentation.chat_ui.MessageBody
 import com.ibsystem.temiassistant.presentation.chat_ui.ResponseMessage
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Interceptor
@@ -28,10 +30,16 @@ private var client: OkHttpClient = OkHttpClient.Builder().addInterceptor(
     },
 ).build()
 
+val moshi = Moshi.Builder()
+    .addLast(KotlinJsonAdapterFactory())
+    .build()
+
+
 private var retrofit: Retrofit = Retrofit.Builder()
     .client(client)
     .baseUrl("https://api.wit.ai/")
-    .addConverterFactory(MoshiConverterFactory.create())
+    .addConverterFactory(MoshiConverterFactory.create(moshi))
+
     .build()
 
 var witApiService = retrofit.create(WitApiService::class.java)

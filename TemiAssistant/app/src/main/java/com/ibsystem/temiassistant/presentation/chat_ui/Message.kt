@@ -1,8 +1,11 @@
 package com.ibsystem.temiassistant.presentation.chat_ui
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+
 
 data class Message(
     val message_body: MessageBody,
@@ -10,8 +13,11 @@ data class Message(
     var time: String = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
 )
 
+@JsonClass(generateAdapter = true)
 data class MessageBody(
+    @field:Json(name = "message")
     val message: String,
+    @field:Json(name = "type")
     val type: String = "message"
 )
 

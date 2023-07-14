@@ -116,7 +116,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     override fun onAsrResult(asrResult: String) {
         mRobot.finishConversation() // stop ASR listener
         // chats.add(Chat(asrResult, formattedTime, true))
-        viewModel.addMessage(Message(MessageBody(asrResult), true))
+        viewModel.addMessage(Message(MessageBody(message = asrResult), true))
         Log.i(tag, "ASR Result: $asrResult")
         mRobot.startDefaultNlu(asrResult)
     }
