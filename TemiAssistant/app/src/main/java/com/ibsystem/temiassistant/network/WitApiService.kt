@@ -49,5 +49,5 @@ interface WitApiService {
 
     suspend fun sendMessage(@Query("session_id") session_id: String = "test1",
                             @Body message: MessageBody
-    ): Response<SnapshotStateList<ResponseMessage>>
+    ): Response<List<ResponseMessage>>
 }
