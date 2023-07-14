@@ -109,9 +109,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 
     override fun onAsrResult(asrResult: String) {
         mRobot.finishConversation() // stop ASR listener
-        val currentTime = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("h:mm a", Locale.getDefault())
-        val formattedTime = formatter.format(currentTime)
+        val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
         chats.add(Chat(asrResult, formattedTime, true))
         Log.i(tag, "ASR Result: $asrResult")
         mRobot.startDefaultNlu(asrResult)
@@ -136,9 +134,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 
 //    override fun onNlpCompleted(nlpResult: NlpResult) {
 //        Log.i(tag, "onNlpCompleted")
-//        val currentTime = Calendar.getInstance().time
-//        val formatter = SimpleDateFormat("h:mm a", Locale.getDefault())
-//        val formattedTime = formatter.format(currentTime)
+//        val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
 //        val response = nlpResult.params["response"].toString()
 //        if (response != "") {
 //            chats.add(Chat(response, formattedTime, false))
