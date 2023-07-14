@@ -12,13 +12,12 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.ibsystem.temiassistant.mainscreen.Navigation
 import com.ibsystem.temiassistant.network.MessageModel
-import com.ibsystem.temiassistant.presentation.chat_ui.chats
 import com.ibsystem.temiassistant.ui.theme.ComposeUiTempletesTheme
-import com.robotemi.sdk.NlpResult
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.listeners.OnConversationStatusChangedListener
 import com.robotemi.sdk.listeners.OnDetectionDataChangedListener
@@ -41,16 +40,18 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener {
     private val tag = MainActivity::class.java.simpleName
     lateinit var mRobot: Robot
+    private lateinit var viewModel : MainActivityViewModel
     @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mRobot = Robot.getInstance()
+        viewModel = MainActivityViewModel()
         setContent {
             ComposeUiTempletesTheme() {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     val navController = rememberNavController()
-                    Navigation(navController)
+                    Navigation(viewModel, navController)
                 }
             }
         }
@@ -110,7 +111,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     override fun onAsrResult(asrResult: String) {
         mRobot.finishConversation() // stop ASR listener
         val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
-        chats.add(MessageModel(asrResult, formattedTime, true))
+        viewModel.addMessage(MessageModel(asrResult, formattedTime, true))
         Log.i(tag, "ASR Result: $asrResult")
         mRobot.startDefaultNlu(asrResult)
     }
@@ -127,7 +128,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
             Log.i(tag, "Status: $statusStr | Text: $text")
             if (statusStr == "SPEAKING" && text != "") {
                 val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
-                chats.add(MessageModel(text, formattedTime, false))
+                viewModel.addMessage(MessageModel(text, formattedTime, false))
             }
         }
     }

@@ -60,7 +60,7 @@ val profile = R.drawable.ic_final_icon
 const val isOnline = true
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ChatScreen(navController: NavController, viewModel: MainActivityViewModel = MainActivityViewModel()) {
+fun ChatScreen(navController: NavController, viewModel: MainActivityViewModel? = null) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Box(
         modifier = Modifier
@@ -84,10 +84,13 @@ fun ChatScreen(navController: NavController, viewModel: MainActivityViewModel = 
                 isOnline = isOnline,
                 onBack = { navController.navigateUp() }
             )
-            ChatSection(Modifier.weight(1f))
             if (viewModel != null) {
+                ChatSection(Modifier.weight(1f), viewModel)
                 MessageSection(viewModel)
             }
+
+
+
         }
     }
 
@@ -146,17 +149,18 @@ fun TopBarSection(
     }
 }
 
-@Preview
+
 @Composable
 fun ChatSection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: MainActivityViewModel
 ) {
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
     ) {
-        items(chats) { chat ->
+        items(viewModel.messages) { chat ->
             MessageItem(
                 chat.message,
                 chat.time,
