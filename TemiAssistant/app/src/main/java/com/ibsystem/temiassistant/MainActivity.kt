@@ -113,25 +113,25 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     override fun onAsrResult(asrResult: String) {
         mRobot.finishConversation() // stop ASR listener
         // chats.add(Chat(asrResult, formattedTime, true))
-        viewModel.addMessage(Message(MessageBody(message = asrResult), true))
+        viewModel.messageToWit(MessageBody(message = asrResult))
         Log.i(tag, "ASR Result: $asrResult")
-        mRobot.startDefaultNlu(asrResult)
+        //mRobot.startDefaultNlu(asrResult)
     }
 
     override fun onConversationStatusChanged(status: Int, text: String) {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val statusStr = when (status) {
-                OnConversationStatusChangedListener.IDLE -> "IDLE"
-                OnConversationStatusChangedListener.LISTENING -> "LISTENING"
-                OnConversationStatusChangedListener.THINKING -> "THINKING"
-                OnConversationStatusChangedListener.SPEAKING -> "SPEAKING"
-                else -> "UNKNOWN"
-            }
-            Log.i(tag, "Status: $statusStr | Text: $text")
-            if (statusStr == "SPEAKING" && text != "") {
-                viewModel.addMessage(Message(MessageBody(text), false))
-            }
-        }
+//        lifecycleScope.launch(Dispatchers.Main) {
+//            val statusStr = when (status) {
+//                OnConversationStatusChangedListener.IDLE -> "IDLE"
+//                OnConversationStatusChangedListener.LISTENING -> "LISTENING"
+//                OnConversationStatusChangedListener.THINKING -> "THINKING"
+//                OnConversationStatusChangedListener.SPEAKING -> "SPEAKING"
+//                else -> "UNKNOWN"
+//            }
+//            Log.i(tag, "Status: $statusStr | Text: $text")
+//            if (statusStr == "SPEAKING" && text != "") {
+//                viewModel.addMessage(Message(MessageBody(text), false))
+//            }
+//        }
     }
 
 //    override fun onNlpCompleted(nlpResult: NlpResult) {
