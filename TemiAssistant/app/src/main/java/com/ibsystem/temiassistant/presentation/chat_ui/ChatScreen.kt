@@ -200,7 +200,10 @@ fun MessageSection(viewModel: ChatScreenViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(6.dp)
         ) {
-            IconButton(onClick = { viewModel.clearMessage() }) {
+            IconButton(onClick = {
+                viewModel.clearMessage()
+                viewModel.newSessionID()
+            }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Clear Messages"

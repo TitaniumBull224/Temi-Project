@@ -11,6 +11,7 @@ import com.ibsystem.temiassistant.network.witApiService
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.TtsRequest
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
     private val _messageList = MutableLiveData<List<Message>>(emptyList())
@@ -18,6 +19,8 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
 
     private val _connectivityState = MutableLiveData<Boolean>()
     val connectivityState: LiveData<Boolean> = _connectivityState
+
+    private var _sessionID: String = generateSessionID(5)
 
     fun addMessage(message: Message) {
         val currentList = _messageList.value.orEmpty()
@@ -28,6 +31,17 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
         _messageList.value = emptyList()
     }
 
+    private fun generateSessionID(length: Int): String {
+        val allowedChars = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        return (1..length)
+            .map { allowedChars.random() }
+            .joinToString("")
+    }
+
+    fun newSessionID() {
+        _sessionID = generateSessionID(5)
+    }
+
     fun changeConnectivityState(currentConnectivityState: Boolean) {
         _connectivityState.value = currentConnectivityState
     }
@@ -35,7 +49,7 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
     fun messageToWit(message: MessageBody) {
         addMessage(Message(message_body = message, isOut = true))
         viewModelScope.launch {
-            val response = witApiService.sendMessage(message = message)
+            val response = witApiService.sendMessage(message = message, session_id = _sessionID)
 
             if (response.isSuccessful) {
                 val responseMessage = response.body()
