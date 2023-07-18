@@ -15,12 +15,9 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.ibsystem.temiassistant.mainscreen.Navigation
-import com.ibsystem.temiassistant.presentation.chat_ui.Chat
 import com.ibsystem.temiassistant.presentation.chat_ui.ChatScreenViewModel
 import com.ibsystem.temiassistant.presentation.chat_ui.Message
 import com.ibsystem.temiassistant.presentation.chat_ui.MessageBody
-import com.ibsystem.temiassistant.presentation.chat_ui.chats
-import com.ibsystem.temiassistant.presentation.chat_ui.message
 import com.ibsystem.temiassistant.ui.theme.ComposeUiTempletesTheme
 import com.robotemi.sdk.NlpResult
 import com.robotemi.sdk.Robot
@@ -132,8 +129,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
             }
             Log.i(tag, "Status: $statusStr | Text: $text")
             if (statusStr == "SPEAKING" && text != "") {
-                val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
-                chats.add(Chat(text, formattedTime, false))
+                viewModel.addMessage(Message(MessageBody(text), false))
             }
         }
     }

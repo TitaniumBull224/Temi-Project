@@ -1,5 +1,6 @@
 package com.ibsystem.temiassistant.presentation.chat_ui
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
@@ -13,7 +14,7 @@ class ChatScreenViewModel: ViewModel() {
     private val _messageList = MutableLiveData<List<Message>>(emptyList())
     val messageList: LiveData<List<Message>> = _messageList
 
-    val _connectivityState = MutableLiveData<Boolean>()
+    private val _connectivityState = MutableLiveData<Boolean>()
     val connectivityState: LiveData<Boolean> = _connectivityState
 
     fun addMessage(message: Message) {
@@ -21,21 +22,33 @@ class ChatScreenViewModel: ViewModel() {
         _messageList.value = currentList + message
     }
 
+    fun changeConnectivityState(currentConnectivityState: Boolean) {
+        _connectivityState.value = currentConnectivityState
+    }
+
     fun messageToWit(message: MessageBody) {
         addMessage(Message(message_body = message, isOut = true))
         viewModelScope.launch {
             val response = witApiService.sendMessage(message = message)
-            if (response.code() == 200 && response.body() != null && response.body()!!.size > 0) {
-                response.body()!!.forEach() { response_mess ->
-                    addMessage(Message(MessageBody(response_mess.response.text), false))
+
+            if (response.isSuccessful) {
+                val responseMessage = response.body()
+                if (responseMessage != null) {
+                    println(responseMessage.toString())
+                    Log.i(response.code().toString(), responseMessage.toString())
+                    addMessage(Message(MessageBody(responseMessage.response.text), false))
                 }
-            }  else {
+            } else {
                 addMessage(Message(MessageBody("Error: Code ${response.code()}"), false))
             }
-        }
-    }
 
-    fun changeConnectivityState(currentConnectivityState: Boolean) {
-        _connectivityState.value = currentConnectivityState
+//            if (response.code() == 200 && response.body() != null && response.body()!!.size > 0) {
+//                response.body()!!.forEach() { response_mess ->
+//                    addMessage(Message(MessageBody(response_mess.response.text), false))
+//                }
+//            }  else {
+//                addMessage(Message(MessageBody("Error: Code ${response.code()}"), false))
+//            }
+        }
     }
 }
