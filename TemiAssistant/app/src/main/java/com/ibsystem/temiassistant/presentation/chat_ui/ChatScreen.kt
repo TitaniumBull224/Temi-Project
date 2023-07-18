@@ -63,6 +63,7 @@ fun ChatScreen(navController: NavController, viewModel: ChatScreenViewModel) {
         val imeBottom = with(LocalDensity.current) { insets.ime.bottom.toDp() }
 
         viewModel.changeConnectivityState(activeNetwork != null)
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -172,6 +173,12 @@ fun ChatSection(
             .fillMaxWidth()
             .padding(16.dp),
     ) {
+        item {Text(text = viewModel.getSessionID(), color = Color.Gray)}
+        item { Box(
+            Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Color.Gray)) }
         items(messages) { message ->
             MessageItem(
                 message.message_body.message,
@@ -180,6 +187,12 @@ fun ChatSection(
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
+        item {Text(text = "終わり", color = Color.Gray)}
+        item { Box(
+            Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Color.Gray)) }
     }
 }
 
@@ -283,4 +296,8 @@ fun MessageItem(
         )
     }
 }
+
+//Divider Line
+
+
 

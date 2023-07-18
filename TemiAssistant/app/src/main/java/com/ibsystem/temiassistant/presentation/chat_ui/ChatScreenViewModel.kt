@@ -42,6 +42,10 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
         _sessionID = generateSessionID(5)
     }
 
+    fun getSessionID(): String {
+        return _sessionID
+    }
+
     fun changeConnectivityState(currentConnectivityState: Boolean) {
         _connectivityState.value = currentConnectivityState
     }
