@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mRobot = Robot.getInstance()
-        viewModel = ChatScreenViewModel()
+        viewModel = ChatScreenViewModel(mRobot)
         setContent {
             ComposeUiTempletesTheme() {
                 // A surface container using the 'background' color from the theme

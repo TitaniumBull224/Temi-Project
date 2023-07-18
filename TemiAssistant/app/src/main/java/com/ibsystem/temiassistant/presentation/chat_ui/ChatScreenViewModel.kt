@@ -8,9 +8,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ibsystem.temiassistant.network.witApiService
+import com.robotemi.sdk.Robot
+import com.robotemi.sdk.TtsRequest
 import kotlinx.coroutines.launch
 
-class ChatScreenViewModel: ViewModel() {
+class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
     private val _messageList = MutableLiveData<List<Message>>(emptyList())
     val messageList: LiveData<List<Message>> = _messageList
 
@@ -20,6 +22,10 @@ class ChatScreenViewModel: ViewModel() {
     fun addMessage(message: Message) {
         val currentList = _messageList.value.orEmpty()
         _messageList.value = currentList + message
+    }
+
+    fun clearMessage() {
+        _messageList.value = emptyList()
     }
 
     fun changeConnectivityState(currentConnectivityState: Boolean) {
@@ -34,9 +40,11 @@ class ChatScreenViewModel: ViewModel() {
             if (response.isSuccessful) {
                 val responseMessage = response.body()
                 if (responseMessage != null) {
-                    println(responseMessage.toString())
                     Log.i(response.code().toString(), responseMessage.toString())
+//                    val ttsRequest = TtsRequest.create(responseMessage.response.text, true)
+//                    mRobot.speak(ttsRequest)
                     addMessage(Message(MessageBody(responseMessage.response.text), false))
+                    mRobot.askQuestion(responseMessage.response.text)
                 }
             } else {
                 addMessage(Message(MessageBody("Error: Code ${response.code()}"), false))

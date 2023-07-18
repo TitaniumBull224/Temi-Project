@@ -1,4 +1,4 @@
-@file:Suppress("OPT_IN_IS_NOT_ENABLED")
+@file:Suppress("OPT_IN_IS_NOT_ENABLED", "DEPRECATION")
 
 package com.ibsystem.temiassistant.presentation.chat_ui
 
@@ -12,79 +12,89 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Mic
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.ibsystem.temiassistant.MainActivity
 import com.ibsystem.temiassistant.R
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
-import kotlin.reflect.KProperty
+import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ChatScreen(navController: NavController, viewModel: ChatScreenViewModel) {
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val context = LocalContext.current
-    val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetwork = connectivityManager.activeNetworkInfo
-    viewModel.changeConnectivityState(activeNetwork != null)
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        keyboardController?.hide()
-                        tryAwaitRelease()
-                    }
-                )
-            }
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
+    val windowInsets = rememberInsetsPaddingValues(
+        insets = LocalWindowInsets.current.systemBars,
+        applyBottom = false
+    )
+    ProvideWindowInsets {
+        val keyboardController = LocalSoftwareKeyboardController.current
+        val context = LocalContext.current
+
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetworkInfo
+
+        val insets = LocalWindowInsets.current
+        val imeBottom = with(LocalDensity.current) { insets.ime.bottom.toDp() }
+
+        viewModel.changeConnectivityState(activeNetwork != null)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onPress = {
+                            keyboardController?.hide()
+                            tryAwaitRelease()
+                        }
+                    )
+                }
         ) {
-            viewModel.connectivityState.value?.let {
-                TopBarSection(
-                    username = "Chatbot",
-                    profile = painterResource(id = R.drawable.ic_final_icon),
-                    isOnline = it,
-                    onBack = { navController.navigateUp() }
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(windowInsets),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                viewModel.connectivityState.value?.let {
+                    TopBarSection(
+                        username = "Chatbot",
+                        profile = painterResource(id = R.drawable.ic_final_icon),
+                        isOnline = it,
+                        onBack = { navController.navigateUp() }
+                    )
+                }
+                ChatSection(Modifier.weight(1f), viewModel)
+                MessageSection(viewModel)
             }
-            ChatSection(Modifier.weight(1f), viewModel)
-            MessageSection(viewModel)
+            Spacer(modifier = Modifier.height(imeBottom))
         }
     }
-
 }
 
 @Composable
@@ -140,19 +150,29 @@ fun TopBarSection(
     }
 }
 
-
 @Composable
 fun ChatSection(
     modifier: Modifier = Modifier,
-    viewModel : ChatScreenViewModel
+    viewModel: ChatScreenViewModel
 ) {
     val messages: List<Message> by viewModel.messageList.observeAsState(emptyList())
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    // Automatically scroll to the bottom of the chat whenever a new message is added
+    LaunchedEffect(messages) {
+        coroutineScope.launch {
+            listState.animateScrollToItem(messages.size)
+        }
+    }
+
     LazyColumn(
+        state = listState,
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
     ) {
-        items(messages.orEmpty()) { message ->
+        items(messages) { message ->
             MessageItem(
                 message.message_body.message,
                 message.isOut,
@@ -162,6 +182,7 @@ fun ChatSection(
         }
     }
 }
+
 
 @Composable
 fun MessageSection(viewModel: ChatScreenViewModel) {
@@ -179,6 +200,12 @@ fun MessageSection(viewModel: ChatScreenViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(6.dp)
         ) {
+            IconButton(onClick = { viewModel.clearMessage() }) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Clear Messages"
+                )
+            }
             OutlinedTextField(
                 placeholder = {
                     Text("Message..")
