@@ -1,9 +1,11 @@
 package com.ibsystem.temiassistant
 
 import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.CheckResult
@@ -31,10 +33,12 @@ import com.robotemi.sdk.navigation.listener.OnCurrentPositionChangedListener
 import com.robotemi.sdk.navigation.model.Position
 import com.robotemi.sdk.permission.Permission
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.internal.NoOpContinuation.context
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 
 @Suppress("DEPRECATION")
 class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListener, // Robot.NlpListener,
@@ -119,19 +123,19 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     }
 
     override fun onConversationStatusChanged(status: Int, text: String) {
-//        lifecycleScope.launch(Dispatchers.Main) {
-//            val statusStr = when (status) {
-//                OnConversationStatusChangedListener.IDLE -> "IDLE"
-//                OnConversationStatusChangedListener.LISTENING -> "LISTENING"
-//                OnConversationStatusChangedListener.THINKING -> "THINKING"
-//                OnConversationStatusChangedListener.SPEAKING -> "SPEAKING"
-//                else -> "UNKNOWN"
-//            }
-//            Log.i(tag, "Status: $statusStr | Text: $text")
-//            if (statusStr == "SPEAKING" && text != "") {
-//                viewModel.addMessage(Message(MessageBody(text), false))
-//            }
-//        }
+
+            val statusStr = when (status) {
+                OnConversationStatusChangedListener.IDLE -> "IDLE"
+                OnConversationStatusChangedListener.LISTENING -> "LISTENING"
+                OnConversationStatusChangedListener.THINKING -> "THINKING"
+                OnConversationStatusChangedListener.SPEAKING -> "SPEAKING"
+                else -> "UNKNOWN"
+            }
+            Log.i(tag, "Status: $statusStr | Text: $text")
+            if (statusStr == "LISTENING" && text != "") {
+                Toast.makeText(this, "Please check your internet", Toast.LENGTH_LONG).show()
+            }
+
     }
 
 //    override fun onNlpCompleted(nlpResult: NlpResult) {
