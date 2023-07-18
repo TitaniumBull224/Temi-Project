@@ -39,11 +39,11 @@ data class ContextMap(
 )
 @JsonClass(generateAdapter = true)
 data class ResponseBody(
-    val speech: Speech,
-    val text: String,
+    val speech: Speech?,
+    val text: String?,
 )
 @JsonClass(generateAdapter = true)
 data class Speech(
-    val q: String,
-    val voice: String,
+    val q: String?,
+    val voice: String?,
 )
