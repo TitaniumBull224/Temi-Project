@@ -32,7 +32,9 @@ data class ResponseMessage(
 )
 @JsonClass(generateAdapter = true)
 data class ContextMap(
+    @Json(name = "name")
     val name: String?,
+    @Json(name = "command_type")
     val command_type: String?
 )
 @JsonClass(generateAdapter = true)
