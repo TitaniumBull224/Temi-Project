@@ -24,9 +24,13 @@ data class MessageBody(
 ///////////////
 @JsonClass(generateAdapter = true)
 data class ResponseMessage(
+    @Json(name = "context_map")
     val contextMap: ContextMap?,
+    @Json(name = "expects_input")
     val expectsInput: Boolean?,
+    @Json(name = "is_final")
     val isFinal: Boolean?,
+    @Json(name = "response")
     val response: ResponseBody,
     val isOut: Boolean?
 )
