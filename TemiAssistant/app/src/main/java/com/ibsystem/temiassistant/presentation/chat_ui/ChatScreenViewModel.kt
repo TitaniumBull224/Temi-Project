@@ -64,7 +64,11 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
                             Log.i("Weather API", weatherResponse.body().toString())
                             if (weatherResponse.isSuccessful) {
                                 val weatherResponseBody = weatherResponse.body()
-                                val weatherDescription = weatherResponseBody!!.weather.joinToString("/")
+                                var weatherDescription = ""
+                                weatherResponseBody!!.weather.forEach() {i ->
+                                    weatherDescription += i.description + "　"
+                                }
+
                                 robotResponse("温度は" +
                                         weatherResponseBody!!.main.temp + "度\n湿度は" +
                                         weatherResponseBody!!.main.humidity + "%\n天気内容は" +
