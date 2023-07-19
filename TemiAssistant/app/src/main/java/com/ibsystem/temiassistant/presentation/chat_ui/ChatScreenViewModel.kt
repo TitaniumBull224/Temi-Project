@@ -59,19 +59,21 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
             if (response.isSuccessful) {
                 val responseMessage = response.body()
                 if (responseMessage != null) {
-                    Log.i(response.code().toString(), responseMessage.toString())
-//                    val ttsRequest = TtsRequest.create(responseMessage.response.text, true)
-//                    mRobot.speak(ttsRequest)
-                    addMessage(Message(MessageBody(responseMessage.response.text), false))
+                    Log.i("WIT AI API", responseMessage.toString())
+                    robotResponse(responseMessage.response.text)
                     when (responseMessage.contextMap?.command_type) {
 //                        "system" -> {}
-                        "get_temp" -> {
+                        "get_weather" -> {
                             val weatherResponse = openWeatherApiService.getWeatherData("37.916191", "139.036407")
-                            Log.i("Weather API", weatherResponse.toString())
+                            Log.i("Weather API", weatherResponse.body().toString())
+                            if (weatherResponse.isSuccessful) {
+                                robotResponse("温度は" + weatherResponse.body()!!.main.temp + "度")
+                                robotResponse("湿度は" + weatherResponse.body()!!.main.humidity + "%")
+                                robotResponse("天気内容は" + weatherResponse.body()!!.weather[0].description)
+                            }
                         }
                         else -> Log.i("Weather API", "わがんない")
                     }
-                    mRobot.askQuestion(responseMessage.response.text)
                 }
             } else {
                 addMessage(Message(MessageBody("Error: Code ${response.code()}"), false))
@@ -85,5 +87,10 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
 //                addMessage(Message(MessageBody("Error: Code ${response.code()}"), false))
 //            }
         }
+    }
+
+    private fun robotResponse(speech: String) {
+        addMessage(Message(MessageBody(speech), false))
+        mRobot.askQuestion(speech)
     }
 }

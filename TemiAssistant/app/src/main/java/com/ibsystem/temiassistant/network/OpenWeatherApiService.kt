@@ -29,6 +29,7 @@ interface OpenWeatherApiService {
     suspend fun getWeatherData(@Query("lat") lat: String,
                                @Query("lon") lon: String,
                                @Query("lang") lang: String = "ja",
-                               @Query("appid") appID: String = apiKey
+                               @Query("appid") appID: String = apiKey,
+                               @Query("units") units: String = "metric"
     ): Response<WeatherModel>
 }
