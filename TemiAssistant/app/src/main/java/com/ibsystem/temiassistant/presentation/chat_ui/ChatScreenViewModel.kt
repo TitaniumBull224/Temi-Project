@@ -1,8 +1,6 @@
 package com.ibsystem.temiassistant.presentation.chat_ui
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,9 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.ibsystem.temiassistant.network.openWeatherApiService
 import com.ibsystem.temiassistant.network.witApiService
 import com.robotemi.sdk.Robot
-import com.robotemi.sdk.TtsRequest
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
     private val _messageList = MutableLiveData<List<Message>>(emptyList())
