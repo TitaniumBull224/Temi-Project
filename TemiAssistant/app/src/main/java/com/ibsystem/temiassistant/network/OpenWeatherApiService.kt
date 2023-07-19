@@ -17,7 +17,7 @@ import retrofit2.http.Query
 val apiKey = "254ad7f324af7a5dfbd99f056aec068b"
 
 private var retrofit_weather: Retrofit = Retrofit.Builder()
-    .baseUrl("https://api.openweathermap.org/data/2.5/")
+    .baseUrl("https://api.openweathermap.org/")
     .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
     .build()
 
@@ -25,7 +25,7 @@ var openWeatherApiService: OpenWeatherApiService = retrofit_weather.create(OpenW
 
 interface OpenWeatherApiService {
     @Headers("Content-Type: application/json")
-    @GET("/weather")
+    @GET("data/2.5/weather")
     suspend fun getWeatherData(@Query("lat") lat: String,
                                @Query("lon") lon: String,
                                @Query("lang") lang: String = "ja",
