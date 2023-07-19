@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ibsystem.temiassistant.network.openWeatherApiService
 import com.ibsystem.temiassistant.network.witApiService
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.TtsRequest
@@ -62,6 +63,13 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
 //                    val ttsRequest = TtsRequest.create(responseMessage.response.text, true)
 //                    mRobot.speak(ttsRequest)
                     addMessage(Message(MessageBody(responseMessage.response.text), false))
+                    when(responseMessage.contextMap?.command_type){
+                        //"system" ->
+                        "get_temp" -> {
+                            val weatherResponse = openWeatherApiService.getWeatherData("37.916191", "139.036407")
+                            print(weatherResponse.toString())
+                        }
+                    }
                     mRobot.askQuestion(responseMessage.response.text)
                 }
             } else {
