@@ -37,8 +37,8 @@ data class ResponseMessage(
 )
 @JsonClass(generateAdapter = true)
 data class ContextMap(
-    @Json(name = "name")
-    val name: List<Name>?,
+//    @Json(name = "name")
+//    val name: Name?,
     @Json(name = "command_type")
     val command_type: String?
 )
@@ -53,18 +53,18 @@ data class Speech(
     val voice: String?,
 )
 
-
-data class Name (
-    val body: String,
-    val confidence: Double,
-    val end: Long,
-    val entities: Entities,
-    val id: String,
-    val name: String,
-    val role: String,
-    val start: Long,
-    val type: String,
-    val value: String
-)
+//@JsonClass(generateAdapter = true)
+//data class Name (
+//    val body: String,
+//    val confidence: Double,
+//    val end: Long,
+//    val entities: Entities,
+//    val id: String,
+//    val name: String,
+//    val role: String,
+//    val start: Long,
+//    val type: String,
+//    val value: String
+//)
 
 typealias Entities = JsonObject

@@ -27,7 +27,8 @@ interface OpenWeatherApiService {
     @Headers("Content-Type: application/json")
     @GET("/weather")
     suspend fun getWeatherData(@Query("lat") lat: String,
-                            @Query("lon") lon: String, @Query("lang") lang: String = "ja",
-                            @Query("appid") appID: String = apiKey,
+                               @Query("lon") lon: String,
+                               @Query("lang") lang: String = "ja",
+                               @Query("appid") appID: String = apiKey
     ): Response<WeatherModel>
 }

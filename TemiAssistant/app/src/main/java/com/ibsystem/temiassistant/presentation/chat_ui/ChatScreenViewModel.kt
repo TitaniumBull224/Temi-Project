@@ -52,9 +52,9 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
     }
 
     fun messageToWit(message: MessageBody) {
-        addMessage(Message(message_body = message, isOut = true))
+        addMessage(Message(message, true))
         viewModelScope.launch {
-            val response = witApiService.sendMessage(message = message, session_id = _sessionID)
+            val response = witApiService.sendMessage(_sessionID, message)
 
             if (response.isSuccessful) {
                 val responseMessage = response.body()
@@ -63,12 +63,13 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
 //                    val ttsRequest = TtsRequest.create(responseMessage.response.text, true)
 //                    mRobot.speak(ttsRequest)
                     addMessage(Message(MessageBody(responseMessage.response.text), false))
-                    when(responseMessage.contextMap?.command_type){
-                        //"system" ->
+                    when (responseMessage.contextMap?.command_type) {
+//                        "system" -> {}
                         "get_temp" -> {
                             val weatherResponse = openWeatherApiService.getWeatherData("37.916191", "139.036407")
-                            print(weatherResponse.toString())
+                            Log.i("Weather API", weatherResponse.toString())
                         }
+                        else -> Log.i("Weather API", "わがんない")
                     }
                     mRobot.askQuestion(responseMessage.response.text)
                 }
