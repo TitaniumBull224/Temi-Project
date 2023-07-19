@@ -1,5 +1,6 @@
 package com.ibsystem.temiassistant.presentation.chat_ui
 
+import com.google.gson.JsonObject
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.text.SimpleDateFormat
@@ -65,3 +66,5 @@ data class Name (
     val type: String,
     val value: String
 )
+
+typealias Entities = JsonObject
