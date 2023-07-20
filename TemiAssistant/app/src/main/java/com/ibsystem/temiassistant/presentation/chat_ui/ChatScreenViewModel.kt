@@ -63,6 +63,7 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
                     robotResponse(responseMessage.response.text)
                     when (responseMessage.contextMap?.command_type) {
                         "system" -> {
+                            Log.i("System Command", message.message)
                             mRobot.startDefaultNlu(message.message)
                         }
                         "get_weather" -> {

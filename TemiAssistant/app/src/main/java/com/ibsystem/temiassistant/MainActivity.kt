@@ -221,6 +221,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         }
     }
 
+    // GET PHYSICAL LOCATION
     private fun getCurrentLocation() {
         if(checkPermission()) {
             if(isLocationEnabled()) {
@@ -245,7 +246,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
             }
         }
         else {
-                requestPermission()
+            requestPermission()
         }
     }
 
