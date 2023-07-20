@@ -45,10 +45,10 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener,
     OnLoadMapStatusChangedListener {
     private val tag = MainActivity::class.java.simpleName
-    lateinit var mRobot: Robot
-    lateinit var fusedLocationListener: FusedLocationProviderClient
-    lateinit var chatViewModel: ChatScreenViewModel
-    lateinit var mapViewModel: MapScreenViewModel
+    private lateinit var mRobot: Robot
+    private lateinit var fusedLocationListener: FusedLocationProviderClient
+    private lateinit var chatViewModel: ChatScreenViewModel
+    private lateinit var mapViewModel: MapScreenViewModel
 
     @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         fusedLocationListener = LocationServices.getFusedLocationProviderClient(this)
         chatViewModel = ChatScreenViewModel(mRobot)
         setContent {
-            ComposeUiTempletesTheme() {
+            ComposeUiTempletesTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     val navController = rememberNavController()
