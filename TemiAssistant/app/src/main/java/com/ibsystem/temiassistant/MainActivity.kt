@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener,
     OnLoadMapStatusChangedListener {
     private val tag = MainActivity::class.java.simpleName
-    private lateinit var mRobot: Robot
+    lateinit var mRobot: Robot
     private lateinit var fusedLocationListener: FusedLocationProviderClient
     private lateinit var chatViewModel: ChatScreenViewModel
     private lateinit var mapViewModel: MapScreenViewModel
@@ -56,6 +56,8 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot = Robot.getInstance()
         fusedLocationListener = LocationServices.getFusedLocationProviderClient(this)
         chatViewModel = ChatScreenViewModel(mRobot)
+        mapViewModel = MapScreenViewModel(mRobot)
+        getCurrentLocation()
         setContent {
             ComposeUiTempletesTheme {
                 // A surface container using the 'background' color from the theme
@@ -228,6 +230,8 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
                     }
                     else {
                         Toast.makeText(this, "Get success", Toast.LENGTH_SHORT).show()
+                        Log.i("LOCATION LON",location.longitude.toString())
+                        Log.i("LOCATION LAT",location.latitude.toString())
                         chatViewModel.longitude = location.longitude.toString()
                         chatViewModel.latitude = location.latitude.toString()
                     }

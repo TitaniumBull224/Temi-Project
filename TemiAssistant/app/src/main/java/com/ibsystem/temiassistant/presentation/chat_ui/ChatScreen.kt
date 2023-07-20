@@ -297,7 +297,5 @@ fun MessageItem(
     }
 }
 
-//Divider Line
-
 
 
