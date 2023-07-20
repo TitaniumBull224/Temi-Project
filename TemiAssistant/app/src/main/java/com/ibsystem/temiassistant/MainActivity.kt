@@ -39,7 +39,7 @@ import com.robotemi.sdk.navigation.model.Position
 import com.robotemi.sdk.permission.Permission
 
 
-@Suppress("DEPRECATION")
+@Suppress("DEPRECATION", "OPT_IN_IS_NOT_ENABLED")
 class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListener, // Robot.NlpListener,
     OnConversationStatusChangedListener, OnCurrentPositionChangedListener,
     OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener,
@@ -264,6 +264,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
