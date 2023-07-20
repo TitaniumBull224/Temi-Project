@@ -104,4 +104,6 @@ dependencies {
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.14.0'
 
     implementation "com.google.accompanist:accompanist-insets:0.23.1"
+
+    implementation "com.google.android.gms:play-services-location:21.0.1"
 }
