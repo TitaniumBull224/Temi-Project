@@ -1,6 +1,5 @@
 package com.ibsystem.temiassistant.presentation.chat_ui
 
-import android.location.LocationManager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,9 +18,6 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
     val connectivityState: LiveData<Boolean> = _connectivityState
 
     private var _sessionID: String = generateSessionID(5)
-
-     lateinit var longitude: String
-     lateinit var latitude: String
 
     fun addMessage(message: Message) {
         val currentList = _messageList.value.orEmpty()
@@ -66,7 +62,7 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
                             mRobot.startDefaultNlu(message.message)
                         }
                         "get_weather" -> {
-                            val weatherResponse = openWeatherApiService.getWeatherData(latitude, longitude)
+                            val weatherResponse = openWeatherApiService.getWeatherData("37.916191", "139.036407")
                             Log.i("Weather API", weatherResponse.body().toString())
                             if (weatherResponse.isSuccessful) {
                                 val weatherResponseBody = weatherResponse.body()
