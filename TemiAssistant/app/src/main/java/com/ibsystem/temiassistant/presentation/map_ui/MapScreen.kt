@@ -54,7 +54,7 @@ fun MapScreen(navController: NavController, viewModel: MapScreenViewModel) {
                 .fillMaxSize()
         ) {
             TopBarSection(
-                username = "Chatbot",
+                username = "Map",
                 profile = painterResource(id = R.drawable.ic_final_icon),
                 isOnline = true,
                 onBack = { navController.navigateUp() }
@@ -69,7 +69,6 @@ fun MapScreen(navController: NavController, viewModel: MapScreenViewModel) {
                         Bitmap.Config.ARGB_8888
                     )
                 }
-
                 ZoomableImage(bitmap)
             }
         }
@@ -95,11 +94,13 @@ fun MapScreen(navController: NavController, viewModel: MapScreenViewModel) {
 @Composable
 fun ZoomableImage(bitmap: Bitmap) {
     var scale by remember { mutableStateOf(1f) }
+    var rotation by remember { mutableStateOf(0f) }
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember { mutableStateOf(0f) }
 
-    val state = rememberTransformableState { zoomChange, _, _ ->
+    val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
         scale *= zoomChange
+        rotation += rotationChange
     }
 
     Box(
@@ -122,6 +123,7 @@ fun ZoomableImage(bitmap: Bitmap) {
                 .graphicsLayer(
                     scaleX = scale,
                     scaleY = scale,
+                    rotationZ = rotation,
                     translationX = offsetX,
                     translationY = offsetY
                 )
