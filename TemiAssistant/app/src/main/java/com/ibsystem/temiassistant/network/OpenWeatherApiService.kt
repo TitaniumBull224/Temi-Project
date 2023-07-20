@@ -14,7 +14,7 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-val apiKey = "254ad7f324af7a5dfbd99f056aec068b"
+const val apiKey = "254ad7f324af7a5dfbd99f056aec068b"
 
 private var retrofit_weather: Retrofit = Retrofit.Builder()
     .baseUrl("https://api.openweathermap.org/")
