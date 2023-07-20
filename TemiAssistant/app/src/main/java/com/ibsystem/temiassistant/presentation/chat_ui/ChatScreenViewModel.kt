@@ -78,7 +78,8 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
                                 robotResponse("温度は" +
                                         weatherResponseBody.main.temp + "度\n湿度は" +
                                         weatherResponseBody.main.humidity + "%\n天気予報：" +
-                                        weatherDescription
+                                        weatherDescription + "\n" +
+                                        weatherResponseBody.name
                                 )
                             }
                         }
