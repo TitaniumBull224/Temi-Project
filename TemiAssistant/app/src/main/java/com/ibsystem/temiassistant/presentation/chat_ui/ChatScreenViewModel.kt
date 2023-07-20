@@ -20,8 +20,8 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
 
     private var _sessionID: String = generateSessionID(5)
 
-     lateinit var longitude: String
-     lateinit var latitude: String
+    lateinit var longitude: String
+    lateinit var latitude: String
 
     fun addMessage(message: Message) {
         val currentList = _messageList.value.orEmpty()

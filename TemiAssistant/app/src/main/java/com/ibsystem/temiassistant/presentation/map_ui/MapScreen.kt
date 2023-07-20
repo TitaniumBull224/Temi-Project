@@ -37,6 +37,7 @@ import com.ibsystem.temiassistant.R
 import com.ibsystem.temiassistant.presentation.chat_ui.TopBarSection
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.map.MapModel
+import com.robotemi.sdk.navigation.model.Position
 import kotlin.math.roundToInt
 
 @Composable
@@ -69,17 +70,23 @@ fun MapScreen(navController: NavController, viewModel: MapScreenViewModel) {
                     )
                 }
 
-//                Image(
-//                    bitmap = bitmap.asImageBitmap(),
-//                    contentDescription = "Map image",
-//                    modifier = Modifier.fillMaxWidth()
-//                )
                 ZoomableImage(bitmap)
+            }
+        }
+
+        if (mapDataModel != null) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.BottomEnd)
+            ) {
                 Text("Map ID: ${mapDataModel.mapId}")
                 Text("Map Info: ${mapDataModel.mapInfo}")
                 Text("Green Paths: ${mapDataModel.greenPaths}")
                 Text("Virtual Walls: ${mapDataModel.virtualWalls}")
-                Text("Locations: ${mapDataModel.locations}")
+                viewModel.getPosition()?.let { position ->
+                    RobotPosition(position)
+                }
             }
         }
     }
@@ -119,6 +126,17 @@ fun ZoomableImage(bitmap: Bitmap) {
                     translationY = offsetY
                 )
         )
+    }
+}
+
+@Composable
+fun RobotPosition(position: Position) {
+    Column {
+        Text("Locations: ")
+        Text("X: ${position.x}")
+        Text("Y: ${position.y}")
+        Text("Yaw: ${position.yaw}")
+        Text("Tilt: ${position.tiltAngle}")
     }
 }
 @Composable
