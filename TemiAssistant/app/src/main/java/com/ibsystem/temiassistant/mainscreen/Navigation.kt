@@ -9,11 +9,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ibsystem.temiassistant.presentation.chat_ui.ChatScreen
 import com.ibsystem.temiassistant.presentation.chat_ui.ChatScreenViewModel
+import com.ibsystem.temiassistant.presentation.map_ui.MapScreen
+import com.ibsystem.temiassistant.presentation.map_ui.MapScreenViewModel
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun Navigation(navController: NavHostController, viewModel: ChatScreenViewModel){
+fun Navigation(navController: NavHostController, chatViewModel: ChatScreenViewModel, mapViewModel: MapScreenViewModel){
     NavHost(
         navController = navController,
         startDestination = Screen.MainScreen.route
@@ -21,9 +23,11 @@ fun Navigation(navController: NavHostController, viewModel: ChatScreenViewModel)
         composable(route = Screen.MainScreen.route){
             MainScreen(navController = navController)
         }
-
         composable(route = Screen.ChatScreen.route){
-            ChatScreen(navController = navController, viewModel = viewModel)
+            ChatScreen(navController = navController, viewModel = chatViewModel)
+        }
+        composable(route = Screen.MapScreen.route){
+            MapScreen(navController = navController, viewModel = mapViewModel)
         }
     }
 }

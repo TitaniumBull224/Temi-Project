@@ -1,15 +1,11 @@
 package com.ibsystem.temiassistant
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
-import android.location.SettingInjectorService
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -17,8 +13,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.CheckResult
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -30,6 +24,7 @@ import com.google.android.gms.location.LocationServices
 import com.ibsystem.temiassistant.mainscreen.Navigation
 import com.ibsystem.temiassistant.presentation.chat_ui.ChatScreenViewModel
 import com.ibsystem.temiassistant.presentation.chat_ui.MessageBody
+import com.ibsystem.temiassistant.presentation.map_ui.MapScreenViewModel
 import com.ibsystem.temiassistant.ui.theme.ComposeUiTempletesTheme
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.listeners.OnConversationStatusChangedListener
@@ -37,6 +32,7 @@ import com.robotemi.sdk.listeners.OnDetectionDataChangedListener
 import com.robotemi.sdk.listeners.OnDetectionStateChangedListener
 import com.robotemi.sdk.listeners.OnRobotReadyListener
 import com.robotemi.sdk.listeners.OnUserInteractionChangedListener
+import com.robotemi.sdk.map.OnLoadMapStatusChangedListener
 import com.robotemi.sdk.model.DetectionData
 import com.robotemi.sdk.navigation.listener.OnCurrentPositionChangedListener
 import com.robotemi.sdk.navigation.model.Position
@@ -46,24 +42,26 @@ import com.robotemi.sdk.permission.Permission
 @Suppress("DEPRECATION")
 class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListener, // Robot.NlpListener,
     OnConversationStatusChangedListener, OnCurrentPositionChangedListener,
-    OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener {
+    OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener,
+    OnLoadMapStatusChangedListener {
     private val tag = MainActivity::class.java.simpleName
     lateinit var mRobot: Robot
-    lateinit var viewModel: ChatScreenViewModel
     lateinit var fusedLocationListener: FusedLocationProviderClient
+    lateinit var chatViewModel: ChatScreenViewModel
+    lateinit var mapViewModel: MapScreenViewModel
 
     @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mRobot = Robot.getInstance()
-        viewModel = ChatScreenViewModel(mRobot)
         fusedLocationListener = LocationServices.getFusedLocationProviderClient(this)
+        chatViewModel = ChatScreenViewModel(mRobot)
         setContent {
             ComposeUiTempletesTheme() {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     val navController = rememberNavController()
-                    Navigation(navController, viewModel)
+                    Navigation(navController, chatViewModel, mapViewModel)
                 }
             }
         }
@@ -71,7 +69,6 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 
     override fun onStart() {
         super.onStart()
-        // Add robot event listeners
         Log.i(tag, "Robot: OnStart")
         mRobot.addOnRobotReadyListener(this)
         mRobot.addAsrListener(this)
@@ -81,34 +78,31 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.addOnDetectionDataChangedListener(this)
         mRobot.addOnUserInteractionChangedListener(this)
 
-        // mRobot.addNlpListener(this)
-
+        mRobot.addOnLoadMapStatusChangedListener(this)
     }
 
     override fun onStop() {
         super.onStop()
-        // Remove robot event listeners
         Log.i(tag, "Robot: OnStop")
         mRobot.removeOnRobotReadyListener(this)
         mRobot.removeAsrListener(this)
         mRobot.removeOnConversationStatusChangedListener(this)
         mRobot.removeOnCurrentPositionChangedListener(this)
-        Log.i(tag, "Set detection mode: OFF")
+
         mRobot.setDetectionModeOn(false, 2.0f) // Set detection mode off
-        Log.i(tag, "Set track user: OFF")
         mRobot.trackUserOn = false // Set tracking mode off
+        Log.i(tag, "Set detection mode: OFF\nSet track user: OFF")
         mRobot.removeOnDetectionStateChangedListener(this)
         mRobot.removeOnDetectionDataChangedListener(this)
         mRobot.removeOnUserInteractionChangedListener(this)
 
-        // mRobot.removeNlpListener(this)
+        mRobot.removeOnLoadMapStatusChangedListener(this)
     }
 
     override fun onRobotReady(isReady: Boolean) {
         if (isReady) {
             Log.i(tag, "Robot: OnRobotReady")
             try {
-                // Hide temi's ActivityBar and pull-down bar
                 val activityInfo = packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA)
                 mRobot.onStart(activityInfo)
                 mRobot.hideTopBar()
@@ -120,7 +114,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 
     override fun onAsrResult(asrResult: String) {
         mRobot.finishConversation() // stop ASR listener
-        viewModel.messageToWit(MessageBody(asrResult))
+        chatViewModel.messageToWit(MessageBody(asrResult))
         Log.i(tag, "ASR Result: $asrResult")
         //　mRobot.startDefaultNlu(asrResult)
     }
@@ -139,15 +133,6 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         }
 
     }
-
-//    override fun onNlpCompleted(nlpResult: NlpResult) {
-//        Log.i(tag, "onNlpCompleted")
-//        val formattedTime = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
-//        val response = nlpResult.params["response"].toString()
-//        if (response != "") {
-//            chats.add(Chat(response, formattedTime, false))
-//        }
-//    }
 
     override fun onCurrentPositionChanged(position: Position) {
         val str = "Current Position: X: " + position.x + " Y: " + position.y
@@ -177,6 +162,12 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         // - User is interacting by touch, voice, or in telepresence-mode
         // - Robot is moving
         Log.i(tag, "User Interaction: $str")
+    }
+
+    // MAP RELATED FUNCTION
+
+    override fun onLoadMapStatusChanged(status: Int, requestId: String) {
+        Log.i(tag, "load map status: $status, requestId: $requestId")
     }
 
     // PERMISSION CHECK
@@ -213,10 +204,6 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         )
         private const val PERMISSION_REQUEST_ACCESS_LOCATION = 100
 
-        /**
-         * Checks if the app has permission to write to device storage
-         * If the app does not has permission then the user will be prompted to grant permissions
-         */
         fun verifyStoragePermissions(activity: Activity?) {
             // Check if we have write permission
             val permission = ActivityCompat.checkSelfPermission(
@@ -241,8 +228,8 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
                     }
                     else {
                         Toast.makeText(this, "Get success", Toast.LENGTH_SHORT).show()
-                        viewModel.longitude = location.longitude.toString()
-                        viewModel.latitude = location.latitude.toString()
+                        chatViewModel.longitude = location.longitude.toString()
+                        chatViewModel.latitude = location.latitude.toString()
                     }
                 }
             }
@@ -293,7 +280,4 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
             }
         }
     }
-
-
-
 }

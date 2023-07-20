@@ -48,6 +48,9 @@ fun MainScreen(navController: NavController) {
             Button(onClick = { navController.navigate(Screen.ChatScreen.route) }) {
                 Text("Do YoU WaNnA pLaY a GaMe WiTh Me!")
             }
+            Button(onClick = { navController.navigate(Screen.MapScreen.route) }) {
+                Text("DON'T LOOK!")
+            }
         }
     }
 }
