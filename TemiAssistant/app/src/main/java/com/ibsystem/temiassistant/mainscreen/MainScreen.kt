@@ -46,10 +46,10 @@ fun MainScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(onClick = { navController.navigate(Screen.ChatScreen.route) }) {
-                Text("Do YoU WaNnA pLaY a GaMe WiTh Me!")
+                Text("Chatbot")
             }
             Button(onClick = { navController.navigate(Screen.MapScreen.route) }) {
-                Text("DON'T LOOK!")
+                Text("Map")
             }
         }
     }
