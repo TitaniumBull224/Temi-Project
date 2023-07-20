@@ -58,7 +58,9 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
                     Log.i("WIT AI API", responseMessage.toString())
                     robotResponse(responseMessage.response.text)
                     when (responseMessage.contextMap?.command_type) {
-//                        "system" -> {}
+                        "system" -> {
+                            mRobot.startDefaultNlu(message.message)
+                        }
                         "get_weather" -> {
                             val weatherResponse = openWeatherApiService.getWeatherData("37.916191", "139.036407")
                             Log.i("Weather API", weatherResponse.body().toString())
@@ -71,7 +73,7 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
 
                                 robotResponse("温度は" +
                                         weatherResponseBody!!.main.temp + "度\n湿度は" +
-                                        weatherResponseBody!!.main.humidity + "%\n天気内容は" +
+                                        weatherResponseBody!!.main.humidity + "%\n天気予報：" +
                                         weatherDescription
                                 )
                             }

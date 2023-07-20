@@ -109,9 +109,9 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 
     override fun onAsrResult(asrResult: String) {
         mRobot.finishConversation() // stop ASR listener
-        viewModel.messageToWit(MessageBody(message = asrResult))
+        viewModel.messageToWit(MessageBody(asrResult))
         Log.i(tag, "ASR Result: $asrResult")
-        //mRobot.startDefaultNlu(asrResult)
+        //　mRobot.startDefaultNlu(asrResult)
     }
 
     override fun onConversationStatusChanged(status: Int, text: String) {

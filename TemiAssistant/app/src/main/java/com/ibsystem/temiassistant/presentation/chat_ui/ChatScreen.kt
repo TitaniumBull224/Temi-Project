@@ -240,7 +240,7 @@ fun MessageSection(viewModel: ChatScreenViewModel) {
                             if(viewModel.connectivityState.value == true) {
                                 viewModel.messageToWit(MessageBody(message.value))
                             } else {
-                                Toast.makeText(context, "Please check your internet", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "回線不調！", Toast.LENGTH_LONG).show()
                             }
                             message.value = ""
                         }
@@ -250,7 +250,7 @@ fun MessageSection(viewModel: ChatScreenViewModel) {
                     .weight(1f)
                     .padding(end = 6.dp),
             )
-            IconButton(onClick = { mRobot.askQuestion("刮目せよ！") }) {
+            IconButton(onClick = { mRobot.askQuestion("刮目せよ！吾輩の名はテミだ！") }) {
                 Icon(
                     imageVector = Icons.Default.Mic,
                     contentDescription = "Voice Input"
