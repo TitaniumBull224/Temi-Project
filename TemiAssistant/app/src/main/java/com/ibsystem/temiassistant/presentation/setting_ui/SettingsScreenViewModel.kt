@@ -4,10 +4,14 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+
+object SettingVMObj {
+    val SettingVM : SettingsScreenViewModel = SettingsScreenViewModel()
+}
 class SettingsScreenViewModel : ViewModel() {
 
-    private val _isSwitchOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    var isSwitchOn = _isSwitchOn.asStateFlow()
+    private val _isSpeakerOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var isSpeakerOn = _isSpeakerOn.asStateFlow()
 
     private val _textPreference: MutableStateFlow<String> = MutableStateFlow("")
     var textPreference = _textPreference.asStateFlow()
@@ -17,7 +21,7 @@ class SettingsScreenViewModel : ViewModel() {
 
 
     fun toggleSwitch(){
-        _isSwitchOn.value = _isSwitchOn.value.not()
+        _isSpeakerOn.value = _isSpeakerOn.value.not()
         // here is place for permanent storage handling - switch
     }
 

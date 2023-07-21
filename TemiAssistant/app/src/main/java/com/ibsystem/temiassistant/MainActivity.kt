@@ -18,6 +18,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -38,6 +39,7 @@ import com.robotemi.sdk.model.DetectionData
 import com.robotemi.sdk.navigation.listener.OnCurrentPositionChangedListener
 import com.robotemi.sdk.navigation.model.Position
 import com.robotemi.sdk.permission.Permission
+import kotlinx.coroutines.flow.observeOn
 
 
 @Suppress("DEPRECATION", "OPT_IN_IS_NOT_ENABLED")
@@ -63,6 +65,8 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         chatViewModel = ChatScreenViewModel(mRobot)
         mapViewModel = MapScreenViewModel(mRobot)
         settingsViewModel = SettingsScreenViewModel()
+
+
 
         setContent {
             ComposeUiTempletesTheme {

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ibsystem.temiassistant.network.openWeatherApiService
 import com.ibsystem.temiassistant.network.witApiService
+import com.ibsystem.temiassistant.presentation.setting_ui.SettingVMObj
 import com.robotemi.sdk.Robot
 import kotlinx.coroutines.launch
 
@@ -103,6 +104,9 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
 
     private fun robotResponse(speech: String) {
         addMessage(Message(MessageBody(speech), false))
-        mRobot.askQuestion(speech)
+        if(SettingVMObj.SettingVM.isSpeakerOn.value) {
+            mRobot.askQuestion(speech)
+        }
+
     }
 }

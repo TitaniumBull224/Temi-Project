@@ -75,11 +75,11 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsScreenViewMo
             }
 
             SettingsSwitchComp(
-                name = "SwitchComp",
+                name = "Robot Speaker",
                 icon = R.drawable.ic_final_icon,
                 iconDesc = "SwitchComp",
                 // value is collected from StateFlow - updates the UI on change
-                state = viewModel.isSwitchOn.collectAsState()
+                state = viewModel.isSpeakerOn.collectAsState()
             ) {
                 // call ViewModel to toggle the value
                 viewModel.toggleSwitch()
@@ -97,6 +97,7 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsScreenViewMo
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingsClickableComp(
     @DrawableRes icon: Int,
@@ -144,6 +145,7 @@ fun SettingsClickableComp(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingsSwitchComp(
     @DrawableRes icon: Int,
