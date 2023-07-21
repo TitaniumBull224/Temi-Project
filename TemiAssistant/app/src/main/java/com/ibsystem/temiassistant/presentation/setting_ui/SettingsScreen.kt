@@ -49,7 +49,8 @@ import com.ibsystem.temiassistant.ui.theme.Blue
 import com.ibsystem.temiassistant.ui.theme.Transparent
 
 @Composable
-fun SettingsScreen(navController: NavController, viewModel: SettingsScreenViewModel) {
+fun SettingsScreen(navController: NavController) {
+    val viewModel = SettingsScreenViewModel.getInstance()
     Scaffold(
         topBar = {
             TopBarSection(

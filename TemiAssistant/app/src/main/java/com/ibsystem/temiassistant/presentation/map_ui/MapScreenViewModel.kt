@@ -11,7 +11,8 @@ import com.robotemi.sdk.navigation.model.Position
 import kotlinx.coroutines.launch
 
 
-class MapScreenViewModel(private val mRobot: Robot): ViewModel() {
+class MapScreenViewModel: ViewModel() {
+    private val mRobot = Robot.getInstance()
 
     var mapDataModel by mutableStateOf<MapDataModel?>(null)
     private var currentPosition by mutableStateOf<Position?>(null)

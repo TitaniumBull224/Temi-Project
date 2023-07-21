@@ -8,11 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ibsystem.temiassistant.network.openWeatherApiService
 import com.ibsystem.temiassistant.network.witApiService
-import com.ibsystem.temiassistant.presentation.setting_ui.SettingVMObj
+import com.ibsystem.temiassistant.presentation.setting_ui.SettingsScreenViewModel
 import com.robotemi.sdk.Robot
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
+class ChatScreenViewModel: ViewModel() {
+    private val mRobot = Robot.getInstance()
+
     private val _messageList = MutableLiveData<List<Message>>(emptyList())
     val messageList: LiveData<List<Message>> = _messageList
 
@@ -104,19 +107,14 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
 
     private fun robotResponse(speech: String) {
         addMessage(Message(MessageBody(speech), false))
-
-
         viewModelScope.launch {
-            SettingVMObj.SettingVM.isSpeakerOn.collect {
-                state -> if(state) {
-                Log.i("Speaker","TRUE")
+            val isSpeakerOn = SettingsScreenViewModel.getInstance().isSpeakerOn.first()
+            if (isSpeakerOn) {
+                Log.i("Speaker", "TRUE")
                 mRobot.askQuestion(speech)
-            }
-            else {
-                Log.i("Speaker","FALSE")
-            }
+            } else {
+                Log.i("Speaker", "FALSE")
             }
         }
-
     }
 }

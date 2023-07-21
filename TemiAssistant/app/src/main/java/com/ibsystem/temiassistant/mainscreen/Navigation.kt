@@ -11,12 +11,11 @@ import com.ibsystem.temiassistant.presentation.chat_ui.ChatScreenViewModel
 import com.ibsystem.temiassistant.presentation.map_ui.MapScreen
 import com.ibsystem.temiassistant.presentation.map_ui.MapScreenViewModel
 import com.ibsystem.temiassistant.presentation.setting_ui.SettingsScreen
-import com.ibsystem.temiassistant.presentation.setting_ui.SettingsScreenViewModel
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun Navigation(navController: NavHostController, chatViewModel: ChatScreenViewModel, mapViewModel: MapScreenViewModel, settingsViewModel: SettingsScreenViewModel){
+fun Navigation(navController: NavHostController, chatViewModel: ChatScreenViewModel, mapViewModel: MapScreenViewModel){
     NavHost(
         navController = navController,
         startDestination = Screen.MainScreen.route
@@ -31,7 +30,7 @@ fun Navigation(navController: NavHostController, chatViewModel: ChatScreenViewMo
             MapScreen(navController = navController, viewModel = mapViewModel)
         }
         composable(route = Screen.SettingsScreen.route){
-            SettingsScreen(navController = navController, viewModel = settingsViewModel)
+            SettingsScreen(navController = navController)
         }
     }
 }

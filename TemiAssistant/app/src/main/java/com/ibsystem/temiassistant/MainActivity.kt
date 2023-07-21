@@ -58,13 +58,13 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mRobot = Robot.getInstance()
+        mRobot = Robot.getInstance() // Create mRobot before any of viewModel
         fusedLocationListener = LocationServices.getFusedLocationProviderClient(this)
         getCurrentLocation()
 
-        chatViewModel = ChatScreenViewModel(mRobot)
-        mapViewModel = MapScreenViewModel(mRobot)
-        settingsViewModel = SettingsScreenViewModel()
+        chatViewModel = ChatScreenViewModel()
+        mapViewModel = MapScreenViewModel()
+        settingsViewModel = SettingsScreenViewModel.getInstance()
 
 
 
@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     val navController = rememberNavController()
-                    Navigation(navController, chatViewModel, mapViewModel, settingsViewModel)
+                    Navigation(navController, chatViewModel, mapViewModel)
                 }
             }
         }

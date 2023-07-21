@@ -5,10 +5,6 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-
-object SettingVMObj {
-    val SettingVM : SettingsScreenViewModel = SettingsScreenViewModel()
-}
 class SettingsScreenViewModel : ViewModel() {
 
     private val _isSpeakerOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -36,7 +32,14 @@ class SettingsScreenViewModel : ViewModel() {
     fun checkTextInput(text: String) = text.isNotEmpty()
 
     companion object {
-        const val TAG = "SettingsViewModel"
+        private var instance: SettingsScreenViewModel? = null
+
+        fun getInstance(): SettingsScreenViewModel {
+            if (instance == null) {
+                instance = SettingsScreenViewModel()
+            }
+            return instance!!
+        }
     }
 
 }
