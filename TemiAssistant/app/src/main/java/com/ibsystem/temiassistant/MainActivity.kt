@@ -25,6 +25,7 @@ import com.ibsystem.temiassistant.mainscreen.Navigation
 import com.ibsystem.temiassistant.presentation.chat_ui.ChatScreenViewModel
 import com.ibsystem.temiassistant.presentation.chat_ui.MessageBody
 import com.ibsystem.temiassistant.presentation.map_ui.MapScreenViewModel
+import com.ibsystem.temiassistant.presentation.setting_ui.SettingsScreenViewModel
 import com.ibsystem.temiassistant.ui.theme.ComposeUiTempletesTheme
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.listeners.OnConversationStatusChangedListener
@@ -44,26 +45,31 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     OnConversationStatusChangedListener, OnCurrentPositionChangedListener,
     OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener,
     OnLoadMapStatusChangedListener {
-    private val tag = MainActivity::class.java.simpleName
+    private val TAG = MainActivity::class.java.simpleName
     lateinit var mRobot: Robot
     private lateinit var fusedLocationListener: FusedLocationProviderClient
+
     private lateinit var chatViewModel: ChatScreenViewModel
     private lateinit var mapViewModel: MapScreenViewModel
+    private lateinit var settingsViewModel: SettingsScreenViewModel
 
     @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mRobot = Robot.getInstance()
         fusedLocationListener = LocationServices.getFusedLocationProviderClient(this)
+        getCurrentLocation()
+
         chatViewModel = ChatScreenViewModel(mRobot)
         mapViewModel = MapScreenViewModel(mRobot)
-        getCurrentLocation()
+        settingsViewModel = SettingsScreenViewModel()
+
         setContent {
             ComposeUiTempletesTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     val navController = rememberNavController()
-                    Navigation(navController, chatViewModel, mapViewModel)
+                    Navigation(navController, chatViewModel, mapViewModel, settingsViewModel)
                 }
             }
         }
@@ -71,7 +77,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 
     override fun onStart() {
         super.onStart()
-        Log.i(tag, "Robot: OnStart")
+        Log.i(TAG, "Robot: OnStart")
         mRobot.addOnRobotReadyListener(this)
         mRobot.addAsrListener(this)
         mRobot.addOnConversationStatusChangedListener(this)
@@ -85,7 +91,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 
     override fun onStop() {
         super.onStop()
-        Log.i(tag, "Robot: OnStop")
+        Log.i(TAG, "Robot: OnStop")
         mRobot.removeOnRobotReadyListener(this)
         mRobot.removeAsrListener(this)
         mRobot.removeOnConversationStatusChangedListener(this)
@@ -93,7 +99,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 
         mRobot.setDetectionModeOn(false, 2.0f) // Set detection mode off
         mRobot.trackUserOn = false // Set tracking mode off
-        Log.i(tag, "Set detection mode: OFF\nSet track user: OFF")
+        Log.i(TAG, "Set detection mode: OFF\nSet track user: OFF")
         mRobot.removeOnDetectionStateChangedListener(this)
         mRobot.removeOnDetectionDataChangedListener(this)
         mRobot.removeOnUserInteractionChangedListener(this)
@@ -103,7 +109,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 
     override fun onRobotReady(isReady: Boolean) {
         if (isReady) {
-            Log.i(tag, "Robot: OnRobotReady")
+            Log.i(TAG, "Robot: OnRobotReady")
             try {
                 val activityInfo = packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA)
                 mRobot.onStart(activityInfo)
@@ -117,7 +123,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     override fun onAsrResult(asrResult: String) {
         mRobot.finishConversation() // stop ASR listener
         chatViewModel.messageToWit(MessageBody(asrResult))
-        Log.i(tag, "ASR Result: $asrResult")
+        Log.i(TAG, "ASR Result: $asrResult")
         //　mRobot.startDefaultNlu(asrResult)
     }
 
@@ -129,7 +135,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
             OnConversationStatusChangedListener.SPEAKING -> "SPEAKING"
             else -> "UNKNOWN"
         }
-        Log.i(tag, "Status: $statusStr | Text: $text")
+        Log.i(TAG, "Status: $statusStr | Text: $text")
         if (statusStr == "LISTENING") {
             Toast.makeText(this, "受信中", Toast.LENGTH_LONG).show()
         }
@@ -139,7 +145,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     override fun onCurrentPositionChanged(position: Position) {
         mapViewModel.setPosition(position)
         val str = "Current Position: X: " + position.x + " Y: " + position.y
-        Log.i(tag, str)
+        Log.i(TAG, str)
     }
 
     override fun onDetectionStateChanged(state: Int) {
@@ -149,12 +155,12 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
             OnDetectionStateChangedListener.DETECTED -> "DETECTED" // Human is detected
             else -> "UNKNOWN" // This should not happen
         }
-        Log.i(tag, "Detection State: $stateStr")
+        Log.i(TAG, "Detection State: $stateStr")
     }
 
     override fun onDetectionDataChanged(detectionData: DetectionData) {
         if (detectionData.isDetected) {
-            Log.i(tag, "Detection Data: " + detectionData.distance + " m")
+            Log.i(TAG, "Detection Data: " + detectionData.distance + " m")
         }
     }
 
@@ -164,13 +170,13 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         // - User is detected
         // - User is interacting by touch, voice, or in telepresence-mode
         // - Robot is moving
-        Log.i(tag, "User Interaction: $str")
+        Log.i(TAG, "User Interaction: $str")
     }
 
     // MAP RELATED FUNCTION
 
     override fun onLoadMapStatusChanged(status: Int, requestId: String) {
-        Log.i(tag, "load map status: $status, requestId: $requestId")
+        Log.i(TAG, "load map status: $status, requestId: $requestId")
     }
 
     // PERMISSION CHECK
