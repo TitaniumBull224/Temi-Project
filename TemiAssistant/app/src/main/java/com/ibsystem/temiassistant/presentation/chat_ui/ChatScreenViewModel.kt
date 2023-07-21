@@ -104,8 +104,18 @@ class ChatScreenViewModel(private val mRobot: Robot): ViewModel() {
 
     private fun robotResponse(speech: String) {
         addMessage(Message(MessageBody(speech), false))
-        if(SettingVMObj.SettingVM.isSpeakerOn.value) {
-            mRobot.askQuestion(speech)
+
+
+        viewModelScope.launch {
+            SettingVMObj.SettingVM.isSpeakerOn.collect {
+                state -> if(state) {
+                Log.i("Speaker","TRUE")
+                mRobot.askQuestion(speech)
+            }
+            else {
+                Log.i("Speaker","FALSE")
+            }
+            }
         }
 
     }
