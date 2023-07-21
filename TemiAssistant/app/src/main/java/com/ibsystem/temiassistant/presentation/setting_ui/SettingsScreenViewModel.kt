@@ -1,5 +1,6 @@
 package com.ibsystem.temiassistant.presentation.setting_ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,6 +24,7 @@ class SettingsScreenViewModel : ViewModel() {
     fun toggleSwitch(){
         _isSpeakerOn.value = _isSpeakerOn.value.not()
         // here is place for permanent storage handling - switch
+        Log.i("Toggle",_isSpeakerOn.value.toString())
     }
 
     fun saveText(finalText: String) {
