@@ -42,7 +42,7 @@ data class ContextMap(
     @Json(name = "command_type")
     val command_type: String?,
     @Json(name = "direction")
-    val direction: List<Direction?>?
+    val direction: String?
 )
 @JsonClass(generateAdapter = true)
 data class ResponseBody(
@@ -69,19 +69,6 @@ data class Speech(
 //    val value: String
 //)
 
-@JsonClass(generateAdapter = true)
-data class Direction (
-    val body: String?,
-    val confidence: Double?,
-    val end: Long?,
-    val entities: Entities?,
-    val id: String?,
-    val name: String?,
-    val role: String?,
-    val start: Long?,
-    val suggested: Boolean?,
-    val type: String?,
-    val value: String
-)
+
 
 typealias Entities = JsonObject

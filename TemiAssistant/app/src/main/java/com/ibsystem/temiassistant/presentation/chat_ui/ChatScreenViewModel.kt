@@ -89,8 +89,8 @@ class ChatScreenViewModel: ViewModel() {
                             }
                         }
                         "movement" -> {
-                            responseMessage.contextMap.direction?.get(0)?.let {
-                                Log.i("Movement", it.value)
+                            responseMessage.contextMap.direction?.let {
+                                Log.i("Movement", it)
                             }
                         }
 
