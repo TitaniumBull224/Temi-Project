@@ -19,6 +19,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -39,7 +41,10 @@ import com.robotemi.sdk.model.DetectionData
 import com.robotemi.sdk.navigation.listener.OnCurrentPositionChangedListener
 import com.robotemi.sdk.navigation.model.Position
 import com.robotemi.sdk.permission.Permission
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.observeOn
+import kotlinx.coroutines.launch
 
 
 @Suppress("DEPRECATION", "OPT_IN_IS_NOT_ENABLED")
@@ -160,6 +165,14 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
             else -> "UNKNOWN" // This should not happen
         }
         Log.i(TAG, "Detection State: $stateStr")
+        lifecycleScope.launch {
+            if(stateStr == "DETECTED" && settingsViewModel.isDetectionOn.first()) {
+                val greetings = listOf("こんにちは", "おはようございます", "こんばんは", "お元気ですか？", "どうして逃げるんだい？", "怪しいもんじゃないんだから")
+                val randomGreeting = greetings.random()
+                mRobot.askQuestion(randomGreeting)
+                mRobot.beWithMe()
+            }
+        }
     }
 
     override fun onDetectionDataChanged(detectionData: DetectionData) {
