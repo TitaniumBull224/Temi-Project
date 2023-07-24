@@ -88,6 +88,13 @@ class ChatScreenViewModel: ViewModel() {
                                 )
                             }
                         }
+                        "movement" -> {
+                            responseMessage.contextMap.direction?.get(0)?.let {
+                                Log.i("Movement",
+                                    it.value)
+                            }
+                        }
+
                         else -> Log.i("Weather API", "わがんない")
                     }
                 }
