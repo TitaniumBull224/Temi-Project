@@ -67,14 +67,21 @@ fun SettingsScreen(navController: NavController) {
                 .padding(it)
                 .padding(16.dp)
         ) {
-            SettingsClickableComp(
-                name = "ClickableComp",
-                icon = R.drawable.ic_final_icon,
-                iconDesc = "ClickableComp",
-            ) {
-                // here you can do anything - navigate - open other settings, ...
-            }
-
+//            SettingsClickableComp(
+//                name = "ClickableComp",
+//                icon = R.drawable.ic_final_icon,
+//                iconDesc = "ClickableComp",
+//            ) {
+//                // here you can do anything - navigate - open other settings, ...
+//            }
+//            SettingsTextComp(
+//                name = "TextComp",
+//                icon = R.drawable.ic_final_icon,
+//                iconDesc = "TextComp",
+//                state = viewModel.textPreference.collectAsState(),
+//                onSave = { finalText -> viewModel.saveText(finalText) },
+//                onCheck = { text -> viewModel.checkTextInput(text) },
+//            )
             SettingsSwitchComp(
                 name = "Robot Speaker",
                 icon = R.drawable.ic_final_icon,
@@ -83,17 +90,19 @@ fun SettingsScreen(navController: NavController) {
                 state = viewModel.isSpeakerOn.collectAsState()
             ) {
                 // call ViewModel to toggle the value
-                viewModel.toggleSwitch()
+                viewModel.toggleSwitch(viewModel.SPEAKER_SWITCH)
             }
 
-            SettingsTextComp(
-                name = "TextComp",
+            SettingsSwitchComp(
+                name = "Robot Detection",
                 icon = R.drawable.ic_final_icon,
-                iconDesc = "TextComp",
-                state = viewModel.textPreference.collectAsState(),
-                onSave = { finalText -> viewModel.saveText(finalText) },
-                onCheck = { text -> viewModel.checkTextInput(text) },
-            )
+                iconDesc = "SwitchComp",
+                // value is collected from StateFlow - updates the UI on change
+                state = viewModel.isDetectionOn.collectAsState()
+            ) {
+                // call ViewModel to toggle the value
+                viewModel.toggleSwitch(viewModel.DETECTION_SWITCH)
+            }
         }
     }
 }

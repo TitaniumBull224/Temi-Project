@@ -99,7 +99,7 @@ class ChatScreenViewModel: ViewModel() {
                     }
                 }
             } else {
-                addMessage(Message(MessageBody("Error: Code ${response.code()}"), false))
+                robotResponse("Error: Code ${response.code()}")
             }
 
 //            if (response.code() == 200 && response.body() != null && response.body()!!.size > 0) {
@@ -112,8 +112,7 @@ class ChatScreenViewModel: ViewModel() {
         }
     }
 
-    private fun robotResponse(speech: String) {
-        addMessage(Message(MessageBody(speech), false))
+    private suspend fun robotResponse(speech: String) {
         viewModelScope.launch {
             val isSpeakerOn = SettingsScreenViewModel.getInstance().isSpeakerOn.first()
             if (isSpeakerOn) {
@@ -123,5 +122,6 @@ class ChatScreenViewModel: ViewModel() {
                 Log.i("Speaker", "FALSE")
             }
         }
+        addMessage(Message(MessageBody(speech), false))
     }
 }

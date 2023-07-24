@@ -141,35 +141,3 @@ fun RobotPosition(position: Position) {
         Text("Tilt: ${position.tiltAngle}")
     }
 }
-@Composable
-fun MapList(mapList: List<MapModel>, onMapSelected: (MapModel) -> Unit) {
-    LazyColumn {
-        items(mapList) { map ->
-            Text(
-                text = map.name,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onMapSelected(map) }
-                    .padding(16.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun MapListDialog(
-    mapList: List<MapModel>,
-    onMapSelected: (MapModel) -> Unit,
-    onDismissRequest: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        title = { Text("Click item to load specific map") },
-        text = { MapList(mapList, onMapSelected) },
-        buttons = {
-            Button(onClick = onDismissRequest) {
-                Text("Close")
-            }
-        }
-    )
-}
