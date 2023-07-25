@@ -119,7 +119,7 @@ class ChatScreenViewModel: ViewModel() {
                                     if (wikiQueryResponse != null) {
                                         wikiQueryResponse.body()?.extract?.let { Log.i("WIKI", it)
                                         robotResponse("Wikiによって、$it")}
-                                        wikiQueryResponse.body().contentUrls.desktop.page?.let {
+                                        wikiQueryResponse.body()?.contentUrls?.desktop?.page?.let {
                                             MessageBody(
                                                 it
                                             )
