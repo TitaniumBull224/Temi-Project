@@ -117,7 +117,8 @@ class ChatScreenViewModel: ViewModel() {
                             if (wikiQueryResponse != null) {
                                 if(wikiQueryResponse.isSuccessful) {
                                     if (wikiQueryResponse != null) {
-                                        wikiQueryResponse.body()?.extract?.let { Log.i("WIKI", it) }
+                                        wikiQueryResponse.body()?.extract?.let { Log.i("WIKI", it)
+                                        robotResponse("Wikiによって、$it")}
                                     }
                                 }
                             }
