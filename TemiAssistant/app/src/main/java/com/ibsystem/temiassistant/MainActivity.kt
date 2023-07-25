@@ -66,7 +66,6 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot = Robot.getInstance() // Create mRobot before any of viewModel
         fusedLocationListener = LocationServices.getFusedLocationProviderClient(this)
         getCurrentLocation()
-
         chatViewModel = ChatScreenViewModel()
         mapViewModel = MapScreenViewModel()
         settingsViewModel = SettingsScreenViewModel.getInstance()
@@ -94,7 +93,6 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.addOnDetectionStateChangedListener(this)
         mRobot.addOnDetectionDataChangedListener(this)
         mRobot.addOnUserInteractionChangedListener(this)
-
         mRobot.addOnLoadMapStatusChangedListener(this)
     }
 
@@ -105,14 +103,12 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.removeAsrListener(this)
         mRobot.removeOnConversationStatusChangedListener(this)
         mRobot.removeOnCurrentPositionChangedListener(this)
-
         mRobot.setDetectionModeOn(false, 2.0f) // Set detection mode off
         mRobot.trackUserOn = false // Set tracking mode off
         Log.i(TAG, "Set detection mode: OFF\nSet track user: OFF")
         mRobot.removeOnDetectionStateChangedListener(this)
         mRobot.removeOnDetectionDataChangedListener(this)
         mRobot.removeOnUserInteractionChangedListener(this)
-
         mRobot.removeOnLoadMapStatusChangedListener(this)
     }
 

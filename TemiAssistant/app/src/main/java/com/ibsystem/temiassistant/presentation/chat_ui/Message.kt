@@ -42,7 +42,9 @@ data class ContextMap(
     @Json(name = "command_type")
     val command_type: String?,
     @Json(name = "direction")
-    val direction: String?
+    val direction: String?,
+    @Json(name = "query_key")
+    val query_key: String?
 )
 @JsonClass(generateAdapter = true)
 data class ResponseBody(

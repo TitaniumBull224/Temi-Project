@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ibsystem.temiassistant.network.openWeatherApiService
+import com.ibsystem.temiassistant.network.wikiApiService
 import com.ibsystem.temiassistant.network.witApiService
 import com.ibsystem.temiassistant.presentation.setting_ui.SettingsScreenViewModel
 import com.robotemi.sdk.Robot
@@ -93,6 +94,20 @@ class ChatScreenViewModel: ViewModel() {
                                 Log.i("Movement", it)
                             }
                         }
+                        "wiki_query" -> {
+                            val wikiQueryResponse = responseMessage.contextMap.query_key?.let {
+                                wikiApiService.getPageSummary(
+                                    it
+                                )
+                            }
+                            if (wikiQueryResponse != null) {
+                                if(wikiQueryResponse.isSuccessful) {
+                                    if (wikiQueryResponse != null) {
+                                        wikiQueryResponse.body()?.extract?.let { Log.i("WIKI", it) }
+                                    }
+                                }
+                            }
+                        }
 
                         else -> Log.i("Weather API", "わがんない")
                     }
@@ -123,4 +138,6 @@ class ChatScreenViewModel: ViewModel() {
         }
         addMessage(Message(MessageBody(speech), false))
     }
+
+
 }
