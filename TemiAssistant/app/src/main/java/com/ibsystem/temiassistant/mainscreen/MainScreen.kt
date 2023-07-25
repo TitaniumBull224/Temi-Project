@@ -51,6 +51,9 @@ fun MainScreen(navController: NavController) {
             Button(onClick = { navController.navigate(Screen.MapScreen.route) }) {
                 Text("Map")
             }
+            Button(onClick = { navController.navigate(Screen.MotionScreen.route) }) {
+                Text("Motion")
+            }
             Button(onClick = { navController.navigate(Screen.SettingsScreen.route) }) {
                 Text("Settings")
             }

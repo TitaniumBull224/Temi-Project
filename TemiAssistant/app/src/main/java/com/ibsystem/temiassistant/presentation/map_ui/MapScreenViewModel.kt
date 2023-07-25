@@ -17,6 +17,8 @@ class MapScreenViewModel: ViewModel() {
     var mapDataModel by mutableStateOf<MapDataModel?>(null)
     private var currentPosition by mutableStateOf<Position?>(null)
 
+
+
     fun loadMapData() {
         viewModelScope.launch {
             mapDataModel = mRobot.getMapData()

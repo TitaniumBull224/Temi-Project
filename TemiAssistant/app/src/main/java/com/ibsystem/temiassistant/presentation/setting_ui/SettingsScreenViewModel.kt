@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 class SettingsScreenViewModel : ViewModel() {
     private val mRobot = Robot.getInstance()
 
-    private val _isSpeakerOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _isSpeakerOn: MutableStateFlow<Boolean> = MutableStateFlow(true)
     var isSpeakerOn = _isSpeakerOn.asStateFlow()
 
     private val _isDetectionOn: MutableStateFlow<Boolean> = MutableStateFlow(false)

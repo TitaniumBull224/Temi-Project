@@ -2,6 +2,8 @@ package com.ibsystem.temiassistant.presentation.map_ui
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.util.Log
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AlertDialog
@@ -24,6 +27,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.consumeAllChanges
@@ -35,6 +40,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ibsystem.temiassistant.R
 import com.ibsystem.temiassistant.presentation.chat_ui.TopBarSection
+import com.ibsystem.temiassistant.ui.theme.Crimson
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.map.MapModel
 import com.robotemi.sdk.navigation.model.Position
@@ -69,7 +75,9 @@ fun MapScreen(navController: NavController, viewModel: MapScreenViewModel) {
                         Bitmap.Config.ARGB_8888
                     )
                 }
-                ZoomableImage(bitmap)
+                viewModel.getPosition()?.let { position ->
+                    ZoomableImage(bitmap, position)
+                }
             }
         }
 
@@ -92,7 +100,7 @@ fun MapScreen(navController: NavController, viewModel: MapScreenViewModel) {
 }
 
 @Composable
-fun ZoomableImage(bitmap: Bitmap) {
+fun ZoomableImage(bitmap: Bitmap, position: Position) {
     var scale by remember { mutableStateOf(1f) }
     var rotation by remember { mutableStateOf(0f) }
     var offsetX by remember { mutableStateOf(0f) }
@@ -116,10 +124,9 @@ fun ZoomableImage(bitmap: Bitmap) {
                 }
             }
     ) {
-        Image(
-            bitmap = bitmap.asImageBitmap(),
-            contentDescription = "Map image",
+        Canvas(
             modifier = Modifier
+                .fillMaxSize()
                 .graphicsLayer(
                     scaleX = scale,
                     scaleY = scale,
@@ -127,7 +134,17 @@ fun ZoomableImage(bitmap: Bitmap) {
                     translationX = offsetX,
                     translationY = offsetY
                 )
-        )
+        ) {
+            drawImage(bitmap.asImageBitmap())
+            drawCircle(
+                color = Crimson,
+                center = Offset(
+                    (position.x * scale + offsetX),
+                    (position.y * scale + offsetY)
+                ),
+                radius = 4.dp.toPx()
+            )
+        }
     }
 }
 
@@ -137,7 +154,5 @@ fun RobotPosition(position: Position) {
         Text("Locations: ")
         Text("X: ${position.x}")
         Text("Y: ${position.y}")
-
-
     }
 }

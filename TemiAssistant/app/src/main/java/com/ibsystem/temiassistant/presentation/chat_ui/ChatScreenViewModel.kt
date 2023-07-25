@@ -110,21 +110,17 @@ class ChatScreenViewModel: ViewModel() {
                         }
                         "wiki_query" -> {
                             val wikiQueryResponse = responseMessage.contextMap.query_key?.let {
-                                wikiApiService.getPageSummary(
-                                    it
-                                )
+                                wikiApiService.getPageSummary(it)
                             }
                             if (wikiQueryResponse != null) {
                                 if(wikiQueryResponse.isSuccessful) {
-                                    if (wikiQueryResponse != null) {
-                                        wikiQueryResponse.body()?.extract?.let { Log.i("WIKI", it)
-                                        robotResponse("Wikiによって、$it")}
-                                        wikiQueryResponse.body()?.contentUrls?.desktop?.page?.let {
-                                            MessageBody(
-                                                it
-                                            )
-                                        }?.let { Message(it, false) }?.let { addMessage(it) }
+                                    wikiQueryResponse.body()?.extract?.let {
+                                        Log.i("WIKI", it)
+                                        robotResponse("Wikiによって、$it")
                                     }
+                                    wikiQueryResponse.body()?.contentUrls?.desktop?.page?.let {
+                                        MessageBody("ソース：$it")
+                                    }?.let { Message(it, false) }?.let { addMessage(it) }
                                 }
                             }
                         }
