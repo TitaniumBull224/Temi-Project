@@ -149,6 +149,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 
     override fun onCurrentPositionChanged(position: Position) {
         mapViewModel.setPosition(position)
+        chatViewModel.setCurrentPosition(position)
         val str = "Current Position: X: " + position.x + " Y: " + position.y
         Log.i(TAG, str)
     }

@@ -11,8 +11,10 @@ import com.ibsystem.temiassistant.network.wikiApiService
 import com.ibsystem.temiassistant.network.witApiService
 import com.ibsystem.temiassistant.presentation.setting_ui.SettingsScreenViewModel
 import com.robotemi.sdk.Robot
+import com.robotemi.sdk.navigation.model.Position
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.math.sqrt
 
 class ChatScreenViewModel: ViewModel() {
     private val mRobot = Robot.getInstance()
@@ -22,6 +24,8 @@ class ChatScreenViewModel: ViewModel() {
 
     private val _connectivityState = MutableLiveData<Boolean>()
     val connectivityState: LiveData<Boolean> = _connectivityState
+
+    private var _currentPosition: Position = Position()
 
     private var _sessionID: String = generateSessionID(5)
 
@@ -56,6 +60,10 @@ class ChatScreenViewModel: ViewModel() {
         _connectivityState.value = currentConnectivityState
     }
 
+    fun setCurrentPosition(position: Position) {
+        _currentPosition = position
+    }
+
     fun messageToWit(message: MessageBody) {
         addMessage(Message(message, true))
         viewModelScope.launch {
@@ -71,27 +79,33 @@ class ChatScreenViewModel: ViewModel() {
                             Log.i("System Command", message.message)
                             mRobot.startDefaultNlu(message.message)
                         }
+
                         "get_weather" -> {
-                            val weatherResponse = openWeatherApiService.getWeatherData(latitude, longitude)
+                            val weatherResponse =
+                                openWeatherApiService.getWeatherData(latitude, longitude)
                             Log.i("Weather API", weatherResponse.body().toString())
                             if (weatherResponse.isSuccessful) {
                                 val weatherResponseBody = weatherResponse.body()
                                 var weatherDescription = ""
-                                weatherResponseBody!!.weather.forEach() {i ->
+                                weatherResponseBody!!.weather.forEach() { i ->
                                     weatherDescription += i.description + "　"
                                 }
 
-                                robotResponse("温度は" +
-                                        weatherResponseBody.main.temp + "度\n湿度は" +
-                                        weatherResponseBody.main.humidity + "%\n天気予報：" +
-                                        weatherDescription + "\nロケーション: " +
-                                        weatherResponseBody.name
+                                robotResponse(
+                                    "温度は" +
+                                            weatherResponseBody.main.temp + "度\n湿度は" +
+                                            weatherResponseBody.main.humidity + "%\n天気予報：" +
+                                            weatherDescription + "\nロケーション: " +
+                                            weatherResponseBody.name
                                 )
                             }
                         }
+
                         "movement" -> {
                             responseMessage.contextMap.direction?.let {
                                 Log.i("Movement", it)
+                                robotMove(it)
+
                             }
                         }
                         "wiki_query" -> {
@@ -140,4 +154,32 @@ class ChatScreenViewModel: ViewModel() {
     }
 
 
+    private fun robotMove(direction: String, distance: Float = 1.0F) {
+        var newPosition: Position = _currentPosition
+        Log.i("RobotMove", "Before X: ${newPosition.x}, Y: ${newPosition.y}")
+        when {
+            direction.contains("斜め") -> {
+                when {
+                    direction.contains("前") -> {
+                        newPosition.x += (distance / sqrt(2.0)).toFloat()
+                        newPosition.y += (distance / sqrt(2.0)).toFloat()
+                    }
+                    direction.contains("後") -> {
+                        newPosition.x -= (distance / sqrt(2.0)).toFloat()
+                        newPosition.y -= (distance / sqrt(2.0)).toFloat()
+                    }
+                }
+            }
+            direction.contains("前") -> newPosition.x += distance
+            direction.contains("後") -> newPosition.x -= distance
+            direction.contains("右") -> newPosition.y += distance
+            direction.contains("左") -> newPosition.y -= distance
+
+
+            direction.contains("横") -> newPosition.y += distance
+            direction.contains("縦") -> newPosition.x += distance
+        }
+        Log.i("RobotMove", "After X: ${newPosition.x}, Y: ${newPosition.y}")
+        mRobot.goToPosition(newPosition)
+    }
 }

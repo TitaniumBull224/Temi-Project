@@ -137,7 +137,7 @@ fun RobotPosition(position: Position) {
         Text("Locations: ")
         Text("X: ${position.x}")
         Text("Y: ${position.y}")
-        Text("Yaw: ${position.yaw}")
-        Text("Tilt: ${position.tiltAngle}")
+
+
     }
 }
