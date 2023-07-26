@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -187,10 +188,10 @@ fun ChatSection(
         }
         items(messages) { message ->
             MessageItem(
-                message.message_body.message,
-                message.isOut,
-                message.time,
-                message.imageUrl
+                messageText = message.message_body.message,
+                isOut = message.isOut,
+                time = message.time,
+                imageUrl = message.imageUrl
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -275,7 +276,7 @@ fun MessageItem(
     messageText: String,
     isOut: Boolean,
     time: String,
-    imageUrl: String?
+    imageUrl: String? = null
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -294,23 +295,27 @@ fun MessageItem(
                     end = 16.dp
                 )
         ) {
-//            if (imageUrl != null) {
-//                Log.i("Image", imageUrl)
-//                Image(
-//                    painter = rememberImagePainter(imageUrl), // Use rememberImagePainter to load and display the image
-//                    contentDescription = "Image",
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(200.dp) // Adjust the height as needed
-//                )
-//            }
-            Text(
-                text = messageText,
-                color = TextWhite
-
-            )
+            Row {
+                if (imageUrl != null) {
+                    Log.i("Image", imageUrl)
+                    Image(
+                        painter = rememberImagePainter(imageUrl),
+                        contentDescription = "Image",
+                        modifier = Modifier
+                            .width(100.dp)
+                            .height(100.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                Text(
+                    text = messageText,
+                    color = TextWhite,
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .weight(1f)
+                )
+            }
         }
-
         Text(
             text = time,
             fontSize = 12.sp,

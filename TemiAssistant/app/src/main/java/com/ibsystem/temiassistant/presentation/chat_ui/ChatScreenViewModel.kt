@@ -1,6 +1,6 @@
 package com.ibsystem.temiassistant.presentation.chat_ui
 
-import android.location.LocationManager
+
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,10 +10,8 @@ import com.ibsystem.temiassistant.network.newsApiService
 import com.ibsystem.temiassistant.network.openWeatherApiService
 import com.ibsystem.temiassistant.network.wikiApiService
 import com.ibsystem.temiassistant.network.witApiService
-import com.ibsystem.temiassistant.presentation.setting_ui.SettingsScreenViewModel
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.navigation.model.Position
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 
@@ -33,7 +31,7 @@ class ChatScreenViewModel: ViewModel() {
     lateinit var longitude: String
     lateinit var latitude: String
 
-    fun addMessage(message: Message) {
+    private suspend fun addMessage(message: Message) {
         val currentList = _messageList.value.orEmpty()
         _messageList.value = currentList + message
     }
@@ -66,8 +64,8 @@ class ChatScreenViewModel: ViewModel() {
     }
 
     fun messageToWit(message: MessageBody) {
-        addMessage(Message(message, true))
         viewModelScope.launch {
+            addMessage(Message(message, true))
             val response = witApiService.sendMessage(_sessionID, message)
 
             if (response.isSuccessful) {
@@ -88,7 +86,7 @@ class ChatScreenViewModel: ViewModel() {
                             if (weatherResponse.isSuccessful) {
                                 val weatherResponseBody = weatherResponse.body()
                                 var weatherDescription = ""
-                                weatherResponseBody!!.weather.forEach() { i ->
+                                weatherResponseBody!!.weather.forEach { i ->
                                     weatherDescription += i.description + "　"
                                 }
 
@@ -117,7 +115,7 @@ class ChatScreenViewModel: ViewModel() {
                                 if(wikiQueryResponse.isSuccessful) {
                                     wikiQueryResponse.body()?.extract?.let {
                                         Log.i("WIKI", it)
-                                        robotResponse("Wikiによって、$it", imageUrl = wikiQueryResponse.body()!!.thumbnail?.source)
+                                        robotResponse("Wikiによって、$it", wikiQueryResponse.body()!!.thumbnail?.source)
                                     }
                                     wikiQueryResponse.body()?.contentUrls?.desktop?.page?.let {
                                         MessageBody("ソース：$it")
@@ -131,7 +129,7 @@ class ChatScreenViewModel: ViewModel() {
                                 val newsResponseBody = newsResponse.body()
                                 for(article in newsResponseBody!!.articles!!) {
                                     robotResponse(article!!.title!! + "\n" +
-                                    article.content)
+                                    article.description)
                                 }
                             }
                         }
@@ -156,13 +154,16 @@ class ChatScreenViewModel: ViewModel() {
     private fun robotResponse(speech: String, imageUrl: String? = null) {
         viewModelScope.launch {
             mRobot.askQuestion(speech)
-            imageUrl?.let { addMessage(Message(MessageBody(speech), false, it))}
+            when (imageUrl) {
+                null -> addMessage(Message(MessageBody(speech), false))
+                else -> addMessage(Message(MessageBody(speech), false, imageUrl = imageUrl))
+            }
         }
     }
 
 
     private fun robotMove(direction: String, distance: Float = 1.0F) {
-        var newPosition: Position = _currentPosition
+        val newPosition: Position = _currentPosition
         Log.i("RobotMove", "Before X: ${newPosition.x}, Y: ${newPosition.y}")
         when {
             direction.contains("斜め") -> {
