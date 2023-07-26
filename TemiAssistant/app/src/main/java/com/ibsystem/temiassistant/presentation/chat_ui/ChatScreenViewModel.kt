@@ -129,7 +129,10 @@ class ChatScreenViewModel: ViewModel() {
                             val newsResponse = newsApiService.getHeadlineNews()
                             if(newsResponse.isSuccessful) {
                                 val newsResponseBody = newsResponse.body()
-                                robotResponse(newsResponseBody!!.articles!![0]!!.title!!)
+                                for(article in newsResponseBody!!.articles!!) {
+                                    robotResponse(article!!.title!! + "\n" +
+                                    article.content)
+                                }
                             }
                         }
 
