@@ -16,12 +16,12 @@ private var retrofit_news: Retrofit = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
     .build()
 
-var newsApiService: OpenWeatherApiService = retrofit_news.create(OpenWeatherApiService::class.java)
+var newsApiService: NewsApiService = retrofit_news.create(NewsApiService::class.java)
 
 interface NewsApiService {
     @Headers("Content-Type: application/json")
     @GET("v2/top-headlines")
-    suspend fun getWeatherData(@Query("country") lang: String = "jp",
+    suspend fun getHeadlineNews(@Query("country") lang: String = "jp",
                                @Query("apiKey") appID: String = apiKeyNews,
 
     ): Response<NewsModel>

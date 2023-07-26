@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ibsystem.temiassistant.network.newsApiService
 import com.ibsystem.temiassistant.network.openWeatherApiService
 import com.ibsystem.temiassistant.network.wikiApiService
 import com.ibsystem.temiassistant.network.witApiService
@@ -123,6 +124,15 @@ class ChatScreenViewModel: ViewModel() {
                                     wikiQueryResponse.body()?.contentUrls?.desktop?.page?.let {
                                         MessageBody("ソース：$it")
                                     }?.let { Message(it, false) }?.let { addMessage(it) }
+                                }
+                            }
+                        }
+                        "get_news" -> {
+                            val newsResponse = newsApiService.getHeadlineNews()
+                            if(newsResponse!=null) {
+                                if(newsResponse.isSuccessful) {
+                                    val newsResponseBody = newsResponse.body()
+                                    robotResponse(newsResponseBody!!.articles!![0]!!.title!!)
                                 }
                             }
                         }
