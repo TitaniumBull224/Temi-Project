@@ -116,7 +116,9 @@ class ChatScreenViewModel: ViewModel() {
                                 if(wikiQueryResponse.isSuccessful) {
                                     wikiQueryResponse.body()?.extract?.let {
                                         Log.i("WIKI", it)
-                                        robotResponse("Wikiによって、$it")
+                                        robotResponse("Wikiによって、$it",
+                                            wikiQueryResponse.body()!!.thumbnail?.source
+                                        )
                                     }
                                     wikiQueryResponse.body()?.contentUrls?.desktop?.page?.let {
                                         MessageBody("ソース：$it")
@@ -142,7 +144,7 @@ class ChatScreenViewModel: ViewModel() {
         }
     }
 
-    private suspend fun robotResponse(speech: String) {
+    private suspend fun robotResponse(speech: String, imageUrl: String? = null) {
         viewModelScope.launch {
             val isSpeakerOn = SettingsScreenViewModel.getInstance().isSpeakerOn.first()
             if (isSpeakerOn) {
@@ -152,7 +154,13 @@ class ChatScreenViewModel: ViewModel() {
                 Log.i("Speaker", "FALSE")
             }
         }
-        addMessage(Message(MessageBody(speech), false))
+        if(imageUrl != null) {
+            addMessage(Message(MessageBody(speech), false, imageUrl))
+        }
+        else {
+            addMessage(Message(MessageBody(speech), false))
+        }
+
     }
 
 

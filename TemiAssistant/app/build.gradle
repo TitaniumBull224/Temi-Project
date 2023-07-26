@@ -108,4 +108,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-insets:0.23.1"
 
     implementation "com.google.android.gms:play-services-location:21.0.1"
+
+    //Coil image
+    implementation 'io.coil-kt:coil-compose:1.4.0'
 }

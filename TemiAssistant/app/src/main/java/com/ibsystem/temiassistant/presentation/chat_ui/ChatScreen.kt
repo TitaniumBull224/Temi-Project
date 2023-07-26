@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
@@ -264,7 +265,8 @@ fun MessageSection(viewModel: ChatScreenViewModel) {
 fun MessageItem(
     messageText: String,
     isOut: Boolean,
-    time: String
+    time: String,
+    imageUrl: String? = null
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -283,9 +285,20 @@ fun MessageItem(
                     end = 16.dp
                 )
         ) {
+            if (imageUrl != null) {
+                Image(
+                    painter = rememberImagePainter(imageUrl), // Use rememberImagePainter to load and display the image
+                    contentDescription = "Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp) // Adjust the height as needed
+                )
+            }
+
             Text(
                 text = messageText,
                 color = Color.White
+
             )
         }
 

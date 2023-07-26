@@ -11,7 +11,8 @@ import java.util.Locale
 data class Message(
     val message_body: MessageBody,
     val isOut: Boolean,
-    var time: String = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time)
+    var time: String = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Calendar.getInstance().time),
+    var imageUrl: String? = null
 )
 
 @JsonClass(generateAdapter = true)
