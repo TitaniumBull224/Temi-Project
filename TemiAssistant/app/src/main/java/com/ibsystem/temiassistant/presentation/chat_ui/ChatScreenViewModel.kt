@@ -128,13 +128,12 @@ class ChatScreenViewModel: ViewModel() {
                             if(newsResponse.isSuccessful) {
                                 val newsResponseBody = newsResponse.body()
                                 for(article in newsResponseBody!!.articles!!) {
-                                    robotResponse(article!!.title!! + "\n" +
-                                    article.description)
+                                    robotResponse(article!!.title!! + "\n" + article.description, article.urlToImage)
                                 }
                             }
                         }
 
-                        else -> Log.i("Weather API", "わがんない")
+                        else -> Log.i("CONTEXT", "UNKNOWN")
                     }
                 }
             } else {

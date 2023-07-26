@@ -294,28 +294,42 @@ fun MessageItem(
                     start = 16.dp,
                     end = 16.dp
                 )
+                .let {
+                    when (imageUrl) {
+                        null -> it
+                        else -> it.fillMaxWidth(0.7f)
+                    }
+                }
         ) {
-            Row {
+            Row(
+                horizontalArrangement = Arrangement.End, // Set the horizontalArrangement parameter to Arrangement.End to arrange the children in reverse order
+                modifier = Modifier.wrapContentWidth()
+            ) {
+                Text(
+                    text = messageText,
+                    color = TextWhite,
+                    modifier = Modifier
+                        .let {
+                            when (imageUrl) {
+                                null -> it
+                                else -> it.weight(1f)
+                            }
+                        }
+                )
                 if (imageUrl != null) {
                     Log.i("Image", imageUrl)
                     Image(
                         painter = rememberImagePainter(imageUrl),
                         contentDescription = "Image",
                         modifier = Modifier
-                            .width(100.dp)
-                            .height(100.dp),
+                            .width(200.dp)
+                            .height(200.dp),
                         contentScale = ContentScale.Crop
                     )
                 }
-                Text(
-                    text = messageText,
-                    color = TextWhite,
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .weight(1f)
-                )
             }
         }
+
         Text(
             text = time,
             fontSize = 12.sp,
