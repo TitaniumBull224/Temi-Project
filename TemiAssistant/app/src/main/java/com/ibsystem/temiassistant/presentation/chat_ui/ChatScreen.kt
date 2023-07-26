@@ -4,6 +4,7 @@ package com.ibsystem.temiassistant.presentation.chat_ui
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,6 +43,7 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.ibsystem.temiassistant.MainActivity
 import com.ibsystem.temiassistant.R
+import com.ibsystem.temiassistant.ui.theme.TextWhite
 import kotlinx.coroutines.launch
 
 
@@ -174,26 +176,33 @@ fun ChatSection(
             .fillMaxWidth()
             .padding(16.dp),
     ) {
-        item {Text(text = viewModel.getSessionID(), color = Color.Gray)}
-        item { Box(
-            Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Color.Gray)) }
+        item { Text(text = viewModel.getSessionID(), color = Color.Gray) }
+        item {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(Color.Gray)
+            )
+        }
         items(messages) { message ->
             MessageItem(
                 message.message_body.message,
                 message.isOut,
-                message.time
+                message.time,
+                message.imageUrl
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
-        item {Text(text = "終わり", color = Color.Gray)}
-        item { Box(
-            Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Color.Gray)) }
+        item { Text(text = "終わり", color = Color.Gray) }
+        item {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(Color.Gray)
+            )
+        }
     }
 }
 
@@ -266,7 +275,7 @@ fun MessageItem(
     messageText: String,
     isOut: Boolean,
     time: String,
-    imageUrl: String? = null
+    imageUrl: String?
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -285,19 +294,19 @@ fun MessageItem(
                     end = 16.dp
                 )
         ) {
-            if (imageUrl != null) {
-                Image(
-                    painter = rememberImagePainter(imageUrl), // Use rememberImagePainter to load and display the image
-                    contentDescription = "Image",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp) // Adjust the height as needed
-                )
-            }
-
+//            if (imageUrl != null) {
+//                Log.i("Image", imageUrl)
+//                Image(
+//                    painter = rememberImagePainter(imageUrl), // Use rememberImagePainter to load and display the image
+//                    contentDescription = "Image",
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(200.dp) // Adjust the height as needed
+//                )
+//            }
             Text(
                 text = messageText,
-                color = Color.White
+                color = TextWhite
 
             )
         }

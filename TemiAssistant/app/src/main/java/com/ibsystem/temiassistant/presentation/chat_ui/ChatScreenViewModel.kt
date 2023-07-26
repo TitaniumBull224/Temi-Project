@@ -117,9 +117,7 @@ class ChatScreenViewModel: ViewModel() {
                                 if(wikiQueryResponse.isSuccessful) {
                                     wikiQueryResponse.body()?.extract?.let {
                                         Log.i("WIKI", it)
-                                        robotResponse("Wikiによって、$it",
-                                            wikiQueryResponse.body()!!.thumbnail?.source
-                                        )
+                                        robotResponse("Wikiによって、$it", imageUrl = wikiQueryResponse.body()!!.thumbnail?.source)
                                     }
                                     wikiQueryResponse.body()?.contentUrls?.desktop?.page?.let {
                                         MessageBody("ソース：$it")
@@ -129,11 +127,9 @@ class ChatScreenViewModel: ViewModel() {
                         }
                         "get_news" -> {
                             val newsResponse = newsApiService.getHeadlineNews()
-                            if(newsResponse!=null) {
-                                if(newsResponse.isSuccessful) {
-                                    val newsResponseBody = newsResponse.body()
-                                    robotResponse(newsResponseBody!!.articles!![0]!!.title!!)
-                                }
+                            if(newsResponse.isSuccessful) {
+                                val newsResponseBody = newsResponse.body()
+                                robotResponse(newsResponseBody!!.articles!![0]!!.title!!)
                             }
                         }
 
@@ -154,23 +150,11 @@ class ChatScreenViewModel: ViewModel() {
         }
     }
 
-    private suspend fun robotResponse(speech: String, imageUrl: String? = null) {
+    private fun robotResponse(speech: String, imageUrl: String? = null) {
         viewModelScope.launch {
-            val isSpeakerOn = SettingsScreenViewModel.getInstance().isSpeakerOn.first()
-            if (isSpeakerOn) {
-                Log.i("Speaker", "TRUE")
-                mRobot.askQuestion(speech)
-            } else {
-                Log.i("Speaker", "FALSE")
-            }
+            mRobot.askQuestion(speech)
+            imageUrl?.let { addMessage(Message(MessageBody(speech), false, it))}
         }
-        if(imageUrl != null) {
-            addMessage(Message(MessageBody(speech), false, imageUrl))
-        }
-        else {
-            addMessage(Message(MessageBody(speech), false))
-        }
-
     }
 
 
