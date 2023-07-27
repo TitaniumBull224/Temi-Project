@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -37,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.LocalWindowInsets
@@ -177,7 +179,7 @@ fun ChatSection(
             .fillMaxWidth()
             .padding(16.dp),
     ) {
-        item { Text(text = viewModel.getSessionID(), color = Color.Gray) }
+        item { Text(text = "Session ID:" + viewModel.getSessionID(), color = Color.Gray) }
         item {
             Box(
                 Modifier
@@ -191,11 +193,12 @@ fun ChatSection(
                 messageText = message.message_body.message,
                 isOut = message.isOut,
                 time = message.time,
-                imageUrl = message.imageUrl
+                imageUrl = message.imageUrl,
+
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
-        item { Text(text = "終わり", color = Color.Gray) }
+
         item {
             Box(
                 Modifier
@@ -276,7 +279,8 @@ fun MessageItem(
     messageText: String,
     isOut: Boolean,
     time: String,
-    imageUrl: String? = null
+    imageUrl: String? = null,
+//    currencyQuery: Boolean = false
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -327,6 +331,9 @@ fun MessageItem(
                         contentScale = ContentScale.Crop
                     )
                 }
+//                if(currencyQuery) {
+//                    InputAmountOfMoney(viewModel = viewModel)
+//                }
             }
         }
 
@@ -335,6 +342,41 @@ fun MessageItem(
             fontSize = 12.sp,
             modifier = Modifier.padding(start = 8.dp)
         )
+    }
+}
+
+@Composable
+fun InputAmountOfMoney(viewModel: ChatScreenViewModel) {
+    var inputAmount by rememberSaveable { mutableStateOf("") }
+    var inputFrom by rememberSaveable { mutableStateOf("") }
+    var inputTo by rememberSaveable { mutableStateOf("") }
+    val scope = rememberCoroutineScope() // Create a coroutine scope
+    Row {
+        TextField(
+            value = inputAmount,
+            onValueChange = { newText ->
+                inputAmount = newText.trimStart { it == '0' }
+            }
+        )
+        TextField(
+            value = inputFrom,
+            onValueChange = { newText ->
+                inputAmount = newText.trimStart { it == '0' }
+            }
+        )
+        TextField(
+            value = inputTo,
+            onValueChange = { newText ->
+                inputAmount = newText.trimStart { it == '0' }
+            }
+        )
+        Button(
+            onClick = { scope.launch {
+                viewModel.convertCurrency(inputAmount,inputFrom, inputTo)
+            }},
+        ) {
+            Text("通貨変換")
+        }
     }
 }
 

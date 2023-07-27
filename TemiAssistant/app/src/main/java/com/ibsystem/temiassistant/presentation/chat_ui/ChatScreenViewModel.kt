@@ -2,16 +2,21 @@ package com.ibsystem.temiassistant.presentation.chat_ui
 
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ibsystem.temiassistant.network.currencyApiService
 import com.ibsystem.temiassistant.network.newsApiService
 import com.ibsystem.temiassistant.network.openWeatherApiService
 import com.ibsystem.temiassistant.network.wikiApiService
 import com.ibsystem.temiassistant.network.witApiService
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.navigation.model.Position
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 
@@ -132,6 +137,9 @@ class ChatScreenViewModel: ViewModel() {
                                 }
                             }
                         }
+                        "convert_currency" -> {
+
+                        }
 
                         else -> Log.i("CONTEXT", "UNKNOWN")
                     }
@@ -148,6 +156,10 @@ class ChatScreenViewModel: ViewModel() {
 //                addMessage(Message(MessageBody("Error: Code ${response.code()}"), false))
 //            }
         }
+    }
+
+    suspend fun convertCurrency(amount: String, from: String, to: String) {
+            currencyApiService.convertCurrency(from,to,amount)
     }
 
     private fun robotResponse(speech: String, imageUrl: String? = null) {
