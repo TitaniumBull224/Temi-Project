@@ -12,7 +12,7 @@ import retrofit2.http.Query
 const val apiKeyCurrency = "yp3IHXQkOMHM1YdgIweKb5jYXrNZNyB8"
 
 private var retrofit_currency: Retrofit = Retrofit.Builder()
-    .baseUrl("https://api.currencybeacon.com/v1/")
+    .baseUrl("https://api.currencybeacon.com/")
     .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
     .build()
 
@@ -20,9 +20,11 @@ var currencyApiService: CurrencyApiService = retrofit_currency.create(CurrencyAp
 
 interface CurrencyApiService {
     @Headers("Content-Type: application/json")
-    @GET("convert")
+    @GET("v1/convert")
     suspend fun convertCurrency(@Query("from") from: String,
-                               @Query("to") to: String,
-                               @Query("amount") amount: String,
+                                @Query("to") to: String,
+                                @Query("amount") amount: String,
+                                @Query("api_key") api_key: String = apiKeyCurrency
+
     ): Response<ConvertResponse>
 }

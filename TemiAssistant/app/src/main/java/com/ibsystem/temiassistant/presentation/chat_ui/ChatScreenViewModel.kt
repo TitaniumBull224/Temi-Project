@@ -17,6 +17,8 @@ import com.ibsystem.temiassistant.network.witApiService
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.navigation.model.Position
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 
@@ -35,6 +37,9 @@ class ChatScreenViewModel: ViewModel() {
 
     lateinit var longitude: String
     lateinit var latitude: String
+
+    private val _convertShowDialog: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val convertShowDialog = _convertShowDialog.asStateFlow()
 
     private suspend fun addMessage(message: Message) {
         val currentList = _messageList.value.orEmpty()
@@ -66,6 +71,10 @@ class ChatScreenViewModel: ViewModel() {
 
     fun setCurrentPosition(position: Position) {
         _currentPosition = position
+    }
+
+    fun converShowDialogSwitch() {
+        _convertShowDialog.value = _convertShowDialog.value.not()
     }
 
     fun messageToWit(message: MessageBody) {
@@ -138,7 +147,7 @@ class ChatScreenViewModel: ViewModel() {
                             }
                         }
                         "convert_currency" -> {
-
+                            converShowDialogSwitch()
                         }
 
                         else -> Log.i("CONTEXT", "UNKNOWN")
@@ -158,8 +167,12 @@ class ChatScreenViewModel: ViewModel() {
         }
     }
 
-    suspend fun convertCurrency(amount: String, from: String, to: String) {
-            currencyApiService.convertCurrency(from,to,amount)
+    suspend fun convertCurrency(from: String, to: String, amount: String) {
+        Log.i("Convert", "$amount // $from -> $to")
+        val convertResponse = currencyApiService.convertCurrency(from, to, amount)
+        if(convertResponse.isSuccessful) {
+            robotResponse(convertResponse.body()!!.amount.toString())
+        }
     }
 
     private fun robotResponse(speech: String, imageUrl: String? = null) {
