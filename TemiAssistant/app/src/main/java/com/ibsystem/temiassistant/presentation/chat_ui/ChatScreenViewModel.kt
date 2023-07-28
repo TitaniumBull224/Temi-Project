@@ -171,7 +171,9 @@ class ChatScreenViewModel: ViewModel() {
         Log.i("Convert", "$amount // $from -> $to")
         val convertResponse = currencyApiService.convertCurrency(from, to, amount)
         if(convertResponse.isSuccessful) {
-            robotResponse(convertResponse.body()!!.amount.toString())
+            robotResponse("結果：" + convertResponse.body()!!.value.toString())
+        } else {
+            Log.i("Convert", "Where did I go wrong!")
         }
     }
 

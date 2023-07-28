@@ -287,8 +287,7 @@ fun MessageItem(
     messageText: String,
     isOut: Boolean,
     time: String,
-    imageUrl: String? = null,
-//    currencyQuery: Boolean = false
+    imageUrl: String? = null
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -339,9 +338,6 @@ fun MessageItem(
                         contentScale = ContentScale.Crop
                     )
                 }
-//                if(currencyQuery) {
-//                    InputAmountOfMoney(viewModel = viewModel)
-//                }
             }
         }
 
@@ -361,45 +357,16 @@ fun InputAmountOfMoneyDialog(
 ) {
     if (showDialog) {
         Dialog(onDismissRequest = onDismiss) {
-            InputAmountOfMoney(viewModel, onDismiss)
+            Surface(
+                shape = MaterialTheme.shapes.medium,
+                color = Color.White,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                InputAmountOfMoney(viewModel, onDismiss)
+            }
         }
     }
 }
-
-//@Composable
-//fun InputAmountOfMoney(viewModel: ChatScreenViewModel) {
-//    var inputAmount by rememberSaveable { mutableStateOf("") }
-//    var inputFrom by rememberSaveable { mutableStateOf("") }
-//    var inputTo by rememberSaveable { mutableStateOf("") }
-//    val scope = rememberCoroutineScope() // Create a coroutine scope
-//    Row {
-//        TextField(
-//            value = inputAmount,
-//            onValueChange = { newText ->
-//                inputAmount = newText.trimStart { it == '0' }
-//            }
-//        )
-//        TextField(
-//            value = inputFrom,
-//            onValueChange = { newText ->
-//                inputAmount = newText.trimStart { it == '0' }
-//            }
-//        )
-//        TextField(
-//            value = inputTo,
-//            onValueChange = { newText ->
-//                inputAmount = newText.trimStart { it == '0' }
-//            }
-//        )
-//        Button(
-//            onClick = { scope.launch {
-//                viewModel.convertCurrency(inputFrom, inputTo, inputAmount)
-//            }},
-//        ) {
-//            Text("通貨変換")
-//        }
-//    }
-//}
 
 @Composable
 fun InputAmountOfMoney(
@@ -411,37 +378,46 @@ fun InputAmountOfMoney(
     var inputTo by rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
-    Column {
-        Row {
-            TextField(
-                value = inputAmount,
-                onValueChange = { newText ->
-                    inputAmount = newText.trimStart { it == '0' }
-                },
-                label = { Text("金額") }
-            )
-        }
-        Row {
+    Column(
+        modifier = Modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             TextField(
                 value = inputFrom,
                 onValueChange = { newText ->
-                    inputFrom = newText
+                    inputFrom = newText.toUpperCase()
                 },
                 label = { Text("変換前の通貨") }
             )
             TextField(
                 value = inputTo,
                 onValueChange = { newText ->
-                    inputTo = newText
+                    inputTo = newText.toUpperCase()
                 },
                 label = { Text("変換後の通貨") }
             )
         }
-        Row {
+        Spacer(modifier = Modifier.height(16.dp))
+        TextField(
+            value = inputAmount,
+            onValueChange = { newText ->
+                inputAmount = newText.trimStart { it == '0' }
+            },
+            label = { Text("金額") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Button(
                 onClick = {
                     scope.launch {
-                        Log.i("Convert", "True")
                         viewModel.convertCurrency(inputFrom, inputTo, inputAmount)
                         onDismiss()
                     }
@@ -455,6 +431,7 @@ fun InputAmountOfMoney(
         }
     }
 }
+
 
 
 
