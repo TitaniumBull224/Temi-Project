@@ -124,7 +124,7 @@ fun ItemProductPreview() {
             image = R.drawable.product10,
             unit = "7pcs, Priceg",
             price = 4.99,
-            nutritions = "100gr",
+            nutrition = "100gr",
             review = 4.0
         ),
         navController = rememberNavController(),

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "17cbeed76d3d2a19bd40fb2821dc1bd9",
+    "identityHash": "e4ad90cfb61b3cd2b39582f665efa737",
     "entities": [
       {
         "tableName": "product_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `image` INTEGER NOT NULL, `unit` TEXT NOT NULL, `price` REAL NOT NULL, `nutritions` TEXT NOT NULL, `review` REAL NOT NULL, `isCart` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `image` INTEGER NOT NULL, `unit` TEXT NOT NULL, `price` REAL NOT NULL, `nutrition` TEXT NOT NULL, `review` REAL NOT NULL, `isCart` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -45,8 +45,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "nutritions",
-            "columnName": "nutritions",
+            "fieldPath": "nutrition",
+            "columnName": "nutrition",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -76,7 +76,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '17cbeed76d3d2a19bd40fb2821dc1bd9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e4ad90cfb61b3cd2b39582f665efa737')"
     ]
   }
 }

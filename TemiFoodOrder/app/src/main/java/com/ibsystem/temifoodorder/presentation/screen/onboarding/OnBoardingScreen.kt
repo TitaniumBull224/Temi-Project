@@ -64,7 +64,7 @@ fun OnBoarding(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(id = R.string.welcome_to_store),
+                    text = stringResource(R.string.welcome_to_store),
                     fontFamily = GilroyFontFamily,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = TEXT_SIZE_49sp,

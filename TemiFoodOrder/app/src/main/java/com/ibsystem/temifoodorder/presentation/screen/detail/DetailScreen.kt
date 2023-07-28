@@ -182,7 +182,7 @@ fun DetailContentDescription(
                     .align(Alignment.CenterVertically)
             ) {
                 Text(
-                    text = productItem.nutritions,
+                    text = productItem.nutrition,
                     fontFamily = GilroyFontFamily,
                     fontWeight = FontWeight.SemiBold,
                     color = GraySecondTextColor,
@@ -267,24 +267,7 @@ fun DetailScreenImageHeaderPreview() {
             image = R.drawable.product2,
             unit = "7pcs, Priceg",
             price = 4.99,
-            nutritions = "100gr",
-            review = 4.0
-        )
-    )
-}
-
-@Preview
-@Composable
-fun DetailContentDescriptionPreview() {
-    DetailContentImageHeader(
-        ProductItem(
-            id = 1,
-            title = "Organic Bananas",
-            description = "Apples are nutritious. Apples may be good for weight loss. apples may be good for your heart. As part of a healtful and varied diet.",
-            image = R.drawable.product2,
-            unit = "7pcs, Priceg",
-            price = 4.99,
-            nutritions = "100gr",
+            nutrition = "100gr",
             review = 4.0
         )
     )

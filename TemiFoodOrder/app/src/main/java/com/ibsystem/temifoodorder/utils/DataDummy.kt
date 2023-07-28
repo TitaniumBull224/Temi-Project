@@ -17,7 +17,7 @@ object DataDummy {
                 image = R.drawable.product1,
                 unit = "1pcs, Price",
                 price = 6.52,
-                nutritions = "50gr",
+                nutrition = "50gr",
                 review = 3.5,
             ),
             ProductItem(
@@ -27,7 +27,7 @@ object DataDummy {
                 image = R.drawable.product2,
                 unit = "10pcs, Price",
                 price = 2.50,
-                nutritions = "150gr",
+                nutrition = "150gr",
                 review = 5.0
             ),
             ProductItem(
@@ -37,7 +37,7 @@ object DataDummy {
                 image = R.drawable.product3,
                 unit = "1pcs, Price",
                 price = 7.5,
-                nutritions = "100gr",
+                nutrition = "100gr",
                 review = 4.0
             ),
             ProductItem(
@@ -47,7 +47,7 @@ object DataDummy {
                 image = R.drawable.product4,
                 unit = "1pcs, Price",
                 price = 9.5,
-                nutritions = "90gr",
+                nutrition = "90gr",
                 review = 4.7
             ),
             ProductItem(
@@ -57,7 +57,7 @@ object DataDummy {
                 image = R.drawable.product5,
                 unit = "20pcs, Price",
                 price = 2.0,
-                nutritions = "50gr",
+                nutrition = "50gr",
                 review = 4.2
             ),
             ProductItem(
@@ -67,7 +67,7 @@ object DataDummy {
                 image = R.drawable.product6,
                 unit = "1pcs, Price",
                 price = 1.5,
-                nutritions = "10gr",
+                nutrition = "10gr",
                 review = 3.8
             ),
             ProductItem(
@@ -77,7 +77,7 @@ object DataDummy {
                 image = R.drawable.product7,
                 unit = "1pcs, Price",
                 price = 5.0,
-                nutritions = "70gr",
+                nutrition = "70gr",
                 review = 3.0
             ),
             ProductItem(
@@ -87,7 +87,7 @@ object DataDummy {
                 image = R.drawable.product8,
                 unit = "1pcs, Price",
                 price = 6.5,
-                nutritions = "100gr",
+                nutrition = "100gr",
                 review = 4.2
             ),
             ProductItem(
@@ -97,7 +97,7 @@ object DataDummy {
                 image = R.drawable.product9,
                 unit = "1pcs, Price",
                 price = 5.54,
-                nutritions = "100gr",
+                nutrition = "100gr",
                 review = 4.7
             ),
             ProductItem(
@@ -107,7 +107,7 @@ object DataDummy {
                 image = R.drawable.product10,
                 unit = "8pcs, Price",
                 price = 9.10,
-                nutritions = "100gr",
+                nutrition = "100gr",
                 review = 4.5
             ),
         )
