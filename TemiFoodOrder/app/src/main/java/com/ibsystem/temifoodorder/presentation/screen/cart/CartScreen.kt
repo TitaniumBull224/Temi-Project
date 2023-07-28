@@ -22,29 +22,29 @@ fun CartScreen(
     modifier: Modifier = Modifier,
     cartViewModel: CartViewModel = hiltViewModel()
 ) {
-    val productCartList by cartViewModel.productCartList.collectAsState()
-
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Text(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(top = DIMENS_16dp),
-            text = stringResource(R.string.my_cart),
-            fontFamily = GilroyFontFamily,
-            fontWeight = FontWeight.Bold,
-            fontSize = TEXT_SIZE_18sp,
-            color = Black
-        )
-
-        Spacer(modifier = Modifier.height(DIMENS_16dp))
-
-        ListContentCart(
-            cartProducts = productCartList,
-            onClickDeleteCart = { productItem ->
-                cartViewModel.deleteCart(productItem.copy(isCart = false))
-            }
-        )
-    }
+//    val productCartList by cartViewModel.productCartList.collectAsState()
+//
+//    Column(
+//        modifier = modifier.fillMaxSize()
+//    ) {
+//        Text(
+//            modifier = Modifier
+//                .align(Alignment.CenterHorizontally)
+//                .padding(top = DIMENS_16dp),
+//            text = stringResource(R.string.my_cart),
+//            fontFamily = GilroyFontFamily,
+//            fontWeight = FontWeight.Bold,
+//            fontSize = TEXT_SIZE_18sp,
+//            color = Black
+//        )
+//
+//        Spacer(modifier = Modifier.height(DIMENS_16dp))
+//
+//        ListContentCart(
+//            cartProducts = productCartList,
+//            onClickDeleteCart = { productItem ->
+//                cartViewModel.deleteCart(productItem.copy(isCart = false))
+//            }
+//        )
+//    }
 }
