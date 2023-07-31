@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.ibsystem.temifooddelivery.data.datasource.ApiResult
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
+import com.ibsystem.temifooddelivery.ui.order_list_ui.OrderListScreen
 import com.ibsystem.temifooddelivery.ui.theme.TemiFoodDeliveryTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -26,6 +27,8 @@ class MainActivity : ComponentActivity() {
     private val orderViewModel by viewModels<OrderViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        orderViewModel.getAllOrders()
+        observeData()
         setContent {
             TemiFoodDeliveryTheme {
                 // A surface container using the 'background' color from the theme
@@ -33,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    OrderListScreen(viewModel = orderViewModel)
                 }
             }
         }
@@ -50,13 +53,11 @@ class MainActivity : ComponentActivity() {
                     Log.i("Main Act", "IS LOADING")
                 }
                 is ApiResult.Success -> {
-                    val orders = data.data as List<OrderModelItem>
+                    val orders = data.data as List<*>
                     orders.forEach{
                         Log.i("Main Act", it.toString())
                     }
                 }
-
-
             }
             }
         }

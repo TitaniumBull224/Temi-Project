@@ -1,7 +1,5 @@
 package com.ibsystem.temifooddelivery.data.datasource
 
-import androidx.compose.ui.text.android.style.BaselineShiftSpan
-import com.ibsystem.temifooddelivery.domain.OrderModel
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
@@ -12,18 +10,20 @@ import javax.inject.Inject
 
 class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseClient) {
      fun getAllOrders(): Flow<ApiResult<List<OrderModelItem>>> {
+         println("FDFS")
          return flow {
              emit(ApiResult.Loading)
              try {
-                 val queryRes = supabaseClient.postgrest.from("Order")
-                     .select(columns = Columns.raw(
-                         """
-                    *,
-                    Product(*),
-                    Order_Product(quantity)
-                """.trimIndent()
+                 val queryRes = supabaseClient.postgrest["Order"]
+                     .select(columns = Columns.list(
+
+                    "*",
+                    "Product(*)",
+                    "Order_Product(quantity)"
                      ))
+
                  val orders = queryRes.decodeList<OrderModelItem>()
+                 println(orders.toString())
                  emit(ApiResult.Success(orders))
              }
              catch (e: Exception) {
