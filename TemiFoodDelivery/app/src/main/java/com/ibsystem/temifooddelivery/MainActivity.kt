@@ -1,8 +1,10 @@
 package com.ibsystem.temifooddelivery
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -10,9 +12,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
+import com.ibsystem.temifooddelivery.data.datasource.ApiResult
+import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import com.ibsystem.temifooddelivery.ui.theme.TemiFoodDeliveryTheme
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val orderViewModel by viewModels<OrderViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -24,6 +35,29 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Greeting("Android")
                 }
+            }
+        }
+    }
+
+    private fun observeData() {
+        lifecycleScope.launch {
+            orderViewModel.uiState.collectLatest {
+                    data -> when(data){
+                is ApiResult.Error -> {
+                    Log.e("Main Act", "Error: ${data.message}")
+                }
+                ApiResult.Loading -> {
+                    Log.i("Main Act", "IS LOADING")
+                }
+                is ApiResult.Success -> {
+                    val orders = data.data as List<OrderModelItem>
+                    orders.forEach{
+                        Log.i("Main Act", it.toString())
+                    }
+                }
+
+
+            }
             }
         }
     }
