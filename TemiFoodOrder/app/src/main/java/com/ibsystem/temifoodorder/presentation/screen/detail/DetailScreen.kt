@@ -60,7 +60,7 @@ fun DetailScreen(
                         productItem = it,
                         onClickToCart = { productItem ->
                             mContext.showToastShort("Success Add To Cart ${productItem.name}")
-                            TODO("Add select Cart")
+                            // TODO: Add select Cart
                         }
                     )
                 }

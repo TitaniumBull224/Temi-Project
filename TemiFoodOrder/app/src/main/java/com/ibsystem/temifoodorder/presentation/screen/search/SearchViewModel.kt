@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.ibsystem.temifoodorder.domain.model.ProductItem
-import com.ibsystem.temifoodorder.domain.usecase.UseCases
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val useCases: UseCases
+
 ) : ViewModel() {
 
     private val _searchQuery = mutableStateOf("")
@@ -29,9 +28,7 @@ class SearchViewModel @Inject constructor(
 
     fun searchProduct(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            useCases.searchProductUseCase.invoke(query).collect { values ->
-                _searchProductList.value = values
-            }
+            // TODO: searchProduct
         }
     }
 

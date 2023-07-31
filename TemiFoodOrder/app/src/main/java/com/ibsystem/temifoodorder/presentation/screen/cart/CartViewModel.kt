@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.ibsystem.temifoodorder.domain.model.ProductItem
-import com.ibsystem.temifoodorder.domain.usecase.UseCases
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,11 +12,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    private val useCases: UseCases
+
 ) : ViewModel() {
-
-    private val isCart = true
-
     private val _productCartList = MutableStateFlow<List<ProductItem>>(emptyList())
     val productCartList = _productCartList.asStateFlow()
 
@@ -26,17 +22,11 @@ class CartViewModel @Inject constructor(
     }
 
     private fun getAllProductCartList() {
-        viewModelScope.launch(Dispatchers.IO) {
-            useCases.getAllCartUseCase.invoke(isCart).collect { values ->
-                _productCartList.value = values
-            }
-        }
+        // TODO: getAllProductCartList
     }
 
     fun deleteCart(productItem: ProductItem) {
-        viewModelScope.launch(Dispatchers.IO) {
-            useCases.deleteCart.invoke(productItem)
-        }
+        // TODO: deleteCart
     }
 
 }

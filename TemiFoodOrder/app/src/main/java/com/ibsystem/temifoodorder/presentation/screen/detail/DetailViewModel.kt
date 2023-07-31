@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.ibsystem.temifoodorder.domain.model.ProductItem
-import com.ibsystem.temifoodorder.domain.usecase.UseCases
 import com.ibsystem.temifoodorder.utils.Constants.PRODUCT_ARGUMENT_KEY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val useCases: UseCases,
-    saveStatedHandle: SavedStateHandle
+    // saveStatedHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _selectedProduct: MutableStateFlow<ProductItem?> = MutableStateFlow(null)
@@ -24,14 +22,13 @@ class DetailViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            val productId = saveStatedHandle.get<Int>(PRODUCT_ARGUMENT_KEY) ?: 0
-            _selectedProduct.value =
-                useCases.getSelectedProductUseCase.invoke(productId = productId)
+//            val productId = saveStatedHandle.get<Int>(PRODUCT_ARGUMENT_KEY) ?: 0
+//            _selectedProduct.value = useCases.getSelectedProductUseCase.invoke(productId = productId)
         }
     }
 
     fun addCart(productItem: ProductItem) = viewModelScope.launch {
-        useCases.addCartUseCase.invoke(productItem)
+        // TODO: addCart
     }
 
 }

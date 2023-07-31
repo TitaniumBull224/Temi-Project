@@ -125,7 +125,7 @@ fun HeaderLocationHome(
 
 fun clickToCart(context: Context, productItem: ProductItem, viewModel: HomeViewModel) {
     context.showToastShort("Success Add To Cart ${productItem.name}")
-    TODO("Do something with addCart on Home")
+    // TODO: Do something with addCart on Home
 }
 
 @Preview(showBackground = true)
