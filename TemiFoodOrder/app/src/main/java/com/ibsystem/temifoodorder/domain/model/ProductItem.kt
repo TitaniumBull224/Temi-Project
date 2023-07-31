@@ -7,13 +7,9 @@ import com.ibsystem.temifoodorder.utils.Constants.PRODUCT_DATABASE_TABLE
 @Entity(tableName = PRODUCT_DATABASE_TABLE)
 data class ProductItem(
     @PrimaryKey(autoGenerate = false)
-    val id: Int,
-    val title: String,
+    val id: String,
+    val name: String,
     val description: String,
     val image: Int,
-    val unit: String,
-    val price: Double,
-    val nutrition: String,
-    val review: Double,
-    var isCart: Boolean = false
+    val price: Double
 )

@@ -2,21 +2,21 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "e4ad90cfb61b3cd2b39582f665efa737",
+    "identityHash": "b4fd76fc6ed4b3ba1e6975e9c6834396",
     "entities": [
       {
         "tableName": "product_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `image` INTEGER NOT NULL, `unit` TEXT NOT NULL, `price` REAL NOT NULL, `nutrition` TEXT NOT NULL, `review` REAL NOT NULL, `isCart` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `image` INTEGER NOT NULL, `price` REAL NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "title",
-            "columnName": "title",
+            "fieldPath": "name",
+            "columnName": "name",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -33,33 +33,9 @@
             "notNull": true
           },
           {
-            "fieldPath": "unit",
-            "columnName": "unit",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
             "fieldPath": "price",
             "columnName": "price",
             "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "nutrition",
-            "columnName": "nutrition",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "review",
-            "columnName": "review",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isCart",
-            "columnName": "isCart",
-            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -76,7 +52,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e4ad90cfb61b3cd2b39582f665efa737')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b4fd76fc6ed4b3ba1e6975e9c6834396')"
     ]
   }
 }

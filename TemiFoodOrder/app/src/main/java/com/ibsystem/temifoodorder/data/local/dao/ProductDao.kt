@@ -16,8 +16,8 @@ interface ProductDao {
     @Query("SELECT * FROM product_table WHERE id=:productId")
     fun getSelectedProduct(productId: Int): ProductItem
 
-    @Query("SELECT * FROM product_table WHERE isCart=:isCart")
-    fun getAllProductCart(isCart: Boolean): Flow<List<ProductItem>>
+    @Query("SELECT * FROM product_table WHERE id=1")
+    fun getAllProductCart(): Flow<List<ProductItem>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCart(productItem: ProductItem)
@@ -25,7 +25,7 @@ interface ProductDao {
     @Update
     suspend fun deleteCart(productItem: ProductItem)
 
-    @Query("SELECT * FROM product_table WHERE title LIKE '%' || :query || '%'")
+    @Query("SELECT * FROM product_table WHERE name LIKE '%' || :query || '%'")
     fun searchProduct(query: String): Flow<List<ProductItem>>
 
 }

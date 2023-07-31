@@ -20,13 +20,14 @@ class LocalDataSourceImpl(
         productDao.getSelectedProduct(productId = productId)
 
     override fun getAllProductCart(isCart: Boolean): Flow<List<ProductItem>> =
-        productDao.getAllProductCart(isCart)
+        productDao.getAllProductCart()
 
     override suspend fun addCart(productItem: ProductItem) = productDao.addCart(productItem)
 
     override suspend fun deleteCart(productItem: ProductItem) {
-        productItem.isCart = false
+        // Here
         productDao.deleteCart(productItem)
+        TODO("Do something about delete")
     }
 
     override fun searchProduct(query: String): Flow<List<ProductItem>> =

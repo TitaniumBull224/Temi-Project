@@ -58,21 +58,11 @@ fun ProductCard(
             Spacer(modifier = Modifier.height(DIMENS_24dp))
 
             Text(
-                text = productItem.title,
+                text = productItem.name,
                 fontFamily = GilroyFontFamily,
                 fontWeight = FontWeight.Bold,
                 color = Black,
                 fontSize = TEXT_SIZE_16sp
-            )
-
-            Spacer(modifier = Modifier.height(DIMENS_6dp))
-
-            Text(
-                text = productItem.unit,
-                fontFamily = GilroyFontFamily,
-                fontWeight = FontWeight.Medium,
-                color = GraySecondTextColor,
-                fontSize = TEXT_SIZE_12sp
             )
 
             Spacer(modifier = Modifier.height(DIMENS_20dp))
@@ -118,14 +108,11 @@ fun ProductCard(
 fun ItemProductPreview() {
     ProductCard(
         productItem = ProductItem(
-            id = 1,
-            title = "Organic Bananas",
+            id = "1",
+            name = "Organic Bananas",
             description = "",
             image = R.drawable.product10,
-            unit = "7pcs, Priceg",
-            price = 4.99,
-            nutrition = "100gr",
-            review = 4.0
+            price = 4.99
         ),
         navController = rememberNavController(),
         onClickToCart = {}

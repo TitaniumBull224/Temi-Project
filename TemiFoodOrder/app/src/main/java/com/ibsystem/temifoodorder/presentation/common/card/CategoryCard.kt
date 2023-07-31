@@ -45,7 +45,7 @@ fun CategoryCard(
             Spacer(modifier = Modifier.height(DIMENS_20dp))
 
             Text(
-                text = categoryItem.title,
+                text = categoryItem.cat_name,
                 fontFamily = GilroyFontFamily,
                 fontWeight = FontWeight.Bold,
                 fontSize = TEXT_SIZE_16sp,
@@ -62,7 +62,8 @@ fun CategoryCard(
 fun CategoryCardPreview() {
     CategoryCard(
         categoryItem = CategoryItem(
-            title = "Fresh Fruits\n" + "& Vegetable",
+            cat_id = "1",
+            cat_name = "Fresh Fruits\n" + "& Vegetable",
             image = R.drawable.category2,
             background = BackgroundCategory3
         )

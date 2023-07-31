@@ -72,34 +72,25 @@ fun ListContentProductPreview() {
         title = "Exclusive Offer",
         products = listOf(
             ProductItem(
-                id = 1,
-                title = "Organic Bananas",
+                id = "1",
+                name = "Organic Bananas",
                 description = "",
                 image = R.drawable.product10,
-                unit = "7pcs, Priceg",
-                price = 4.99,
-                nutrition = "100gr",
-                review = 4.0
+                price = 4.99
             ),
             ProductItem(
-                id = 1,
-                title = "Organic Bananas",
+                id = "2",
+                name = "Organic Bananas",
                 description = "",
                 image = R.drawable.product10,
-                unit = "7pcs, Priceg",
-                price = 4.99,
-                nutrition = "100gr",
-                review = 4.0
+                price = 4.99
             ),
             ProductItem(
-                id = 1,
-                title = "Organic Bananas",
+                id = "3",
+                name = "Organic Bananas",
                 description = "",
                 image = R.drawable.product10,
-                unit = "7pcs, Priceg",
-                price = 4.99,
-                nutrition = "100gr",
-                review = 4.0
+                price = 4.99
             )
         ),
         navController = rememberNavController(),

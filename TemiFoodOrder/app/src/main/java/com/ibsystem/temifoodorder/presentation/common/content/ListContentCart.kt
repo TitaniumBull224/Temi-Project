@@ -76,22 +76,13 @@ fun ContentCart(
                     .padding(start = DIMENS_16dp),
             ) {
                 Text(
-                    text = productItem.title,
+                    text = productItem.name,
                     fontFamily = GilroyFontFamily,
                     fontWeight = FontWeight.Bold,
                     color = Black,
                     fontSize = TEXT_SIZE_16sp
                 )
 
-                Spacer(modifier = Modifier.height(DIMENS_4dp))
-
-                Text(
-                    text = productItem.unit,
-                    fontFamily = GilroyFontFamily,
-                    fontWeight = FontWeight.Medium,
-                    color = GraySecondTextColor,
-                    fontSize = TEXT_SIZE_12sp,
-                )
             }
 
             Text(
@@ -124,14 +115,11 @@ fun ContentCart(
 fun ContentCartPreview() {
     ContentCart(
         productItem = ProductItem(
-            id = 1,
-            title = "Organic Bananas",
+            id = "1",
+            name = "Organic Bananas",
             description = "Apples are nutritious. Apples may be good for weight loss. apples may be good for your heart. As part of a healtful and varied diet.",
             image = R.drawable.product2,
-            unit = "7pcs, Priceg",
-            price = 4.99,
-            nutrition = "100gr",
-            review = 4.0
+            price = 4.99
         ),
         onClickDeleteCart = {}
     )
