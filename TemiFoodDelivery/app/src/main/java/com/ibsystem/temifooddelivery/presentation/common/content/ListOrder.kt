@@ -82,12 +82,12 @@ fun ListOrder(
                     )
                     TableCell(text = "デート", weight = column2Weight, title = true)
                     TableCell(text = "状況", weight = column3Weight, title = true)
-//                    TableCell(
-//                        text = "Amount",
-//                        weight = column4Weight,
-//                        alignment = TextAlign.Right,
-//                        title = true
-//                    )
+                    TableCell(
+                        text = "Amount",
+                        weight = column4Weight,
+                        alignment = TextAlign.Right,
+                        title = true
+                    )
                 }
                 Divider(
                     color = Color.LightGray,
@@ -110,11 +110,11 @@ fun ListOrder(
                     )
                     TableCell(text = order.time!!, weight = column2Weight)
                     StatusCell(text = "Pending", weight = column3Weight)
-//                    TableCell(
-//                        text = "order",
-//                        weight = column4Weight,
-//                        alignment = TextAlign.Right
-//                    )
+                    TableCell(
+                        text = "order",
+                        weight = column4Weight,
+                        alignment = TextAlign.Right
+                    )
                 }
                 Divider(
                     color = Color.LightGray,
