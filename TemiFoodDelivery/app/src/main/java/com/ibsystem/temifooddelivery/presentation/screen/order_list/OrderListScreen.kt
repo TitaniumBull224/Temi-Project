@@ -46,7 +46,6 @@ viewModel: OrderViewModel
                 if (orders != null) {
                     ListOrder(title = "オーダーリスト", orders = orders)
                 }
-
             }
         }
 
