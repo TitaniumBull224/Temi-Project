@@ -3,11 +3,14 @@ package com.ibsystem.temifooddelivery.data.repository
 import com.ibsystem.temifooddelivery.data.datasource.ApiResult
 import com.ibsystem.temifooddelivery.data.datasource.OrderDataSource
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
+import io.github.jan.supabase.realtime.PostgresAction
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 interface OrderRepository {
     fun getAllOrders(): Flow<ApiResult<List<OrderModelItem>>>
+    suspend fun listenToOrdersChange(): Flow<PostgresAction>
+
 }
 
 class OrderRepositoryImpl @Inject constructor(
@@ -15,6 +18,10 @@ class OrderRepositoryImpl @Inject constructor(
 ) : OrderRepository {
     override fun getAllOrders(): Flow<ApiResult<List<OrderModelItem>>> {
         return dataSource.getAllOrders()
+    }
+
+    override suspend fun listenToOrdersChange(): Flow<PostgresAction> {
+        return dataSource.listenToOrdersChange()
     }
 
 }

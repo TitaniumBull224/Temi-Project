@@ -32,6 +32,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled = true
+
+
     }
     kotlinOptions {
         jvmTarget = '17'
@@ -95,6 +98,8 @@ dependencies {
 
     // Testing
     androidTestImplementation "androidx.navigation:navigation-testing:2.5.3"
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.2")
 
 
 }

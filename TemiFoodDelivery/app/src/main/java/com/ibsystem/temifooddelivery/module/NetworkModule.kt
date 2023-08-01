@@ -26,7 +26,7 @@ object NetworkModule {
             supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5bGh2bnZ2Y3dvZnN1d3Bvem9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTA1MDQ3ODUsImV4cCI6MjAwNjA4MDc4NX0.Mg6Z6zXG42CxfScgxzBwzVOmk85-J8WEvUG9oK2d00o"
         ) {
             install(Postgrest)
-
+            install(Realtime)
         }
     }
 

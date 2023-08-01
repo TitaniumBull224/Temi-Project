@@ -30,6 +30,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         orderViewModel.getAllOrders()
         observeData()
+        orderViewModel.listenToOrdersChange()
         setContent {
             TemiFoodDeliveryTheme {
                 // A surface container using the 'background' color from the theme
@@ -45,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
     private fun observeData() {
         lifecycleScope.launch {
-            orderViewModel.uiState.collectLatest {
+            orderViewModel.uiState.collect {
                     data -> when(data){
                 is ApiResult.Error -> {
                     Log.e("Main Act", "Error: ${data.message}")
