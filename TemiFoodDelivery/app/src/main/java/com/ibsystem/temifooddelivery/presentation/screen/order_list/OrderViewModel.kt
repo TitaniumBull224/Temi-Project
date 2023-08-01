@@ -29,6 +29,10 @@ class OrderViewModel @Inject constructor (
         val orderList: StateFlow<List<OrderModelItem>>
             get() = _orderList
 
+    init {
+        getAllOrders()
+        listenToOrdersChange()
+    }
 
 
     fun getAllOrders() {
@@ -51,10 +55,12 @@ class OrderViewModel @Inject constructor (
                     is PostgresAction.Delete -> Log.i("Listener","Deleted: ${it.oldRecord}")
                     is PostgresAction.Insert -> {
                         Log.i("Listener", "Inserted: ${it.record["id"]}")
-                        updateOrders(getOrderID(it))
+                        addNewOrders(getOrderID(it))
                     }
                     is PostgresAction.Select -> Log.i("Listener","Selected: ${it.record}")
-                    is PostgresAction.Update -> Log.i("Listener","Updated: ${it.oldRecord} with ${it.record}")
+                    is PostgresAction.Update -> {
+                        Log.i("Listener", "Updated: ${it.oldRecord} with ${it.record}")
+                    }
                 else -> Log.i("Listener","sighhh")
                 }
             }
@@ -64,7 +70,7 @@ class OrderViewModel @Inject constructor (
     private fun getOrderID(it: PostgresAction.Insert) =
         it.record["id"].toString().replace("\"", "")
 
-    fun updateOrders(id: String) {
+    fun addNewOrders(id: String) {
         viewModelScope.launch {
             repository.getOrderDetailsByID(id).collectLatest {
                 res -> if(res is ApiResult.Success) {
@@ -77,5 +83,11 @@ class OrderViewModel @Inject constructor (
             }
         }
 
+    }
+
+    fun updateOrderStatus(id: String, newStatus: String) {
+        viewModelScope.launch {
+            repository.updateOrderStatus(id, newStatus)
+        }
     }
 }

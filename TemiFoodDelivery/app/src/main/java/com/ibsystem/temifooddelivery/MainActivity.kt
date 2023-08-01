@@ -29,9 +29,9 @@ class MainActivity : ComponentActivity() {
     private val orderViewModel by viewModels<OrderViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        orderViewModel.getAllOrders()
+        //orderViewModel.getAllOrders()
         observeData()
-        orderViewModel.listenToOrdersChange()
+        //orderViewModel.listenToOrdersChange()
         setContent {
             TemiFoodDeliveryTheme {
                 // A surface container using the 'background' color from the theme

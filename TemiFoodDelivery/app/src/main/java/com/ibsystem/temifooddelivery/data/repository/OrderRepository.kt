@@ -10,6 +10,7 @@ import javax.inject.Inject
 interface OrderRepository {
     fun getAllOrders(): Flow<ApiResult<List<OrderModelItem>>>
     fun getOrderDetailsByID(id: String): Flow<ApiResult<OrderModelItem>>
+    fun updateOrderStatus(id: String, newStatus: String): Flow<ApiResult<Unit>>
     suspend fun listenToOrdersChange(): Flow<PostgresAction>
 
 }
@@ -25,8 +26,14 @@ class OrderRepositoryImpl @Inject constructor(
         return dataSource.getOrderDetailsByID(id)
     }
 
+    override fun updateOrderStatus(id: String, newStatus: String): Flow<ApiResult<Unit>> {
+        return dataSource.updateOrderStatus(id, newStatus)
+    }
+
     override suspend fun listenToOrdersChange(): Flow<PostgresAction> {
         return dataSource.listenToOrdersChange()
     }
+
+
 
 }

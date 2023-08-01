@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ibsystem.temifooddelivery.data.datasource.ApiResult
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
+import com.ibsystem.temifooddelivery.presentation.common.content.ListOrder
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
@@ -35,14 +36,16 @@ viewModel: OrderViewModel
             ApiResult.Loading -> CircularProgressIndicator()
             is ApiResult.Success -> {
                 val orders = orderList.value as? List<OrderModelItem>
-                    LazyColumn {
-                        items(orders ?: listOf()) { order ->
-                            Text(text = order.toString(),modifier = Modifier
-                                .padding(10.dp)
-                                .fillMaxWidth())
-                        }
-                    }
-
+//                    LazyColumn {
+//                        items(orders ?: listOf()) { order ->
+//                            Text(text = order.toString(),modifier = Modifier
+//                                .padding(10.dp)
+//                                .fillMaxWidth())
+//                        }
+//                    }
+                if (orders != null) {
+                    ListOrder(title = "オーダーリスト", orders = orders)
+                }
 
             }
         }

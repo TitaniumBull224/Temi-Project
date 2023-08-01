@@ -25,7 +25,6 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.ibsystem.temifooddelivery.R
 import com.ibsystem.temifooddelivery.navigation.screen.Screen
-import com.ibsystem.temifooddelivery.presentation.common.content.ListContentProduct
 import com.ibsystem.temifooddelivery.ui.theme.*
 import com.ibsystem.temifooddelivery.utils.showToastShort
 
