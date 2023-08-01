@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.runtime.*
@@ -166,59 +167,105 @@ fun MessageSection(viewModel: ChatScreenViewModel) {
     val context = LocalContext.current
     val mRobot = (context as MainActivity).mRobot
     val message = remember { mutableStateOf("") }
+    val suggestions = remember { mutableStateListOf(*viewModel.generateSuggestions(message.value, 3).toTypedArray()) }
+    val conversationStage by viewModel.conversationStage.collectAsState()
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        backgroundColor = Color.White,
-        elevation = 10.dp
-    ) {
+    LaunchedEffect(conversationStage) {
+        suggestions.clear()
+        suggestions.addAll(viewModel.generateSuggestions(message.value, 3))
+    }
+    LaunchedEffect(message.value) {
+        suggestions.clear()
+        suggestions.addAll(viewModel.generateSuggestions(message.value, 3))
+    }
+
+    Column {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(6.dp)
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
-            IconButton(onClick = {
-                viewModel.clearMessage()
-                viewModel.newSessionID()
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Clear Messages"
-                )
-            }
-            OutlinedTextField(
-                placeholder = {
-                    Text("Message..")
-                },
-                value = message.value,
-                onValueChange = {
-                    message.value = it
-                },
-                shape = RoundedCornerShape(25.dp),
-                trailingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_send),
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.primary,
-                        modifier = Modifier.clickable {
-                            if(viewModel.connectivityState.value == true) {
-                                viewModel.messageToWit(MessageBody(message.value))
+            suggestions.forEach { suggestion ->
+                Text(
+                    text = suggestion,
+                    color = Color.White,
+                    modifier = Modifier
+                        .background(
+                            MaterialTheme.colors.primary,
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .padding(
+                            top = 8.dp,
+                            bottom = 8.dp,
+                            start = 16.dp,
+                            end = 16.dp
+                        )
+                        .clickable {
+                            if (viewModel.connectivityState.value == true) {
+                                viewModel.messageToWit(MessageBody(suggestion))
                             } else {
                                 Toast.makeText(context, "回線不調！", Toast.LENGTH_LONG).show()
                             }
-                            message.value = ""
                         }
-                    )
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 6.dp),
-            )
-            IconButton(onClick = { mRobot.askQuestion("刮目せよ！吾輩の名はテミだ！") }) {
-                Icon(
-                    imageVector = Icons.Default.Mic,
-                    contentDescription = "Voice Input"
+                        .padding(start = 8.dp, end = 8.dp)
                 )
+            }
+        }
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(),
+            backgroundColor = Color.White,
+            elevation = 10.dp
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(6.dp)
+            ) {
+                IconButton(onClick = {
+                    viewModel.clearMessage()
+                    viewModel.newSessionID()
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Clear Messages"
+                    )
+                }
+                OutlinedTextField(
+                    placeholder = {
+                        Text("Message..")
+                    },
+                    value = message.value,
+                    onValueChange = {
+                        message.value = it
+                    },
+                    shape = RoundedCornerShape(25.dp),
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_send),
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.primary,
+                            modifier = Modifier.clickable {
+                                if (viewModel.connectivityState.value == true) {
+                                    viewModel.messageToWit(MessageBody(message.value))
+                                } else {
+                                    Toast.makeText(context, "回線不調！", Toast.LENGTH_LONG).show()
+                                }
+                                message.value = ""
+                            }
+                        )
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 6.dp),
+                )
+                IconButton(onClick = { mRobot.askQuestion("刮目せよ！吾輩の名はテミだ！") }) {
+                    Icon(
+                        imageVector = Icons.Default.Mic,
+                        contentDescription = "Voice Input"
+                    )
+                }
             }
         }
     }
@@ -320,6 +367,13 @@ fun InputAmountOfMoney(
     var inputTo by rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
+    // Example list of currencies
+    val currencies = listOf("USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "HKD", "NZD")
+
+    // State variables for the dropdown menus
+    var showFromDropdown by remember { mutableStateOf(false) }
+    var showToDropdown by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier.padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -328,22 +382,71 @@ fun InputAmountOfMoney(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
-            TextField(
-                value = inputFrom,
-                onValueChange = { newText ->
-                    inputFrom = newText.toUpperCase()
-                },
-                label = { Text("変換前の通貨") }
-            )
-            TextField(
-                value = inputTo,
-                onValueChange = { newText ->
-                    inputTo = newText.toUpperCase()
-                },
-                label = { Text("変換後の通貨") }
-            )
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                OutlinedTextField(
+                    value = inputFrom,
+                    onValueChange = { inputFrom = it },
+                    label = { Text("変換前の通貨") },
+                    readOnly = true,
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = null,
+                            Modifier.clickable { showFromDropdown = true }
+                        )
+                    }
+                )
+                DropdownMenu(
+                    expanded = showFromDropdown,
+                    onDismissRequest = { showFromDropdown = false }
+                ) {
+                    currencies.forEach { currency ->
+                        DropdownMenuItem(onClick = {
+                            inputFrom = currency
+                            showFromDropdown = false
+                        }) {
+                            Text(currency)
+                        }
+                    }
+                }
+            }
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                OutlinedTextField(
+                    value = inputTo,
+                    onValueChange = { inputTo = it },
+                    label = { Text("変換後の通貨") },
+                    readOnly = true,
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = null,
+                            Modifier.clickable { showToDropdown = true }
+                        )
+                    }
+                )
+                DropdownMenu(
+                    expanded = showToDropdown,
+                    onDismissRequest = { showToDropdown = false }
+                ) {
+                    currencies.forEach { currency ->
+                        DropdownMenuItem(onClick = {
+                            inputTo = currency
+                            showToDropdown = false
+                        }) {
+                            Text(currency)
+                        }
+                    }
+                }
+            }
         }
+
         Spacer(modifier = Modifier.height(16.dp))
+
         TextField(
             value = inputAmount,
             onValueChange = { newText ->
@@ -352,7 +455,9 @@ fun InputAmountOfMoney(
             label = { Text("金額") },
             modifier = Modifier.fillMaxWidth()
         )
+
         Spacer(modifier = Modifier.height(16.dp))
+
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
