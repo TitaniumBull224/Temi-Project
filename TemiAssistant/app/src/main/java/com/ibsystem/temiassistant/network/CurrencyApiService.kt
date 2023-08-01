@@ -1,7 +1,6 @@
 package com.ibsystem.temiassistant.network
 
-import com.ibsystem.temiassistant.presentation.chat_ui.ConvertResponse
-import com.ibsystem.temiassistant.presentation.chat_ui.WeatherModel
+import com.ibsystem.temiassistant.domain.model.ConvertResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory

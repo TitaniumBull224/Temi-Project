@@ -1,4 +1,4 @@
-package com.ibsystem.temiassistant.presentation.map_ui
+package com.ibsystem.temiassistant.presentation.screen.map
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

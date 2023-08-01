@@ -1,6 +1,6 @@
-package com.ibsystem.temiassistant.presentation.chat_ui
-import com.squareup.moshi.JsonClass
+package com.ibsystem.temiassistant.domain.model
 
+import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Json
 
 //@JsonClass(generateAdapter = true)

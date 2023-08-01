@@ -1,4 +1,4 @@
-package com.ibsystem.temiassistant.mainscreen
+package com.ibsystem.temiassistant.navigation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
@@ -6,12 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.ibsystem.temiassistant.presentation.chat_ui.ChatScreen
-import com.ibsystem.temiassistant.presentation.chat_ui.ChatScreenViewModel
-import com.ibsystem.temiassistant.presentation.map_ui.MapScreen
-import com.ibsystem.temiassistant.presentation.map_ui.MapScreenViewModel
-import com.ibsystem.temiassistant.presentation.motion_ui.MotionScreen
-import com.ibsystem.temiassistant.presentation.setting_ui.SettingsScreen
+import com.ibsystem.temiassistant.presentation.screen.MainScreen
+import com.ibsystem.temiassistant.presentation.screen.chat.ChatScreen
+import com.ibsystem.temiassistant.presentation.screen.chat.ChatScreenViewModel
+import com.ibsystem.temiassistant.presentation.screen.map.MapScreen
+import com.ibsystem.temiassistant.presentation.screen.map.MapScreenViewModel
+import com.ibsystem.temiassistant.presentation.screen.settings.SettingsScreen
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -30,9 +30,9 @@ fun Navigation(navController: NavHostController, chatViewModel: ChatScreenViewMo
         composable(route = Screen.MapScreen.route) {
             MapScreen(navController = navController, viewModel = mapViewModel)
         }
-        composable(route = Screen.MotionScreen.route) {
-            MotionScreen(navController = navController, viewModel = mapViewModel)
-        }
+//        composable(route = Screen.MotionScreen.route) {
+//            MotionScreen(navController = navController, viewModel = mapViewModel)
+//        }
         composable(route = Screen.SettingsScreen.route) {
             SettingsScreen(navController = navController)
         }

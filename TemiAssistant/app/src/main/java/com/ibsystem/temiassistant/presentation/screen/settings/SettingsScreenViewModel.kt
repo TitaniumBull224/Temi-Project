@@ -1,4 +1,4 @@
-package com.ibsystem.temiassistant.presentation.setting_ui
+package com.ibsystem.temiassistant.presentation.screen.settings
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

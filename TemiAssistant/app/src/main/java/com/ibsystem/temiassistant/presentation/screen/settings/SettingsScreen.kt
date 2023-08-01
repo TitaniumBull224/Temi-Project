@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package com.ibsystem.temiassistant.presentation.setting_ui
+package com.ibsystem.temiassistant.presentation.screen.settings
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.ibsystem.temiassistant.R
-import com.ibsystem.temiassistant.presentation.chat_ui.TopBarSection
+import com.ibsystem.temiassistant.presentation.component.TopBarSection
 import com.ibsystem.temiassistant.ui.theme.Blue
 import com.ibsystem.temiassistant.ui.theme.Transparent
 

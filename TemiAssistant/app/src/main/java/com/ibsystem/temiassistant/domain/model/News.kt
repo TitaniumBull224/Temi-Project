@@ -1,8 +1,7 @@
-package com.ibsystem.temiassistant.presentation.chat_ui
+package com.ibsystem.temiassistant.domain.model
+
 import com.squareup.moshi.JsonClass
-
 import com.squareup.moshi.Json
-
 
 @JsonClass(generateAdapter = true)
 data class NewsModel(

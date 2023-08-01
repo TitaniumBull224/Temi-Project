@@ -1,7 +1,6 @@
 package com.ibsystem.temiassistant
 
-import com.ibsystem.temiassistant.presentation.chat_ui.Message
-import com.ibsystem.temiassistant.presentation.chat_ui.MessageBody
+import com.ibsystem.temiassistant.domain.model.MessageBody
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import org.junit.Assert
