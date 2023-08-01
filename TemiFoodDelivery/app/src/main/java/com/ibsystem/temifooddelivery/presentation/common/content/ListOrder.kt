@@ -6,10 +6,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Checkbox
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +27,7 @@ import com.ibsystem.temifooddelivery.R
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import com.ibsystem.temifooddelivery.presentation.common.card.ExpandableCard
 import com.ibsystem.temifooddelivery.ui.theme.*
+import kotlinx.coroutines.launch
 
 val column1Weight = .2f
 val column2Weight = .3f
@@ -35,6 +42,19 @@ fun ListOrder(
     //navController: NavController,
 //    onClickToCart: (ProductItem) -> Unit
 ) {
+    val checkedState = remember { mutableStateListOf<Boolean>() }
+    checkedState.clear()
+    checkedState.addAll(List(orders.size) { false })
+
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(orders) {
+        coroutineScope.launch {
+            listState.animateScrollToItem(orders.size)
+        }
+    }
+
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -64,11 +84,6 @@ fun ListOrder(
             verticalArrangement = Arrangement.spacedBy(DIMENS_2dp),
             contentPadding = PaddingValues(DIMENS_8dp)
         ) {
-//            items(orders) { order ->
-//                ExpandableCard(
-//                    orderItem = order
-//                )
-//            }
             item {
                 Row(
                     Modifier.fillMaxWidth(),
@@ -98,22 +113,24 @@ fun ListOrder(
                 )
             }
 
-            itemsIndexed(orders) { _, order ->
+            itemsIndexed(orders) { index, order ->
                 Row(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     TableCell(
-                        text = "#"+order.tableId!!,
+                        text = "#" + order.tableId!!,
                         weight = column1Weight,
                         alignment = TextAlign.Left
                     )
                     TableCell(text = order.time!!, weight = column2Weight)
                     StatusCell(text = "Pending", weight = column3Weight)
-                    TableCell(
-                        text = "order",
+                    CheckBoxCell(
                         weight = column4Weight,
-                        alignment = TextAlign.Right
+                        checked = checkedState[index],
+                        onCheckedChange = { checked ->
+                            checkedState[index] = checked
+                        }
                     )
                 }
                 Divider(
@@ -171,6 +188,21 @@ fun RowScope.StatusCell(
             .background(color, shape = RoundedCornerShape(50.dp)),
         textAlign = alignment,
         color = textColor
+    )
+}
+
+@Composable
+fun RowScope.CheckBoxCell(
+    checked: Boolean = false,
+    weight: Float,
+    onCheckedChange: ((Boolean) -> Unit)? = null
+) {
+    Checkbox(
+        checked = checked,
+        onCheckedChange = onCheckedChange,
+        modifier = Modifier
+            .weight(weight)
+            .padding(10.dp)
     )
 }
 
