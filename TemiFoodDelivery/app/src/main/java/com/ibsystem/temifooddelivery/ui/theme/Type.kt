@@ -22,13 +22,13 @@ val TypographyStyle = Typography(
     h1 = TextStyle(
         fontFamily = GilroyFontFamily,
         fontWeight = FontWeight.Bold,
-        color = Color.White,
+        color = Color.Black,
         fontSize = 49.sp
     ),
     body1 = TextStyle(
         fontFamily = GilroyFontFamily,
         fontWeight = FontWeight.Bold,
-        color = Color.White,
+        color = Color.Black,
         fontSize = 24.sp
     ),
 )

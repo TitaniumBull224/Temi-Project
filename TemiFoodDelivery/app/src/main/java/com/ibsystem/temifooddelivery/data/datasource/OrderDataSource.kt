@@ -5,6 +5,7 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.decodeIfNotEmptyOrDefault
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.postgrest.query.FilterOperator
 import io.github.jan.supabase.realtime.PostgresAction
 import io.github.jan.supabase.realtime.createChannel
 import io.github.jan.supabase.realtime.decodeRecord
@@ -55,18 +56,45 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
                 return changeFlow
     }
 
-    // Helper function to extract the changed orders from the PostgresChange
-//    private fun getUpdatedOrdersFromChange(change: PostgresAction): List<OrderModelItem> {
-//        return when (change) {
-//            is PostgresAction.Delete -> listOf(change.oldRecord as OrderModelItem)
-//            is PostgresAction.Insert -> listOf(change.record as OrderModelItem)
-//            is PostgresAction.Select -> listOf(change.record as OrderModelItem)
-//            is PostgresAction.Update -> listOf(change.record as OrderModelItem, change.oldRecord as OrderModelItem)
-//        }
-//    }
 
-    fun getOrderByID(id: String) {
-        
+    fun getOrderDetailsByID(id: String): Flow<ApiResult<OrderModelItem>> {
+        return flow {
+            emit(ApiResult.Loading)
+            try {
+                val queryRes = supabaseClient.postgrest["Order"]
+                    .select(columns = Columns.list(
+                        "*",
+                        "Product(*)",
+                        "Order_Product(quantity)"
+                    )) {
+                        eq("id", id)
+                    }
+
+                val order = queryRes.decodeSingle<OrderModelItem>()
+                emit(ApiResult.Success(order))
+            }
+            catch (e: Exception) {
+                emit(ApiResult.Error(e.message))
+            }
+        }
+    }
+
+    fun updateOrderStatus(id: String, newStatus: String): Flow<ApiResult<Unit>> {
+        return flow {
+            emit(ApiResult.Loading)
+            try {
+                supabaseClient.postgrest["Order"].update({
+                    set("status", newStatus)
+                }) {
+                    eq("id",id)
+                }
+
+                emit(ApiResult.Success(Unit))
+            }
+            catch (e: Exception) {
+                emit(ApiResult.Error(e.message))
+            }
+        }
     }
 
 //    suspend fun listenToOrdersChange() {

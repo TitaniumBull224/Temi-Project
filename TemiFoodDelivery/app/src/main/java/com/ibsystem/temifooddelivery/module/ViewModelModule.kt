@@ -1,7 +1,6 @@
 package com.ibsystem.temifooddelivery.module
 
-import com.ibsystem.temifooddelivery.OrderViewModel
-import com.ibsystem.temifooddelivery.data.datasource.OrderDataSource
+import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderViewModel
 import com.ibsystem.temifooddelivery.data.repository.OrderRepository
 import dagger.Module
 import dagger.Provides

@@ -15,7 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.ibsystem.temifooddelivery.data.datasource.ApiResult
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
-import com.ibsystem.temifooddelivery.ui.order_list_ui.OrderListScreen
+import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderListScreen
+import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderViewModel
 import com.ibsystem.temifooddelivery.ui.theme.GrayBackground
 import com.ibsystem.temifooddelivery.ui.theme.TemiFoodDeliveryTheme
 import dagger.hilt.android.AndroidEntryPoint

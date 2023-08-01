@@ -1,4 +1,4 @@
-package com.ibsystem.temifooddelivery
+package com.ibsystem.temifooddelivery.presentation.screen.order_list
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,6 +9,7 @@ import com.ibsystem.temifooddelivery.data.repository.OrderRepositoryImpl
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.realtime.PostgresAction
+import io.github.jan.supabase.realtime.decodeRecord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -37,6 +38,7 @@ class OrderViewModel @Inject constructor (
                  if(data is ApiResult.Success) {
                      val orderList = data.data
                      _orderList.value = orderList
+                     print("ORDERRR"+_orderList.value.toString())
                  }
             }
         }
@@ -47,12 +49,33 @@ class OrderViewModel @Inject constructor (
             repository.listenToOrdersChange().collect {
             when (it) {
                     is PostgresAction.Delete -> Log.i("Listener","Deleted: ${it.oldRecord}")
-                    is PostgresAction.Insert -> Log.i("Listener","Inserted: ${it.record}")
+                    is PostgresAction.Insert -> {
+                        Log.i("Listener", "Inserted: ${it.record["id"]}")
+                        updateOrders(getOrderID(it))
+                    }
                     is PostgresAction.Select -> Log.i("Listener","Selected: ${it.record}")
                     is PostgresAction.Update -> Log.i("Listener","Updated: ${it.oldRecord} with ${it.record}")
                 else -> Log.i("Listener","sighhh")
                 }
             }
         }
+    }
+
+    private fun getOrderID(it: PostgresAction.Insert) =
+        it.record["id"].toString().replace("\"", "")
+
+    fun updateOrders(id: String) {
+        viewModelScope.launch {
+            repository.getOrderDetailsByID(id).collectLatest {
+                res -> if(res is ApiResult.Success) {
+                    Log.i("DSDSAD","PLSSSSS")
+                _orderList.value = _orderList.value + res.data
+                }
+                else {
+                Log.i("DSDSAD",res.toString())
+                }
+            }
+        }
+
     }
 }

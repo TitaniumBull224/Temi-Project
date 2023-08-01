@@ -1,6 +1,8 @@
-package com.ibsystem.temifooddelivery.ui.order_list_ui
+package com.ibsystem.temifooddelivery.presentation.screen.order_list
 
 import android.annotation.SuppressLint
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ibsystem.temifooddelivery.OrderViewModel
 import com.ibsystem.temifooddelivery.data.datasource.ApiResult
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 
@@ -21,22 +22,28 @@ import com.ibsystem.temifooddelivery.domain.OrderModelItem
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun OrderListScreen(modifier: Modifier = Modifier,
-viewModel: OrderViewModel) {
+viewModel: OrderViewModel
+) {
     val uiState = viewModel.uiState.collectAsState()
+    val orderList = viewModel.orderList.collectAsState()
+
+    Log.i("SIGH", orderList.toString())
 
     Scaffold(modifier = modifier.fillMaxSize(), content = {
         when(uiState.value) {
             is ApiResult.Error -> TODO()
             ApiResult.Loading -> CircularProgressIndicator()
             is ApiResult.Success -> {
-                val orders = (uiState.value as ApiResult.Success<*>).data as? List<OrderModelItem>
-                LazyColumn {
-                    items(orders ?: listOf()) { order ->
-                        Text(text = order.toString(),modifier = Modifier
-                            .padding(10.dp)
-                            .fillMaxWidth())
+                val orders = orderList.value as? List<OrderModelItem>
+                    LazyColumn {
+                        items(orders ?: listOf()) { order ->
+                            Text(text = order.toString(),modifier = Modifier
+                                .padding(10.dp)
+                                .fillMaxWidth())
+                        }
                     }
-                }
+
+
             }
         }
 
