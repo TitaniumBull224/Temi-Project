@@ -1,4 +1,4 @@
-package com.ibsystem.temiassistant.presentation.motion_ui
+package com.ibsystem.temiassistant.presentation.screen.motion
 
 import androidx.lifecycle.ViewModel
 import com.robotemi.sdk.Robot

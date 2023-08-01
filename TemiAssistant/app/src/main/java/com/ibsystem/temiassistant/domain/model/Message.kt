@@ -1,4 +1,4 @@
-package com.ibsystem.temiassistant.presentation.chat_ui
+package com.ibsystem.temiassistant.domain.model
 
 import com.google.gson.JsonObject
 import com.squareup.moshi.Json

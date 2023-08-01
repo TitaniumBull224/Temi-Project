@@ -1,8 +1,7 @@
-package com.ibsystem.temiassistant.presentation.chat_ui
+package com.ibsystem.temiassistant.domain.model
+
 import com.squareup.moshi.JsonClass
-
 import com.squareup.moshi.Json
-
 
 @JsonClass(generateAdapter = true)
 data class ConvertResponse(
@@ -48,7 +47,9 @@ data class Response(
     val value: Double?
 )
 
+@JsonClass(generateAdapter = true)
 data class ConvertQuery(
     val amount: String,
-val from: String,
-val to: String)
+    val from: String,
+    val to: String
+)

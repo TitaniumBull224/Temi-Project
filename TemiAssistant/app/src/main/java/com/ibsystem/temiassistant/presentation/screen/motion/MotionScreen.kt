@@ -1,31 +1,15 @@
-package com.ibsystem.temiassistant.presentation.motion_ui
+package com.ibsystem.temiassistant.presentation.screen.motion
 
-import android.graphics.Bitmap
-import android.graphics.Color
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ibsystem.temiassistant.R
-import com.ibsystem.temiassistant.presentation.chat_ui.ChatScreenViewModel
-import com.ibsystem.temiassistant.presentation.chat_ui.TopBarSection
-import com.ibsystem.temiassistant.presentation.map_ui.MapScreenViewModel
-import com.ibsystem.temiassistant.presentation.map_ui.RobotPosition
-import com.ibsystem.temiassistant.presentation.map_ui.ZoomableImage
-import com.ibsystem.temiassistant.ui.theme.Red
-import kotlin.math.roundToInt
+import com.ibsystem.temiassistant.presentation.component.TopBarSection
+import com.ibsystem.temiassistant.presentation.screen.map.MapScreenViewModel
 
 @Composable
 fun MotionScreen(navController: NavController, viewModel: MapScreenViewModel) {

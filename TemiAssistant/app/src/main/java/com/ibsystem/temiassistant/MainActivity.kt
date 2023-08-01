@@ -18,17 +18,15 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.ibsystem.temiassistant.mainscreen.Navigation
-import com.ibsystem.temiassistant.presentation.chat_ui.ChatScreenViewModel
-import com.ibsystem.temiassistant.presentation.chat_ui.MessageBody
-import com.ibsystem.temiassistant.presentation.map_ui.MapScreenViewModel
-import com.ibsystem.temiassistant.presentation.setting_ui.SettingsScreenViewModel
+import com.ibsystem.temiassistant.navigation.Navigation
+import com.ibsystem.temiassistant.presentation.screen.chat.ChatScreenViewModel
+import com.ibsystem.temiassistant.domain.model.MessageBody
+import com.ibsystem.temiassistant.presentation.screen.map.MapScreenViewModel
+import com.ibsystem.temiassistant.presentation.screen.settings.SettingsScreenViewModel
 import com.ibsystem.temiassistant.ui.theme.ComposeUiTempletesTheme
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.listeners.OnConversationStatusChangedListener
@@ -41,9 +39,7 @@ import com.robotemi.sdk.model.DetectionData
 import com.robotemi.sdk.navigation.listener.OnCurrentPositionChangedListener
 import com.robotemi.sdk.navigation.model.Position
 import com.robotemi.sdk.permission.Permission
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.observeOn
 import kotlinx.coroutines.launch
 
 

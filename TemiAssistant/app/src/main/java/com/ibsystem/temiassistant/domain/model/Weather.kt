@@ -1,7 +1,6 @@
-package com.ibsystem.temiassistant.presentation.chat_ui
+package com.ibsystem.temiassistant.domain.model
 
 import com.squareup.moshi.Json
-
 
 data class WeatherModel (
     val coord: Coord,
@@ -30,16 +29,12 @@ data class Coord (
 
 data class Main (
     val temp: Double,
-
     @Json(name = "feels_like")
     val feelsLike: Double,
-
     @Json(name = "temp_min")
     val tempMin: Double,
-
     @Json(name = "temp_max")
     val tempMax: Double,
-
     val pressure: Long,
     val humidity: Long
 )
