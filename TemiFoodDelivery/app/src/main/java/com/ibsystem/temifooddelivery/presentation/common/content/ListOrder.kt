@@ -10,10 +10,16 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -25,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ibsystem.temifooddelivery.R
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
+import com.ibsystem.temifooddelivery.domain.Product
 import com.ibsystem.temifooddelivery.presentation.common.card.ExpandableCard
 import com.ibsystem.temifooddelivery.ui.theme.*
 import kotlinx.coroutines.launch
@@ -42,6 +49,8 @@ fun ListOrder(
     //navController: NavController,
 //    onClickToCart: (ProductItem) -> Unit
 ) {
+
+
     val checkedState = remember { mutableStateListOf<Boolean>() }
     checkedState.clear()
     checkedState.addAll(List(orders.size) { false })
@@ -114,10 +123,20 @@ fun ListOrder(
             }
 
             itemsIndexed(orders) { index, order ->
+                val isRowExpanded = remember { mutableStateOf(false) }
                 Row(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    IconButton(
+                        onClick = { isRowExpanded.value = !isRowExpanded.value },
+                        modifier = Modifier.padding(10.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (isRowExpanded.value) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                            contentDescription = null
+                        )
+                    }
                     TableCell(
                         text = "#" + order.tableId!!,
                         weight = column1Weight,
@@ -140,6 +159,58 @@ fun ListOrder(
                         .fillMaxHeight()
                         .fillMaxWidth()
                 )
+
+                // Conditionally display the expanded row with product list
+                if (isRowExpanded.value) {
+                    order.product?.let { ProductList(products = it) } // Assuming `products` is a list of ProductItem inside the OrderModelItem
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ProductList(products: List<Product>) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = "Products",
+            fontFamily = GilroyFontFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = TEXT_SIZE_18sp,
+            color = Black,
+            modifier = Modifier.padding(vertical = DIMENS_8dp, horizontal = DIMENS_16dp)
+        )
+
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(DIMENS_4dp)
+        ) {
+            items(products) { product ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = DIMENS_16dp, vertical = DIMENS_4dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    product.prodName?.let {
+                        Text(
+                            text = it,
+                            fontFamily = GilroyFontFamily,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = TEXT_SIZE_16sp,
+                            color = Black
+                        )
+                    }
+                    Text(
+                        text = "￥" + product.prodPrice,
+                        fontFamily = GilroyFontFamily,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = TEXT_SIZE_16sp,
+                        color = Black
+                    )
+                }
             }
         }
     }

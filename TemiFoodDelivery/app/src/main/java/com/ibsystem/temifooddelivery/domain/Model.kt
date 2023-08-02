@@ -12,7 +12,7 @@ data class OrderModelItem(
     @SerialName("Order_Product")
     val orderProduct: List<OrderProduct?>?,
     @SerialName("Product")
-    val product: List<Product?>?,
+    val product: List<Product>?,
     @SerialName("status")
     val status: String?,
     @SerialName("table_id")
