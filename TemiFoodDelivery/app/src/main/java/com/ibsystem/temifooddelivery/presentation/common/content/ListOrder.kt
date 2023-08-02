@@ -1,5 +1,8 @@
 package com.ibsystem.temifooddelivery.presentation.common.content
 
+import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,17 +32,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.ibsystem.temifooddelivery.R
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import com.ibsystem.temifooddelivery.domain.Product
 import com.ibsystem.temifooddelivery.ui.theme.*
+import com.ibsystem.temifooddelivery.utils.reformatDate
 import kotlinx.coroutines.launch
 
-val column1Weight = .2f
-val column2Weight = .3f
+val column1Weight = .1f
+val column2Weight = .2f
 val column3Weight = .25f
 val column4Weight = .25f
+val column5Weight = .2f
 
+@SuppressLint("NewApi")
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun ListOrder(
     modifier: Modifier = Modifier,
@@ -48,7 +54,6 @@ fun ListOrder(
     //navController: NavController,
 //    onClickToCart: (ProductItem) -> Unit
 ) {
-
 
     val checkedState = remember { mutableStateListOf<Boolean>() }
     checkedState.clear()
@@ -96,17 +101,18 @@ fun ListOrder(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    TableCell(text = "", weight = column1Weight)
                     TableCell(
                         text = "テーブル",
-                        weight = column1Weight,
+                        weight = column2Weight,
                         alignment = TextAlign.Left,
                         title = true
                     )
-                    TableCell(text = "デート", weight = column2Weight, title = true)
-                    TableCell(text = "状況", weight = column3Weight, title = true)
+                    TableCell(text = "デート", weight = column3Weight, title = true)
+                    TableCell(text = "状況", weight = column4Weight, title = true)
                     TableCell(
                         text = "Amount",
-                        weight = column4Weight,
+                        weight = column5Weight,
                         alignment = TextAlign.Right,
                         title = true
                     )
@@ -122,13 +128,18 @@ fun ListOrder(
 
             itemsIndexed(orders) { index, order ->
                 val isRowExpanded = remember { mutableStateOf(false) }
+
+                val formattedDate = reformatDate(order.time!!)
+
                 Row(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
                         onClick = { isRowExpanded.value = !isRowExpanded.value },
-                        modifier = Modifier.padding(10.dp)
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .weight(column1Weight)
                     ) {
                         Icon(
                             imageVector = if (isRowExpanded.value) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
@@ -137,13 +148,13 @@ fun ListOrder(
                     }
                     TableCell(
                         text = "#" + order.tableId!!,
-                        weight = column1Weight,
+                        weight = column2Weight,
                         alignment = TextAlign.Left
                     )
-                    TableCell(text = order.time!!, weight = column2Weight)
-                    StatusCell(text = "Pending", weight = column3Weight)
+                    TableCell(text = formattedDate, weight = column3Weight)
+                    StatusCell(text = "Pending", weight = column4Weight)
                     CheckBoxCell(
-                        weight = column4Weight,
+                        weight = column5Weight,
                         checked = checkedState[index],
                         onCheckedChange = { checked ->
                             checkedState[index] = checked
@@ -227,7 +238,7 @@ fun RowScope.TableCell(
             .weight(weight)
             .padding(10.dp),
         fontWeight = if (title) FontWeight.Bold else FontWeight.Normal,
-        textAlign = alignment,
+        textAlign = alignment
     )
 }
 
