@@ -26,14 +26,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ibsystem.temifooddelivery.R
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import com.ibsystem.temifooddelivery.domain.Product
-import com.ibsystem.temifooddelivery.presentation.common.card.ExpandableCard
 import com.ibsystem.temifooddelivery.ui.theme.*
 import kotlinx.coroutines.launch
 
@@ -86,7 +84,7 @@ fun ListOrder(
                 onClick = { /* Handle button click */ },
                 modifier = Modifier.padding(DIMENS_16dp)
             ) {
-                Text("Click Me")
+                Text(text = "Click Me", color = White)
             }
         }
         LazyColumn(
@@ -114,7 +112,7 @@ fun ListOrder(
                     )
                 }
                 Divider(
-                    color = Color.LightGray,
+                    color = GraySecondTextColor,
                     modifier = Modifier
                         .height(1.dp)
                         .fillMaxHeight()
@@ -153,7 +151,7 @@ fun ListOrder(
                     )
                 }
                 Divider(
-                    color = Color.LightGray,
+                    color = GraySecondTextColor,
                     modifier = Modifier
                         .height(1.dp)
                         .fillMaxHeight()
