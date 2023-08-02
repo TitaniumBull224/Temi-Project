@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -71,7 +72,8 @@ fun ListOrder(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = DIMENS_16dp, end = DIMENS_16dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically // Add this line to center the elements vertically
         ) {
             Text(
                 text = title,
@@ -80,14 +82,12 @@ fun ListOrder(
                 fontSize = TEXT_SIZE_24sp,
                 color = Black
             )
-            Text(
-                modifier = Modifier.align(Alignment.CenterVertically),
-                text = stringResource(id = R.string.see_all),
-                fontFamily = GilroyFontFamily,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = TEXT_SIZE_12sp,
-                color = Green
-            )
+            Button(
+                onClick = { /* Handle button click */ },
+                modifier = Modifier.padding(DIMENS_16dp)
+            ) {
+                Text("Click Me")
+            }
         }
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(DIMENS_2dp),
