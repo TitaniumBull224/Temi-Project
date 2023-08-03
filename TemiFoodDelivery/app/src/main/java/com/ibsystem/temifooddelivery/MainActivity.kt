@@ -15,6 +15,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.ibsystem.temifooddelivery.data.datasource.ApiResult
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
+import com.ibsystem.temifooddelivery.domain.OrderProduct
+import com.ibsystem.temifooddelivery.domain.Product
+import com.ibsystem.temifooddelivery.presentation.screen.customer.CustomerScreen
 import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderListScreen
 import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderViewModel
 import com.ibsystem.temifooddelivery.ui.theme.GrayBackground
@@ -39,7 +42,18 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = GrayBackground
                 ) {
-                    OrderListScreen(viewModel = orderViewModel)
+                    //OrderListScreen(viewModel = orderViewModel)
+                    CustomerScreen(
+                        order = OrderModelItem(
+                            orderProduct = listOf(OrderProduct(3)),
+                            product = listOf(Product(catId = "ds", prodName = "カルビ", prodAvail = true, prodDesc = "edd", prodId = "fdf", prodImage = "redf", prodPrice = 23)),
+                            id="2",
+                            status = "DS",
+                            tableId = "3",
+                            time = "2023-08-02T09:53:13.405539+09:00"
+                        )
+
+                    )
                 }
             }
         }

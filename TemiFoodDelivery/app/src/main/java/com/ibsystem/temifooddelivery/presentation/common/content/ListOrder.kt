@@ -3,6 +3,7 @@ package com.ibsystem.temifooddelivery.presentation.common.content
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,6 +24,8 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -63,6 +67,10 @@ fun ListOrder(
     checkedState.addAll(List(orders.size) { false })
 
     val checkedRowIds = remember { mutableStateListOf<String>() }
+    checkedRowIds.clear()
+
+    val context = LocalContext.current
+
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -70,6 +78,7 @@ fun ListOrder(
     LaunchedEffect(orders) {
         coroutineScope.launch {
             listState.animateScrollToItem(orders.size)
+
         }
     }
 
@@ -92,18 +101,20 @@ fun ListOrder(
             )
             Button(
                 onClick = {
-                    if(checkedRowIds.isEmpty()) {}
-                    else {
-                        checkedRowIds.forEach { id->
-                            viewModel.updateOrderStatus(id, "準備完了")
-                        }
+                    if(checkedRowIds.isNotEmpty()) {
+                        checkedRowIds.forEach { id ->
+                            viewModel.updateOrderStatus(id, "準備完了") }
+                    }
+                    else
+                    {
+                        Toast.makeText(context, "オーダーを選んでください", Toast.LENGTH_SHORT).show()
 
                     }
 
                 },
                 modifier = Modifier.padding(DIMENS_16dp)
             ) {
-                Text(text = "Click Me", color = White)
+                Text(text = "準備完了", color = White)
             }
         }
         LazyColumn(
@@ -172,13 +183,12 @@ fun ListOrder(
                         weight = column5Weight,
                         checked = checkedState[index],
                         onCheckedChange = { checked ->
+                            checkedState[index] = checked
                             if (checked) {
                                 checkedRowIds.add(order.id!!) // Add the checked row ID to the list
-
                             } else {
                                 checkedRowIds.remove(order.id!!) // Remove the unchecked row ID from the list
                             }
-                            checkedState[index] = checked
                             checkedRowIds.forEach{
                                 id -> Log.i("DD", id)
                             }
