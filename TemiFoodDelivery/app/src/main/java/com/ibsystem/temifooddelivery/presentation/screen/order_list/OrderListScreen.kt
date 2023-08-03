@@ -1,8 +1,12 @@
 package com.ibsystem.temifooddelivery.presentation.screen.order_list
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ibsystem.temifooddelivery.data.datasource.ApiResult
@@ -24,6 +29,7 @@ import com.ibsystem.temifooddelivery.presentation.common.content.ListOrder
 import kotlinx.coroutines.launch
 
 
+@RequiresApi(Build.VERSION_CODES.N)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun OrderListScreen(modifier: Modifier = Modifier,
@@ -34,7 +40,11 @@ viewModel: OrderViewModel
 
     Log.i("SIGH", orderList.toString())
 
-    Scaffold(modifier = modifier.fillMaxSize(), content = {
+    Scaffold(modifier = modifier.fillMaxSize(), content = {Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         when(uiState.value) {
             is ApiResult.Error -> Log.i("ERRR","YOUFJFKFLGGDFKGFDKGDKGDFKGDFGKFGDK")
             ApiResult.Loading -> CircularProgressIndicator()
@@ -45,6 +55,7 @@ viewModel: OrderViewModel
                 }
             }
         }
+    }
     })
 
 
