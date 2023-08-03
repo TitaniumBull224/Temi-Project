@@ -13,6 +13,7 @@ import com.ibsystem.temiassistant.network.newsApiService
 import com.ibsystem.temiassistant.network.openWeatherApiService
 import com.ibsystem.temiassistant.network.wikiApiService
 import com.ibsystem.temiassistant.network.witApiService
+import com.ibsystem.temiassistant.utils.PromptGenerator
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.navigation.model.Position
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -235,20 +236,20 @@ class ChatScreenViewModel: ViewModel() {
 
     fun generateSuggestions(message: String, numberOfSuggestions: Int): List<String> {
         val allSuggestions = when (_conversationStage.value) {
-            GREETING_STATUS -> listOf("おはようございます", "元気ですか？", "久しぶりですね！", "こんにちは", "こんばんは")
-            INTRODUCTION_STATUS -> listOf("私は山田です", "佐藤と申します", "鈴木を呼んでください", "私の名前は田中です", "私は加藤と申します")
+            GREETING_STATUS -> PromptGenerator.greeting()
+            INTRODUCTION_STATUS -> PromptGenerator.introduction()
             USECASE_STATUS -> when {
-                message.isEmpty() -> listOf("天気予報", "ニュース", "為替レート", "AIとは", "充電", "追従", "YouTube", "音量上げ")
-                message.contains("天気") -> listOf("今日の天気はどうですか？", "今日は暑いですね", "天気予報を教えて", "明日の天気は？", "週末の天気は？")
-                message.contains("移動") -> listOf("前に向いてください", "後ろに移動してください", "左に曲がって", "右に曲がって", "止まって")
-                message.contains("とは") -> listOf("林檎とは", "東京とは", "kotlinの定義を教えてください", "AIとは何ですか？", "ビットコインとは何ですか？")
-                message.contains("ニュース") -> listOf("最新のニュースは何ですか？", "特定のトピックのニュースを教えてください", "今日のニュースは", "スポーツニュースを教えてください", "政治ニュースを教えてください")
-                message.contains("ドル") || message.contains("円") -> listOf("為替レートは何ですか？", "両替する方法を教えてください", "両替手数料はいくらですか？", "ドルから円に換算するには？", "円からドルに換算するには？")
-                message.contains("音量") || message.contains("静") -> listOf("音量を上げて", "音量を下がって", "静かにして下さい", "ミュートしてください", "音量を最大にしてください")
-                message.contains("ベース") || message.contains("チャージ") -> listOf("ベースに戻って", "チャージして", "ホームベースへ", "充電が必要ですか？", "充電時間はどのくらいですか？")
-                message.contains("YouTube") -> listOf("おすすめのYouTubeチャンネルは何ですか？", "YouTube動画の検索方法を教えてください", "YouTube動画のダウンロード方法を教えてください","おもしろいYouTube動画を教えてください","人気のあるYouTube動画を教えてください")
-                message.contains("追") -> listOf("追いかけて", "着いてきなさい", "一緒にしましょう","追跡番号を教えてください","荷物の追跡方法を教えてください")
-                else -> listOf("いいです", "お疲れ様でした", "ストップ","了解しました","分かりました")
+                message.isEmpty() -> PromptGenerator.random()
+                message.contains("天気") -> PromptGenerator.getWeather()
+                message.contains("移動") -> PromptGenerator.movement()
+                message.contains("とは") -> PromptGenerator.wikiQuery()
+                message.contains("ニュース") -> PromptGenerator.getNews()
+                message.contains("ドル") || message.contains("円") -> PromptGenerator.convertCurrency()
+                message.contains("音量") || message.contains("静") -> PromptGenerator.volume()
+                message.contains("ベース") || message.contains("チャージ") -> PromptGenerator.charge()
+                message.contains("YouTube") -> PromptGenerator.youtube()
+                message.contains("追") -> PromptGenerator.follow()
+                else -> PromptGenerator.stop()
             }
             else -> emptyList()
         }
