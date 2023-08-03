@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //orderViewModel.getAllOrders()
-        observeData()
+        //observeData()
         //orderViewModel.listenToOrdersChange()
         setContent {
             TemiFoodDeliveryTheme {
@@ -45,26 +45,26 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun observeData() {
-        lifecycleScope.launch {
-            orderViewModel.uiState.collect {
-                    data -> when(data){
-                is ApiResult.Error -> {
-                    Log.e("Main Act", "Error: ${data.message}")
-                }
-                ApiResult.Loading -> {
-                    Log.i("Main Act", "IS LOADING")
-                }
-                is ApiResult.Success -> {
-                    val orders = data.data as List<*>
-                    orders.forEach{
-                        Log.i("Main Act", it.toString())
-                    }
-                }
-            }
-            }
-        }
-    }
+//    private fun observeData() {
+//        lifecycleScope.launch {
+//            orderViewModel.uiState.collect {
+//                    data -> when(data){
+//                is ApiResult.Error -> {
+//                    Log.e("Main Act", "Error: ${data.message}")
+//                }
+//                ApiResult.Loading -> {
+//                    Log.i("Main Act", "IS LOADING")
+//                }
+//                is ApiResult.Success -> {
+//                    val orders = data.data as List<*>
+//                    orders.forEach{
+//                        Log.i("Main Act", it.toString())
+//                    }
+//                }
+//            }
+//            }
+//        }
+//    }
 }
 
 @Composable

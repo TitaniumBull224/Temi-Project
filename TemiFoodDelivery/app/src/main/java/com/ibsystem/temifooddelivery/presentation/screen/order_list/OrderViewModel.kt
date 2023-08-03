@@ -42,7 +42,6 @@ class OrderViewModel @Inject constructor (
                  if(data is ApiResult.Success) {
                      val orderList = data.data
                      _orderList.value = orderList
-                     print("ORDERRR"+_orderList.value.toString())
                  }
             }
         }
@@ -87,7 +86,19 @@ class OrderViewModel @Inject constructor (
 
     fun updateOrderStatus(id: String, newStatus: String) {
         viewModelScope.launch {
-            repository.updateOrderStatus(id, newStatus)
+            repository.updateOrderStatus(id, newStatus).collectLatest {
+                    res ->
+                _uiState.update { res }
+                val orderIndex = _orderList.value.indexOfFirst { it.id == id }
+                if (orderIndex != -1) {
+                    // Create a new list by updating the order status
+                    val updatedOrderList = _orderList.value.toMutableList()
+                    updatedOrderList[orderIndex] = updatedOrderList[orderIndex].copy(status = newStatus)
+
+                    // Update the state flow with the updated order list
+                    _orderList.emit(updatedOrderList)
+                }
+            }
         }
     }
 }

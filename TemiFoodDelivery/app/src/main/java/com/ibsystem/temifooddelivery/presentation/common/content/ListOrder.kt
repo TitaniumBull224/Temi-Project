@@ -2,6 +2,7 @@ package com.ibsystem.temifooddelivery.presentation.common.content
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import com.ibsystem.temifooddelivery.domain.Product
+import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderViewModel
 import com.ibsystem.temifooddelivery.ui.theme.*
 import com.ibsystem.temifooddelivery.utils.reformatDate
 import kotlinx.coroutines.launch
@@ -51,6 +53,7 @@ fun ListOrder(
     modifier: Modifier = Modifier,
     title: String,
     orders: List<OrderModelItem>,
+    viewModel: OrderViewModel
     //navController: NavController,
 //    onClickToCart: (ProductItem) -> Unit
 ) {
@@ -58,6 +61,8 @@ fun ListOrder(
     val checkedState = remember { mutableStateListOf<Boolean>() }
     checkedState.clear()
     checkedState.addAll(List(orders.size) { false })
+
+    val checkedRowIds = remember { mutableStateListOf<String>() }
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -86,7 +91,16 @@ fun ListOrder(
                 color = Black
             )
             Button(
-                onClick = { /* Handle button click */ },
+                onClick = {
+                    if(checkedRowIds.isEmpty()) {}
+                    else {
+                        checkedRowIds.forEach { id->
+                            viewModel.updateOrderStatus(id, "準備完了")
+                        }
+
+                    }
+
+                },
                 modifier = Modifier.padding(DIMENS_16dp)
             ) {
                 Text(text = "Click Me", color = White)
@@ -133,7 +147,8 @@ fun ListOrder(
 
                 Row(
                     Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(
                         onClick = { isRowExpanded.value = !isRowExpanded.value },
@@ -152,12 +167,22 @@ fun ListOrder(
                         alignment = TextAlign.Left
                     )
                     TableCell(text = formattedDate, weight = column3Weight)
-                    StatusCell(text = "Pending", weight = column4Weight)
+                    StatusCell(text = order.status!!, weight = column4Weight)
                     CheckBoxCell(
                         weight = column5Weight,
                         checked = checkedState[index],
                         onCheckedChange = { checked ->
+                            if (checked) {
+                                checkedRowIds.add(order.id!!) // Add the checked row ID to the list
+
+                            } else {
+                                checkedRowIds.remove(order.id!!) // Remove the unchecked row ID from the list
+                            }
                             checkedState[index] = checked
+                            checkedRowIds.forEach{
+                                id -> Log.i("DD", id)
+                            }
+
                         }
                     )
                 }
@@ -250,13 +275,17 @@ fun RowScope.StatusCell(
 ) {
 
     val color = when (text) {
-        "Pending" -> Color(0xfff8deb5)
-        "Paid" -> Color(0xffadf7a4)
+        "保留中" -> Color(0xFFFF9C00)
+        "準備完了" -> Color(0xFF0090FF)
+        "提供済み" -> Color(0xFF00BCD4)
+        "完了" -> Color(0xFF1CFF00)
         else -> Color(0xffffcccf)
     }
     val textColor = when (text) {
-        "Pending" -> Color(0xffde7a1d)
-        "Paid" -> Color(0xff00ad0e)
+        "保留中" -> Color(0xFFFFFFFF) //Pending
+        "準備完了" -> Color(0xFFFFFFFF) //Prepared
+        "提供済み" -> Color(0xFFFFFFFF) //Served
+        "完了" -> Color(0xFFFFFFFF) //Paid
         else -> Color(0xffca1e17)
     }
 
@@ -275,7 +304,8 @@ fun RowScope.StatusCell(
 fun RowScope.CheckBoxCell(
     checked: Boolean = false,
     weight: Float,
-    onCheckedChange: ((Boolean) -> Unit)? = null
+
+    onCheckedChange: ((Boolean, ) -> Unit)? = null
 ) {
     Checkbox(
         checked = checked,

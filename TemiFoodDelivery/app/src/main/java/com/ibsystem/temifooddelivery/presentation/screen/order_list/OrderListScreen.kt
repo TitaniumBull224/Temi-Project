@@ -36,19 +36,12 @@ viewModel: OrderViewModel
 
     Scaffold(modifier = modifier.fillMaxSize(), content = {
         when(uiState.value) {
-            is ApiResult.Error -> TODO()
+            is ApiResult.Error -> Log.i("ERRR","YOUFJFKFLGGDFKGFDKGDKGDFKGDFGKFGDK")
             ApiResult.Loading -> CircularProgressIndicator()
             is ApiResult.Success -> {
                 val orders = orderList.value as? List<OrderModelItem>
-//                    LazyColumn {
-//                        items(orders ?: listOf()) { order ->
-//                            Text(text = order.toString(),modifier = Modifier
-//                                .padding(10.dp)
-//                                .fillMaxWidth())
-//                        }
-//                    }
                 if (orders != null) {
-                    ListOrder(title = "オーダーリスト", orders = orders)
+                    ListOrder(title = "オーダーリスト", orders = orders, viewModel = viewModel)
                 }
             }
         }

@@ -1,11 +1,13 @@
 package com.ibsystem.temifooddelivery.data.datasource
 
+import android.util.Log
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.decodeIfNotEmptyOrDefault
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.query.FilterOperator
+import io.github.jan.supabase.postgrest.query.Order
 import io.github.jan.supabase.realtime.PostgresAction
 import io.github.jan.supabase.realtime.createChannel
 import io.github.jan.supabase.realtime.decodeRecord
@@ -27,12 +29,14 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
          return flow {
              emit(ApiResult.Loading)
              try {
-                 val queryRes = supabaseClient.postgrest["Order"]
+                 val queryRes = supabaseClient.postgrest.from("Order")
                      .select(columns = Columns.list(
                     "*",
                     "Product(*)",
                     "Order_Product(quantity)"
-                     ))
+                     )) {
+                         order(column = "time", order = Order.ASCENDING)
+                     }
 
                  val orders = queryRes.decodeList<OrderModelItem>()
 //                 println(orders.toString())
@@ -90,6 +94,7 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
                 }
 
                 emit(ApiResult.Success(Unit))
+                Log.i("UpdatePLS","123446454775675")
             }
             catch (e: Exception) {
                 emit(ApiResult.Error(e.message))
