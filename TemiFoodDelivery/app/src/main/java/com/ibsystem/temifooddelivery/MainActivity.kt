@@ -51,8 +51,7 @@ class MainActivity : ComponentActivity() {
                             status = "DS",
                             tableId = "3",
                             time = "2023-08-02T09:53:13.405539+09:00"
-                        )
-
+                        ), viewModel = orderViewModel
                     )
                 }
             }

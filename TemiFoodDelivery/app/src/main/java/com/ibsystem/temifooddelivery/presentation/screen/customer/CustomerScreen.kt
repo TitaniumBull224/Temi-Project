@@ -68,7 +68,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun CustomerScreen(
     modifier: Modifier = Modifier,
-    order: OrderModelItem
+    orderID: String,
+    viewModel: OrderViewModel
     //navController: NavController,
 //    onClickToCart: (ProductItem) -> Unit
 ) {
@@ -92,14 +93,14 @@ fun CustomerScreen(
                     text = "注文詳細(テーブル＃${order.tableId})",
                     fontFamily = GilroyFontFamily,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = TEXT_SIZE_24sp,
+                    fontSize = TEXT_SIZE_18sp,
                     color = Black
                 )
                 Text(
-                    text = formattedDate,
+                    text = "時間：$formattedDate",
                     fontFamily = GilroyFontFamily,
                     fontWeight = FontWeight.Light,
-                    fontSize = TEXT_SIZE_18sp,
+                    fontSize = TEXT_SIZE_16sp,
                     color = Black
                 )
             }
@@ -144,7 +145,7 @@ fun CustomerScreen(
                             text = product.prodName!!,
                             weight = column4Weight,
                         )
-                        TableCell(text = order!!.orderProduct!![index]!!.quantity!!.toString(), weight = column5Weight,alignment = TextAlign.Right)
+                        TableCell(text = "x" + order!!.orderProduct!![index]!!.quantity!!.toString(), weight = column5Weight,alignment = TextAlign.Right)
                     }
                     Divider(
                         color = GraySecondTextColor,
@@ -156,13 +157,16 @@ fun CustomerScreen(
 
                 }
             }
-        }
 
-
-            Button(modifier = Modifier.align(Alignment.End),
-                onClick = { /*TODO*/ }) {
-                Text(text = "GHHGFGH")
+            Column(modifier = Modifier.align(Alignment.End)) {
+                Button(
+                    onClick = {
+                        viewModel.updateOrderStatus(order.id!!,"提供済み")
+                    }) {
+                    Text(text = "受け取った")
+                }
             }
+        }
 
 
     }
@@ -170,21 +174,21 @@ fun CustomerScreen(
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ListContentProductPreview() {
-    CustomerScreen(
-        order = OrderModelItem(
-            orderProduct = listOf(OrderProduct(3)),
-            product = listOf(Product(catId = "ds", prodName = "カルビ", prodAvail = true, prodDesc = "edd", prodId = "fdf", prodImage = "redf", prodPrice = 23)),
-            id="2",
-            status = "DS",
-            tableId = "3",
-            time = "2023-08-02T09:53:13.405539+09:00"
-        )
-
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun ListContentProductPreview() {
+//    CustomerScreen(
+//        order = OrderModelItem(
+//            orderProduct = listOf(OrderProduct(3)),
+//            product = listOf(Product(catId = "ds", prodName = "カルビ", prodAvail = true, prodDesc = "edd", prodId = "fdf", prodImage = "redf", prodPrice = 23)),
+//            id="2",
+//            status = "DS",
+//            tableId = "3",
+//            time = "2023-08-02T09:53:13.405539+09:00"
+//        )
+//
+//    )
+//}
 
 
 

@@ -23,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.ibsystem.temifooddelivery.data.datasource.ApiResult
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import com.ibsystem.temifooddelivery.presentation.common.content.ListOrder
@@ -33,7 +34,7 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun OrderListScreen(modifier: Modifier = Modifier,
-viewModel: OrderViewModel
+viewModel: OrderViewModel, navController: NavController
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val orderList = viewModel.orderList.collectAsState()
@@ -51,7 +52,7 @@ viewModel: OrderViewModel
             is ApiResult.Success -> {
                 val orders = orderList.value as? List<OrderModelItem>
                 if (orders != null) {
-                    ListOrder(title = "オーダーリスト", orders = orders, viewModel = viewModel)
+                    ListOrder(title = "オーダーリスト", orders = orders, viewModel = viewModel, navController = navController)
                 }
             }
         }

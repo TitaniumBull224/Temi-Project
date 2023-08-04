@@ -32,7 +32,6 @@ class OrderRepositoryImpl @Inject constructor(
 
     override suspend fun listenToOrdersChange(): Flow<PostgresAction> {
         return dataSource.listenToOrdersChange()
-
     }
 
 

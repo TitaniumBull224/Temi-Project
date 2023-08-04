@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import com.ibsystem.temifooddelivery.domain.Product
 import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderViewModel
@@ -51,14 +52,13 @@ val column4Weight = .25f
 val column5Weight = .2f
 
 @SuppressLint("NewApi")
-@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun ListOrder(
     modifier: Modifier = Modifier,
     title: String,
     orders: List<OrderModelItem>,
-    viewModel: OrderViewModel
-    //navController: NavController,
+    viewModel: OrderViewModel,
+    navController: NavController,
 //    onClickToCart: (ProductItem) -> Unit
 ) {
 

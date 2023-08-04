@@ -7,9 +7,13 @@ import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.ibsystem.temifooddelivery.navigation.screen.BottomNavItemScreen
 import com.ibsystem.temifooddelivery.navigation.screen.Screen
+import com.ibsystem.temifooddelivery.presentation.common.content.ListOrder
+import com.ibsystem.temifooddelivery.presentation.screen.customer.CustomerScreen
 import com.ibsystem.temifooddelivery.presentation.screen.detail.DetailScreen
 import com.ibsystem.temifooddelivery.presentation.screen.home.HomeScreen
+import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderListScreen
 import com.ibsystem.temifooddelivery.utils.Constants.PRODUCT_ARGUMENT_KEY
+import io.github.jan.supabase.postgrest.query.Order
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -17,29 +21,37 @@ fun MainNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         route = Graph.MAIN,
-        startDestination = BottomNavItemScreen.Home.route
+        startDestination = Screen.OrderListScreen.route
     ) {
-        composable(route = BottomNavItemScreen.Home.route) {
-            HomeScreen(navController = navController)
+        composable(route = Screen.OrderListScreen.route) {
+            OrderListScreen(navController = navController)
+        }
+        composable(route = Screen.CustomerScreen.route + "/{orderID}",
+        arguments = listOf(navArgument("orderID"){
+            nullable = true
+            type = NavType.StringType
+        })
+        ) {entry ->
+            CustomerScreen(orderID = entry.arguments?.getString("orderID")!!)
         }
 
-        detailsNavGraph()
+        //detailsNavGraph()
     }
 }
 
-fun NavGraphBuilder.detailsNavGraph() {
-    navigation(
-        route = Graph.DETAILS,
-        startDestination = Screen.Details.route
-    ) {
-        composable(
-            route = Screen.Details.route,
-            arguments = listOf(navArgument(PRODUCT_ARGUMENT_KEY) {
-                type = NavType.IntType
-            })
-        ) {
-            DetailScreen()
-        }
-    }
-}
+//fun NavGraphBuilder.detailsNavGraph() {
+//    navigation(
+//        route = Graph.DETAILS,
+//        startDestination = Screen.CustomerScreen.route + "/{orderID}"
+//    ) {
+//        composable(
+//            route = Screen.CustomerScreen.route,
+//            arguments = listOf(navArgument(PRODUCT_ARGUMENT_KEY) {
+//                type = NavType.
+//            })
+//        ) {
+//            DetailScreen()
+//        }
+//    }
+//}
 
