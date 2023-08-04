@@ -8,6 +8,7 @@ import com.ibsystem.temifooddelivery.data.repository.OrderRepository
 import com.ibsystem.temifooddelivery.data.repository.OrderRepositoryImpl
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import com.ibsystem.temifooddelivery.domain.OrderProduct
+import com.robotemi.sdk.Robot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.realtime.PostgresAction
 import io.github.jan.supabase.realtime.decodeRecord
@@ -20,13 +21,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OrderViewModel @Inject constructor (private val repository: OrderRepository): ViewModel() {
-        private val _uiState = MutableStateFlow<ApiResult<*>>(ApiResult.Loading)
-        val uiState: StateFlow<ApiResult<*>>
-            get() = _uiState
+    val mRobot = Robot.getInstance()
+    val locationList: List<String> = mRobot.locations
 
-        private val _orderList = MutableStateFlow<List<OrderModelItem>>(mutableListOf())
-        val orderList: StateFlow<List<OrderModelItem>>
-            get() = _orderList
+    private val _uiState = MutableStateFlow<ApiResult<*>>(ApiResult.Loading)
+    val uiState: StateFlow<ApiResult<*>>
+        get() = _uiState
+
+    private val _orderList = MutableStateFlow<List<OrderModelItem>>(mutableListOf())
+    val orderList: StateFlow<List<OrderModelItem>>
+        get() = _orderList
 
     init {
         getAllOrders()
