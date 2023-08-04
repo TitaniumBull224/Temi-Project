@@ -12,27 +12,35 @@ import com.ibsystem.temifooddelivery.presentation.screen.customer.CustomerScreen
 import com.ibsystem.temifooddelivery.presentation.screen.detail.DetailScreen
 import com.ibsystem.temifooddelivery.presentation.screen.home.HomeScreen
 import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderListScreen
+import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderViewModel
 import com.ibsystem.temifooddelivery.utils.Constants.PRODUCT_ARGUMENT_KEY
 import io.github.jan.supabase.postgrest.query.Order
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MainNavGraph(navController: NavHostController) {
+fun MainNavGraph(navController: NavHostController, viewModel: OrderViewModel) {
     NavHost(
         navController = navController,
-        route = Graph.MAIN,
+//        route = Graph.MAIN,
         startDestination = Screen.OrderListScreen.route
     ) {
         composable(route = Screen.OrderListScreen.route) {
-            OrderListScreen(navController = navController)
+            OrderListScreen(navController = navController, viewModel = viewModel)
         }
-        composable(route = Screen.CustomerScreen.route + "/{orderID}",
-        arguments = listOf(navArgument("orderID"){
-            nullable = true
-            type = NavType.StringType
-        })
-        ) {entry ->
-            CustomerScreen(orderID = entry.arguments?.getString("orderID")!!)
+        composable(
+            route = Screen.CustomerScreen.route + "/{orderID}",
+            arguments = listOf(
+                navArgument("orderID") {
+                    nullable = true
+                    type = NavType.StringType
+                }
+            )
+        ) { entry ->
+            CustomerScreen(
+                navController = navController,
+                orderID = entry.arguments?.getString("orderID")!!,
+                viewModel = viewModel
+            )
         }
 
         //detailsNavGraph()

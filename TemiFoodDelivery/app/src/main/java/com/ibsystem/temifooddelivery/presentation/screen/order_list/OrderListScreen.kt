@@ -33,31 +33,37 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.N)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun OrderListScreen(modifier: Modifier = Modifier,
-viewModel: OrderViewModel, navController: NavController
+fun OrderListScreen(
+    modifier: Modifier = Modifier,
+    viewModel: OrderViewModel,
+    navController: NavController
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val orderList = viewModel.orderList.collectAsState()
 
     Log.i("SIGH", orderList.toString())
 
-    Scaffold(modifier = modifier.fillMaxSize(), content = {Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        when(uiState.value) {
-            is ApiResult.Error -> Log.i("ERRR","YOUFJFKFLGGDFKGFDKGDKGDFKGDFGKFGDK")
-            ApiResult.Loading -> CircularProgressIndicator()
-            is ApiResult.Success -> {
-                val orders = orderList.value as? List<OrderModelItem>
-                if (orders != null) {
-                    ListOrder(title = "オーダーリスト", orders = orders, viewModel = viewModel, navController = navController)
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        content = {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                when(uiState.value) {
+                    is ApiResult.Error -> Log.i("ERRR","YOUFJFKFLGGDFKGFDKGDKGDFKGDFGKFGDK")
+                    ApiResult.Loading -> CircularProgressIndicator()
+                    is ApiResult.Success -> {
+                        val orders = orderList.value as? List<OrderModelItem>
+                        if (orders != null) {
+                            ListOrder(title = "オーダーリスト", orders = orders, viewModel = viewModel, navController = navController)
+                        }
+                    }
                 }
             }
         }
-    }
-    })
+    )
 
 
 }

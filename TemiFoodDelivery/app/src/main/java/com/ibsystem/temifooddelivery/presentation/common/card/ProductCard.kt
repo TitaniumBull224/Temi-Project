@@ -60,7 +60,7 @@ fun ExpandableCard(orderItem: OrderModelItem) {
                     ) {
                         items(orderItem.product!!) {product ->
                             Text(
-                                text = product!!.prodName!!,
+                                text = product.prodName!!,
                                 style = MaterialTheme.typography.body1,
                                 modifier = Modifier.padding(8.dp)
                             )
@@ -73,84 +73,84 @@ fun ExpandableCard(orderItem: OrderModelItem) {
         }
 }
 
-@Composable
-fun ProductCard(
-    modifier: Modifier = Modifier,
-    orderItem: OrderModelItem,
-    navController: NavController,
-//    onClickToCart: (ProductItem) -> Unit
-) {
-    Card(
-        shape = RoundedCornerShape(DIMENS_12dp),
-        border = BorderStroke(width = 1.dp, color = GrayBorderStroke),
-        modifier = modifier
-            .padding(DIMENS_12dp)
-            .width(DIMENS_174dp)
-            .clickable {
-                navController.navigate(Screen.Details.passProductId(productId = "1"))
-            }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(DIMENS_12dp)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.product1),
-                contentDescription = stringResource(R.string.image_product),
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .fillMaxWidth()
-                    .height(DIMENS_80dp)
-            )
-
-            Spacer(modifier = Modifier.height(DIMENS_24dp))
-
-            Text(
-                text = "product1",
-                fontFamily = GilroyFontFamily,
-                fontWeight = FontWeight.Bold,
-                color = Black,
-                fontSize = TEXT_SIZE_16sp
-            )
-
-            Spacer(modifier = Modifier.height(DIMENS_20dp))
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "3.33",
-                    fontFamily = GilroyFontFamily,
-                    fontWeight = FontWeight.Bold,
-                    color = Black,
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    fontSize = TEXT_SIZE_18sp
-                )
-
-                Button(
-                    modifier = Modifier.size(DIMENS_46dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Green),
-                    shape = RoundedCornerShape(DIMENS_14dp),
-                    contentPadding = PaddingValues(DIMENS_10dp),
-                    onClick = {
-//                        onClickToCart.invoke(productItem)
-                    }
-                )
-                {
-                    Icon(
-                        modifier = Modifier.fillMaxSize(),
-                        imageVector = Icons.Default.Add,
-                        tint = Color.White,
-                        contentDescription = stringResource(id = R.string.add)
-                    )
-                }
-            }
-
-        }
-    }
-}
+//@Composable
+//fun ProductCard(
+//    modifier: Modifier = Modifier,
+//    orderItem: OrderModelItem,
+//    navController: NavController,
+////    onClickToCart: (ProductItem) -> Unit
+//) {
+//    Card(
+//        shape = RoundedCornerShape(DIMENS_12dp),
+//        border = BorderStroke(width = 1.dp, color = GrayBorderStroke),
+//        modifier = modifier
+//            .padding(DIMENS_12dp)
+//            .width(DIMENS_174dp)
+//            .clickable {
+//                navController.navigate(Screen.Details.passProductId(productId = "1"))
+//            }
+//    ) {
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(DIMENS_12dp)
+//        ) {
+//            Image(
+//                painter = painterResource(id = R.drawable.product1),
+//                contentDescription = stringResource(R.string.image_product),
+//                modifier = Modifier
+//                    .align(Alignment.CenterHorizontally)
+//                    .fillMaxWidth()
+//                    .height(DIMENS_80dp)
+//            )
+//
+//            Spacer(modifier = Modifier.height(DIMENS_24dp))
+//
+//            Text(
+//                text = "product1",
+//                fontFamily = GilroyFontFamily,
+//                fontWeight = FontWeight.Bold,
+//                color = Black,
+//                fontSize = TEXT_SIZE_16sp
+//            )
+//
+//            Spacer(modifier = Modifier.height(DIMENS_20dp))
+//
+//            Row(
+//                horizontalArrangement = Arrangement.SpaceBetween,
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
+//                Text(
+//                    text = "3.33",
+//                    fontFamily = GilroyFontFamily,
+//                    fontWeight = FontWeight.Bold,
+//                    color = Black,
+//                    modifier = Modifier.align(Alignment.CenterVertically),
+//                    fontSize = TEXT_SIZE_18sp
+//                )
+//
+//                Button(
+//                    modifier = Modifier.size(DIMENS_46dp),
+//                    colors = ButtonDefaults.buttonColors(backgroundColor = Green),
+//                    shape = RoundedCornerShape(DIMENS_14dp),
+//                    contentPadding = PaddingValues(DIMENS_10dp),
+//                    onClick = {
+////                        onClickToCart.invoke(productItem)
+//                    }
+//                )
+//                {
+//                    Icon(
+//                        modifier = Modifier.fillMaxSize(),
+//                        imageVector = Icons.Default.Add,
+//                        tint = Color.White,
+//                        contentDescription = stringResource(id = R.string.add)
+//                    )
+//                }
+//            }
+//
+//        }
+//    }
+//}
 
 //@Preview
 //@Composable

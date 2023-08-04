@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import com.ibsystem.temifooddelivery.domain.OrderProduct
 import com.ibsystem.temifooddelivery.domain.Product
@@ -69,109 +70,110 @@ import kotlinx.coroutines.launch
 fun CustomerScreen(
     modifier: Modifier = Modifier,
     orderID: String,
-    viewModel: OrderViewModel
-    //navController: NavController,
-//    onClickToCart: (ProductItem) -> Unit
+    viewModel: OrderViewModel,
+    navController: NavController
 ) {
-
-    val formattedDate = reformatDate(order.time!!)
-
-    Row(modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement  =  Arrangement.SpaceEvenly) {
-        Column(modifier = Modifier.fillMaxHeight()
+    val order = viewModel.findtOrderByID(orderID)
+    order?.let {
+        val formattedDate = reformatDate(order.time!!)
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement  =  Arrangement.SpaceEvenly
         ) {
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = DIMENS_16dp, end = DIMENS_16dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically // Add this line to center the elements vertically
+            Column(modifier = Modifier.fillMaxHeight()
             ) {
-                Text(
-                    text = "注文詳細(テーブル＃${order.tableId})",
-                    fontFamily = GilroyFontFamily,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = TEXT_SIZE_18sp,
-                    color = Black
-                )
-                Text(
-                    text = "時間：$formattedDate",
-                    fontFamily = GilroyFontFamily,
-                    fontWeight = FontWeight.Light,
-                    fontSize = TEXT_SIZE_16sp,
-                    color = Black
-                )
-            }
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(DIMENS_2dp),
-                contentPadding = PaddingValues(DIMENS_8dp)
-            ) {
-                item {
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
 
-                        TableCell(text = "イメージ", weight = column3Weight, title = true,alignment = TextAlign.Left,
-                        )
-                        TableCell(text = "料理名", weight = column4Weight, title = true)
-                        TableCell(
-                            text = "数",
-                            weight = column5Weight,
-                            alignment = TextAlign.Right,
-                            title = true
-                        )
-                    }
-                    Divider(
-                        color = GraySecondTextColor,
-                        modifier = Modifier
-                            .height(1.dp)
-                            .fillMaxHeight()
-                            .fillMaxWidth()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = DIMENS_16dp, end = DIMENS_16dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically // Add this line to center the elements vertically
+                ) {
+                    Text(
+                        text = "注文詳細(テーブル＃${order.tableId})",
+                        fontFamily = GilroyFontFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = TEXT_SIZE_18sp,
+                        color = Black
+                    )
+                    Text(
+                        text = "時間：$formattedDate",
+                        fontFamily = GilroyFontFamily,
+                        fontWeight = FontWeight.Light,
+                        fontSize = TEXT_SIZE_16sp,
+                        color = Black
                     )
                 }
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(DIMENS_2dp),
+                    contentPadding = PaddingValues(DIMENS_8dp)
+                ) {
+                    item {
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
 
-                itemsIndexed(order.product!!) { index, product ->
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        TableCell(text ="", weight = column3Weight,alignment = TextAlign.Left)
-                        TableCell(
-                            text = product.prodName!!,
-                            weight = column4Weight,
+                            TableCell(text = "イメージ", weight = column3Weight, title = true,alignment = TextAlign.Left,
+                            )
+                            TableCell(text = "料理名", weight = column4Weight, title = true)
+                            TableCell(
+                                text = "数",
+                                weight = column5Weight,
+                                alignment = TextAlign.Right,
+                                title = true
+                            )
+                        }
+                        Divider(
+                            color = GraySecondTextColor,
+                            modifier = Modifier
+                                .height(1.dp)
+                                .fillMaxHeight()
+                                .fillMaxWidth()
                         )
-                        TableCell(text = "x" + order!!.orderProduct!![index]!!.quantity!!.toString(), weight = column5Weight,alignment = TextAlign.Right)
                     }
-                    Divider(
-                        color = GraySecondTextColor,
-                        modifier = Modifier
-                            .height(1.dp)
-                            .fillMaxHeight()
-                            .fillMaxWidth()
-                    )
 
+                    itemsIndexed(order.product!!) { index, product ->
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            TableCell(text ="", weight = column3Weight,alignment = TextAlign.Left)
+                            TableCell(
+                                text = product.prodName!!,
+                                weight = column4Weight,
+                            )
+                            TableCell(text = "x" + order.orderProduct!![index]!!.quantity!!.toString(), weight = column5Weight,alignment = TextAlign.Right)
+                        }
+                        Divider(
+                            color = GraySecondTextColor,
+                            modifier = Modifier
+                                .height(1.dp)
+                                .fillMaxHeight()
+                                .fillMaxWidth()
+                        )
+
+                    }
+                }
+
+                Column(modifier = Modifier.align(Alignment.End)) {
+                    Button(
+                        onClick = {
+                            viewModel.updateOrderStatus(order.id!!,"提供済み")
+                            navController.navigateUp()
+                        }) {
+                        Text(text = "受け取った")
+                    }
                 }
             }
 
-            Column(modifier = Modifier.align(Alignment.End)) {
-                Button(
-                    onClick = {
-                        viewModel.updateOrderStatus(order.id!!,"提供済み")
-                    }) {
-                    Text(text = "受け取った")
-                }
-            }
+
         }
-
-
     }
-
-
 }
 
 //@Preview(showBackground = true)

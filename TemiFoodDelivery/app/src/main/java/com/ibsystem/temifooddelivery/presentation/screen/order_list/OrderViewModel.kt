@@ -7,6 +7,7 @@ import com.ibsystem.temifooddelivery.data.datasource.ApiResult
 import com.ibsystem.temifooddelivery.data.repository.OrderRepository
 import com.ibsystem.temifooddelivery.data.repository.OrderRepositoryImpl
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
+import com.ibsystem.temifooddelivery.domain.OrderProduct
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.realtime.PostgresAction
 import io.github.jan.supabase.realtime.decodeRecord
@@ -18,9 +19,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OrderViewModel @Inject constructor (
-    private val repository: OrderRepository): ViewModel() {
-
+class OrderViewModel @Inject constructor (private val repository: OrderRepository): ViewModel() {
         private val _uiState = MutableStateFlow<ApiResult<*>>(ApiResult.Loading)
         val uiState: StateFlow<ApiResult<*>>
             get() = _uiState
@@ -33,7 +32,6 @@ class OrderViewModel @Inject constructor (
         getAllOrders()
         listenToOrdersChange()
     }
-
 
     fun getAllOrders() {
         viewModelScope.launch {
@@ -50,7 +48,7 @@ class OrderViewModel @Inject constructor (
     fun listenToOrdersChange() {
         viewModelScope.launch {
             repository.listenToOrdersChange().collect {
-            when (it) {
+                when (it) {
                     is PostgresAction.Delete -> Log.i("Listener","Deleted: ${it.oldRecord}")
                     is PostgresAction.Insert -> {
                         Log.i("Listener", "Inserted: ${it.record["id"]}")
@@ -60,7 +58,7 @@ class OrderViewModel @Inject constructor (
                     is PostgresAction.Update -> {
                         Log.i("Listener", "Updated: ${it.oldRecord} with ${it.record}")
                     }
-                else -> Log.i("Listener","sighhh")
+                    else -> Log.i("Listener","sighhh")
                 }
             }
         }
@@ -71,23 +69,19 @@ class OrderViewModel @Inject constructor (
 
     fun addNewOrders(id: String) {
         viewModelScope.launch {
-            repository.getOrderDetailsByID(id).collectLatest {
-                res -> if(res is ApiResult.Success) {
-                    Log.i("DSDSAD","PLSSSSS")
-                _orderList.value = _orderList.value + res.data
-                }
-                else {
-                Log.i("DSDSAD",res.toString())
+            repository.getOrderDetailsByID(id).collectLatest { res ->
+                if (res is ApiResult.Success) {
+                    _orderList.value = _orderList.value + res.data
+                } else {
+                    Log.i("DSDSAD",res.toString())
                 }
             }
         }
-
     }
 
     fun updateOrderStatus(id: String, newStatus: String) {
         viewModelScope.launch {
-            repository.updateOrderStatus(id, newStatus).collectLatest {
-                    res ->
+            repository.updateOrderStatus(id, newStatus).collectLatest { res ->
                 _uiState.update { res }
                 val orderIndex = _orderList.value.indexOfFirst { it.id == id }
                 if (orderIndex != -1) {
@@ -101,4 +95,14 @@ class OrderViewModel @Inject constructor (
             }
         }
     }
+
+    fun findtOrderByID(ID: String): OrderModelItem? {
+        val order = _orderList.value.firstOrNull { it.id == ID }
+        if (order == null) {
+            Log.i("findtOrderByID", "No result")
+        }
+
+        return order
+    }
+
 }

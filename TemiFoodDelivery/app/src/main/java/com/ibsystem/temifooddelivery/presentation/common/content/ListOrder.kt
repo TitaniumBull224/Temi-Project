@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,14 +13,18 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
@@ -32,14 +37,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import com.ibsystem.temifooddelivery.domain.Product
+import com.ibsystem.temifooddelivery.navigation.screen.Screen
 import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderViewModel
 import com.ibsystem.temifooddelivery.ui.theme.*
 import com.ibsystem.temifooddelivery.utils.reformatDate
@@ -47,9 +58,9 @@ import kotlinx.coroutines.launch
 
 val column1Weight = .1f
 val column2Weight = .2f
-val column3Weight = .25f
-val column4Weight = .25f
-val column5Weight = .2f
+val column3Weight = .3f
+val column4Weight = .3f
+val column5Weight = .1f
 
 @SuppressLint("NewApi")
 @Composable
@@ -71,17 +82,6 @@ fun ListOrder(
 
     val context = LocalContext.current
 
-
-    val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(orders) {
-        coroutineScope.launch {
-            listState.animateScrollToItem(orders.size)
-
-        }
-    }
-
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -101,14 +101,13 @@ fun ListOrder(
             )
             Button(
                 onClick = {
-                    if(checkedRowIds.isNotEmpty()) {
+                    if (checkedRowIds.isNotEmpty()) {
                         checkedRowIds.forEach { id ->
-                            viewModel.updateOrderStatus(id, "準備完了") }
-                    }
-                    else
-                    {
+                            viewModel.updateOrderStatus(id, "準備完了")
+                            navController.navigate(Screen.CustomerScreen.route + "/$id")
+                        }
+                    } else {
                         Toast.makeText(context, "オーダーを選んでください", Toast.LENGTH_SHORT).show()
-
                     }
 
                 },
@@ -117,9 +116,20 @@ fun ListOrder(
                 Text(text = "準備完了", color = White)
             }
         }
+        val listState = rememberLazyListState()
+        val coroutineScope = rememberCoroutineScope()
+
+        LaunchedEffect(orders) {
+            coroutineScope.launch {
+                listState.animateScrollToItem(orders.size)
+
+            }
+        }
+
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(DIMENS_2dp),
-            contentPadding = PaddingValues(DIMENS_8dp)
+            contentPadding = PaddingValues(DIMENS_8dp),
+            state = listState,
         ) {
             item {
                 Row(
@@ -136,7 +146,7 @@ fun ListOrder(
                     TableCell(text = "デート", weight = column3Weight, title = true)
                     TableCell(text = "状況", weight = column4Weight, title = true)
                     TableCell(
-                        text = "Amount",
+                        text = "",
                         weight = column5Weight,
                         alignment = TextAlign.Right,
                         title = true
@@ -182,6 +192,7 @@ fun ListOrder(
                     CheckBoxCell(
                         weight = column5Weight,
                         checked = checkedState[index],
+                        enabled = order.status == "保留中",
                         onCheckedChange = { checked ->
                             checkedState[index] = checked
                             if (checked) {
@@ -189,10 +200,6 @@ fun ListOrder(
                             } else {
                                 checkedRowIds.remove(order.id!!) // Remove the unchecked row ID from the list
                             }
-                            checkedRowIds.forEach{
-                                id -> Log.i("DD", id)
-                            }
-
                         }
                     )
                 }
@@ -314,16 +321,25 @@ fun RowScope.StatusCell(
 fun RowScope.CheckBoxCell(
     checked: Boolean = false,
     weight: Float,
-
-    onCheckedChange: ((Boolean, ) -> Unit)? = null
+    enabled: Boolean = true,
+    onCheckedChange: ((Boolean) -> Unit)? = null
 ) {
-    Checkbox(
-        checked = checked,
-        onCheckedChange = onCheckedChange,
-        modifier = Modifier
-            .weight(weight)
-            .padding(10.dp)
-    )
+    if (enabled) {
+        Checkbox(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            modifier = Modifier
+                .weight(weight)
+                .padding(10.dp)
+        )
+    } else {
+        Box(
+            modifier = Modifier
+                .weight(weight)
+                .padding(10.dp)
+        ) {}
+
+    }
 }
 
 //@Preview(showBackground = true)
