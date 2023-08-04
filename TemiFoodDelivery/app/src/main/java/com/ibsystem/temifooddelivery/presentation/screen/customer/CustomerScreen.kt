@@ -3,6 +3,7 @@ package com.ibsystem.temifooddelivery.presentation.screen.customer
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -39,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import com.ibsystem.temifooddelivery.domain.OrderProduct
@@ -81,7 +84,8 @@ fun CustomerScreen(
             verticalAlignment = Alignment.Top,
             horizontalArrangement  =  Arrangement.SpaceEvenly
         ) {
-            Column(modifier = Modifier.fillMaxHeight()
+            Column(
+                modifier = Modifier.fillMaxHeight()
             ) {
 
                 Row(
@@ -160,14 +164,21 @@ fun CustomerScreen(
                     }
                 }
 
-                Column(modifier = Modifier.align(Alignment.End)) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
                     Button(
+                        modifier = Modifier.sizeIn(minWidth = 300.dp, minHeight = 100.dp),
                         onClick = {
                             viewModel.updateOrderStatus(order.id!!,"提供済み")
                             navController.navigateUp()
-                        }) {
-                        Text(text = "受け取った")
+                            viewModel.mRobot.goTo("ホームベース")
+                        }
+                    ) {
+                        Text(text = "受け取った", color = White, fontSize = 80.sp)
                     }
+
                 }
             }
 

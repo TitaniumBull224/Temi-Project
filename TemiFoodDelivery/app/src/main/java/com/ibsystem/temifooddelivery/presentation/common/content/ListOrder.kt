@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -69,7 +70,9 @@ fun ListOrder(
     val context = LocalContext.current
 
     Column(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
     ) {
         Row(
             modifier = Modifier
@@ -91,8 +94,10 @@ fun ListOrder(
                         checkedRowIds.forEach { id ->
                             viewModel.updateOrderStatus(id, "準備完了")
                             navController.navigate(Screen.CustomerScreen.route + "/$id")
-                            if (viewModel.locationList.contains(id)) {
-                                viewModel.mRobot.goTo(location = id)
+
+                            val tableID = viewModel.findtOrderByID(id)!!.tableId!!
+                            if (viewModel.locationList.contains(tableID)) {
+                                viewModel.mRobot.goTo(location = tableID)
                             } else {
                                 Log.i("GOTO", "Location Not Found!")
                             }
