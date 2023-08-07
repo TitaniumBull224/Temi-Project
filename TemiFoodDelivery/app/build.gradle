@@ -104,6 +104,8 @@ dependencies {
     // Robot SDK
     implementation 'com.robotemi:sdk:1.131.0'
 
+    //Coil image
+    implementation "io.coil-kt:coil-compose:1.4.0"
 
 }
 

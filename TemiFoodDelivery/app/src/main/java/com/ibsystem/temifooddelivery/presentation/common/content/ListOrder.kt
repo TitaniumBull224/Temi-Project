@@ -1,7 +1,6 @@
 package com.ibsystem.temifooddelivery.presentation.common.content
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -36,8 +35,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
+import com.ibsystem.temifooddelivery.domain.OrderProduct
 import com.ibsystem.temifooddelivery.domain.Product
-import com.ibsystem.temifooddelivery.navigation.screen.Screen
+import com.ibsystem.temifooddelivery.presentation.common.card.ProductCard
 import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderViewModel
 import com.ibsystem.temifooddelivery.ui.theme.*
 import com.ibsystem.temifooddelivery.utils.reformatDate
@@ -183,7 +183,7 @@ fun ListOrder(
 
                 // Conditionally display the expanded row with product list
                 if (isRowExpanded.value) {
-                    order.product?.let { ProductList(products = it) } // Assuming `products` is a list of ProductItem inside the OrderModelItem
+                    order.product?.let { ProductList(products = it, prodQuantity = order.orderProduct!!) } // Assuming `products` is a list of ProductItem inside the OrderModelItem
                 }
             }
 
@@ -215,12 +215,12 @@ fun ListOrder(
 }
 
 @Composable
-fun ProductList(products: List<Product>) {
+fun ProductList(products: List<Product>, prodQuantity: List<OrderProduct?>) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = "Products",
+            text = "商品",
             fontFamily = GilroyFontFamily,
             fontWeight = FontWeight.SemiBold,
             fontSize = TEXT_SIZE_18sp,
@@ -231,7 +231,7 @@ fun ProductList(products: List<Product>) {
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(DIMENS_4dp)
         ) {
-            items(products) { product ->
+            itemsIndexed(products) { index, product ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -239,21 +239,13 @@ fun ProductList(products: List<Product>) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    product.prodName?.let {
-                        Text(
-                            text = it,
-                            fontFamily = GilroyFontFamily,
-                            fontWeight = FontWeight.Normal,
-                            fontSize = TEXT_SIZE_16sp,
-                            color = Black
-                        )
-                    }
-                    Text(
-                        text = "￥" + product.prodPrice,
-                        fontFamily = GilroyFontFamily,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = TEXT_SIZE_16sp,
-                        color = Black
+                    ProductCard(product = product, quantity = prodQuantity[index]!!.quantity!!)
+                    Divider(
+                        color = GraySecondTextColor,
+                        modifier = Modifier
+                            .height(1.dp)
+                            .fillMaxHeight()
+                            .fillMaxWidth()
                     )
                 }
             }

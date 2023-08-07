@@ -145,7 +145,6 @@ fun ChatSection(
                 isOut = message.isOut,
                 time = message.time,
                 imageUrl = message.imageUrl,
-
             )
             Spacer(modifier = Modifier.height(8.dp))
         }

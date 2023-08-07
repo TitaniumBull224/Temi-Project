@@ -2,9 +2,6 @@ package com.ibsystem.temifooddelivery.domain
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
-
-
-
 @Serializable
 data class OrderModelItem(
     @SerialName("id")
