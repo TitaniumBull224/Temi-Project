@@ -1,53 +1,30 @@
 package com.ibsystem.temifooddelivery.presentation.screen.customer
 
-import android.util.Log
-import android.widget.Toast
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Button
 import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.ibsystem.temifooddelivery.domain.OrderModelItem
-import com.ibsystem.temifooddelivery.domain.OrderProduct
-import com.ibsystem.temifooddelivery.domain.Product
-import com.ibsystem.temifooddelivery.presentation.common.content.CheckBoxCell
-import com.ibsystem.temifooddelivery.presentation.common.content.StatusCell
+import com.ibsystem.temifooddelivery.navigation.screen.Screen
 import com.ibsystem.temifooddelivery.presentation.common.content.TableCell
 import com.ibsystem.temifooddelivery.presentation.common.content.column1Weight
 import com.ibsystem.temifooddelivery.presentation.common.content.column2Weight
@@ -67,14 +44,13 @@ import com.ibsystem.temifooddelivery.ui.theme.TEXT_SIZE_18sp
 import com.ibsystem.temifooddelivery.ui.theme.TEXT_SIZE_24sp
 import com.ibsystem.temifooddelivery.ui.theme.White
 import com.ibsystem.temifooddelivery.utils.reformatDate
-import kotlinx.coroutines.launch
 
 @Composable
 fun CustomerScreen(
     modifier: Modifier = Modifier,
+    navController: NavController,
     orderID: String,
-    viewModel: OrderViewModel,
-    navController: NavController
+    viewModel: OrderViewModel
 ) {
     val order = viewModel.findtOrderByID(orderID)
     order?.let {
@@ -172,8 +148,13 @@ fun CustomerScreen(
                         modifier = Modifier.sizeIn(minWidth = 300.dp, minHeight = 100.dp),
                         onClick = {
                             viewModel.updateOrderStatus(order.id!!,"提供済み")
-                            navController.navigateUp()
-                            viewModel.mRobot.goTo("ホームベース")
+
+                            if (viewModel.checkedOrderList.value.isEmpty()) {
+                                navController.navigate(Screen.OrderListScreen.route)
+                                viewModel.mRobot.goTo("ホームベース")
+                            } else {
+                                viewModel.processCheckedRow(navController)
+                            }
                         }
                     ) {
                         Text(text = "受け取った", color = White, fontSize = 80.sp)

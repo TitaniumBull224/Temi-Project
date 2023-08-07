@@ -56,10 +56,8 @@ fun ListOrder(
     title: String,
     orders: List<OrderModelItem>,
     viewModel: OrderViewModel,
-    navController: NavController,
-//    onClickToCart: (ProductItem) -> Unit
+    navController: NavController
 ) {
-
     val checkedState = remember { mutableStateListOf<Boolean>() }
     checkedState.clear()
     checkedState.addAll(List(orders.size) { false })
@@ -88,32 +86,36 @@ fun ListOrder(
                 fontSize = TEXT_SIZE_24sp,
                 color = Black
             )
-            Button(
-                onClick = {
-                    if (checkedRowIds.isNotEmpty()) {
-                        checkedRowIds.forEach { id ->
-                            viewModel.updateOrderStatus(id, "準備完了")
-                            navController.navigate(Screen.CustomerScreen.route + "/$id")
-
-                            val tableID = viewModel.findtOrderByID(id)!!.tableId!!
-                            if (viewModel.locationList.contains(tableID)) {
-                                viewModel.mRobot.goTo(location = tableID)
-                            } else {
-                                Log.i("GOTO", "Location Not Found!")
-                            }
-
-
-                        }
-                    } else {
-                        Toast.makeText(context, "オーダーを選んでください", Toast.LENGTH_SHORT).show()
-                    }
-
-                },
-                modifier = Modifier.padding(DIMENS_16dp)
-            ) {
-                Text(text = "準備完了", color = White)
-            }
         }
+
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TableCell(text = "", weight = column1Weight)
+            TableCell(
+                text = "テーブル",
+                weight = column2Weight,
+                alignment = TextAlign.Left,
+                title = true
+            )
+            TableCell(text = "時間", weight = column3Weight, title = true)
+            TableCell(text = "状況", weight = column4Weight, title = true)
+            TableCell(
+                text = "",
+                weight = column5Weight,
+                alignment = TextAlign.Right,
+                title = true
+            )
+        }
+        Divider(
+            color = GraySecondTextColor,
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxHeight()
+                .fillMaxWidth()
+        )
+
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
 
@@ -129,36 +131,6 @@ fun ListOrder(
             contentPadding = PaddingValues(DIMENS_8dp),
             state = listState,
         ) {
-            item {
-                Row(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    TableCell(text = "", weight = column1Weight)
-                    TableCell(
-                        text = "テーブル",
-                        weight = column2Weight,
-                        alignment = TextAlign.Left,
-                        title = true
-                    )
-                    TableCell(text = "デート", weight = column3Weight, title = true)
-                    TableCell(text = "状況", weight = column4Weight, title = true)
-                    TableCell(
-                        text = "",
-                        weight = column5Weight,
-                        alignment = TextAlign.Right,
-                        title = true
-                    )
-                }
-                Divider(
-                    color = GraySecondTextColor,
-                    modifier = Modifier
-                        .height(1.dp)
-                        .fillMaxHeight()
-                        .fillMaxWidth()
-                )
-            }
-
             itemsIndexed(orders) { index, order ->
                 val isRowExpanded = remember { mutableStateOf(false) }
 
@@ -194,9 +166,9 @@ fun ListOrder(
                         onCheckedChange = { checked ->
                             checkedState[index] = checked
                             if (checked) {
-                                checkedRowIds.add(order.id!!) // Add the checked row ID to the list
+                                viewModel.addCheckedOrderList(order.id!!) // Add the checked row ID to the viewModel.checkedOrderList
                             } else {
-                                checkedRowIds.remove(order.id!!) // Remove the unchecked row ID from the list
+                                viewModel.removeCheckedOrderList(order.id!!) // Remove the unchecked row ID from the viewModel.checkedOrderList
                             }
                         }
                     )
@@ -212,6 +184,30 @@ fun ListOrder(
                 // Conditionally display the expanded row with product list
                 if (isRowExpanded.value) {
                     order.product?.let { ProductList(products = it) } // Assuming `products` is a list of ProductItem inside the OrderModelItem
+                }
+            }
+
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = DIMENS_16dp, end = DIMENS_16dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+
+                ) {
+                    Button(
+                        onClick = {
+                            if (viewModel.checkedOrderList.value.isNotEmpty()) {
+                                viewModel.processCheckedRow(navController)
+                            } else {
+                                Toast.makeText(context, "オーダーを選んでください", Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        modifier = Modifier.padding(DIMENS_16dp)
+                    ) {
+                        Text(text = "準備完了", color = White)
+                    }
                 }
             }
         }
@@ -339,36 +335,3 @@ fun RowScope.CheckBoxCell(
 
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun ListContentProductPreview() {
-//    ListContentProduct(
-//        title = "Exclusive Offer",
-//        products = listOf(
-//            ProductItem(
-//                id = "1",
-//                name = "Organic Bananas",
-//                description = "",
-//                image = R.drawable.product10,
-//                price = 4.99
-//            ),
-//            ProductItem(
-//                id = "2",
-//                name = "Organic Bananas",
-//                description = "",
-//                image = R.drawable.product10,
-//                price = 4.99
-//            ),
-//            ProductItem(
-//                id = "3",
-//                name = "Organic Bananas",
-//                description = "",
-//                image = R.drawable.product10,
-//                price = 4.99
-//            )
-//        ),
-//        navController = rememberNavController(),
-//        onClickToCart = {}
-//    )
-//}

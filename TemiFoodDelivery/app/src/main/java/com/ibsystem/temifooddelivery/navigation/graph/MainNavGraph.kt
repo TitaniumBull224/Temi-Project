@@ -1,5 +1,7 @@
 package com.ibsystem.temifooddelivery.navigation.graph
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
@@ -16,12 +18,11 @@ import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderViewMod
 import com.ibsystem.temifooddelivery.utils.Constants.PRODUCT_ARGUMENT_KEY
 import io.github.jan.supabase.postgrest.query.Order
 
-@OptIn(ExperimentalPagerApi::class)
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun MainNavGraph(navController: NavHostController, viewModel: OrderViewModel) {
     NavHost(
         navController = navController,
-//        route = Graph.MAIN,
         startDestination = Screen.OrderListScreen.route
     ) {
         composable(route = Screen.OrderListScreen.route) {

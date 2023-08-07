@@ -3,11 +3,13 @@ package com.ibsystem.temifooddelivery.presentation.screen.order_list
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.ibsystem.temifooddelivery.data.datasource.ApiResult
 import com.ibsystem.temifooddelivery.data.repository.OrderRepository
 import com.ibsystem.temifooddelivery.data.repository.OrderRepositoryImpl
 import com.ibsystem.temifooddelivery.domain.OrderModelItem
 import com.ibsystem.temifooddelivery.domain.OrderProduct
+import com.ibsystem.temifooddelivery.navigation.screen.Screen
 import com.robotemi.sdk.Robot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.realtime.PostgresAction
@@ -31,6 +33,10 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
     private val _orderList = MutableStateFlow<List<OrderModelItem>>(mutableListOf())
     val orderList: StateFlow<List<OrderModelItem>>
         get() = _orderList
+
+    private val _checkedOrderList = MutableStateFlow<List<String>>(mutableListOf())
+    val checkedOrderList: StateFlow<List<String>>
+        get() = _checkedOrderList
 
     init {
         getAllOrders()
@@ -97,6 +103,37 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     _orderList.emit(updatedOrderList)
                 }
             }
+        }
+    }
+
+    fun addCheckedOrderList(orderID: String) {
+        _checkedOrderList.value += orderID
+    }
+
+    fun removeCheckedOrderList(orderID: String) {
+        _checkedOrderList.value -= orderID
+    }
+
+    fun clearCheckedOrderList() {
+        _checkedOrderList.value = emptyList()
+    }
+
+    fun processCheckedRow(navController: NavController) {
+        if (_checkedOrderList.value.isNotEmpty()) {
+            val id = _checkedOrderList.value.first()
+            updateOrderStatus(id, "準備完了")
+
+            val tableID = findtOrderByID(id)!!.tableId!!
+            if (locationList.contains(tableID)) {
+                mRobot.askQuestion("行ってきます")
+                mRobot.goTo(location = tableID)
+            } else {
+                Log.i("GOTO", "Location Not Found!")
+            }
+            Log.i("checkedOrder", "/$id")
+            navController.navigate(Screen.CustomerScreen.route + "/$id")
+
+            _checkedOrderList.value -= id
         }
     }
 

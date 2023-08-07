@@ -52,7 +52,7 @@ fun OrderListScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 when(uiState.value) {
-                    is ApiResult.Error -> Log.i("ERRR","YOUFJFKFLGGDFKGFDKGDKGDFKGDFGKFGDK")
+                    is ApiResult.Error -> Log.i("API","ERROR!")
                     ApiResult.Loading -> CircularProgressIndicator()
                     is ApiResult.Success -> {
                         val orders = orderList.value as? List<OrderModelItem>

@@ -18,11 +18,13 @@ import com.ibsystem.temifooddelivery.presentation.screen.order_list.OrderViewMod
 import com.ibsystem.temifooddelivery.ui.theme.GrayBackground
 import com.ibsystem.temifooddelivery.ui.theme.TemiFoodDeliveryTheme
 import com.robotemi.sdk.Robot
+import com.robotemi.sdk.listeners.OnGoToLocationStatusChangedListener
 import com.robotemi.sdk.listeners.OnRobotReadyListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity(), OnRobotReadyListener {
+@Suppress("DEPRECATION")
+class MainActivity : ComponentActivity(), OnRobotReadyListener, OnGoToLocationStatusChangedListener {
     private val TAG = MainActivity::class.java.simpleName
     private val mRobot = Robot.getInstance()
     private val orderViewModel by viewModels<OrderViewModel>()
@@ -47,12 +49,14 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener {
         super.onStart()
         Log.i(TAG, "Robot: OnStart")
         mRobot.addOnRobotReadyListener(this)
+        mRobot.addOnGoToLocationStatusChangedListener(this)
     }
 
     override fun onStop() {
         super.onStop()
         Log.i(TAG, "Robot: OnStop")
         mRobot.removeOnRobotReadyListener(this)
+        mRobot.removeOnGoToLocationStatusChangedListener(this)
     }
 
     override fun onRobotReady(isReady: Boolean) {
@@ -68,6 +72,16 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener {
         }
     }
 
+    override fun onGoToLocationStatusChanged(
+        location: String,
+        status: String,
+        descriptionId: Int,
+        description: String
+    ) {
+        if (status == OnGoToLocationStatusChangedListener.COMPLETE) {
+            mRobot.askQuestion(if (location == "ホームベース") "ただいま" else "お待たせしました！")
+        }
+    }
 
 
 //    private fun observeData() {
