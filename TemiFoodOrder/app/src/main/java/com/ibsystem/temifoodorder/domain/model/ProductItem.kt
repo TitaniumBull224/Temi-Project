@@ -1,15 +1,23 @@
 package com.ibsystem.temifoodorder.domain.model
+import kotlinx.serialization.Serializable
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import com.ibsystem.temifoodorder.utils.Constants.PRODUCT_DATABASE_TABLE
+import kotlinx.serialization.SerialName
 
-@Entity(tableName = PRODUCT_DATABASE_TABLE)
+
+@Serializable
 data class ProductItem(
-    @PrimaryKey(autoGenerate = false)
-    val id: String,
-    val name: String,
-    val description: String,
-    val image: Int,
-    val price: Double
+    @SerialName("cat_id")
+    val catId: String?,
+    @SerialName("prod_avail")
+    val prodAvail: Boolean?,
+    @SerialName("prod_desc")
+    val prodDesc: Any?,
+    @SerialName("prod_id")
+    val prodId: String?,
+    @SerialName("prod_image")
+    val prodImage: Any?,
+    @SerialName("prod_name")
+    val prodName: String?,
+    @SerialName("prod_price")
+    val prodPrice: Int?
 )
