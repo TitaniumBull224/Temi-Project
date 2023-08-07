@@ -1,16 +1,19 @@
 package com.ibsystem.temifoodorder.navigation.graph
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ibsystem.temifoodorder.navigation.screen.Screen
 import com.ibsystem.temifoodorder.presentation.screen.MainScreen
 import com.ibsystem.temifoodorder.presentation.screen.onboarding.OnBoardingScreen
+import com.ibsystem.temifoodorder.presentation.screen.order.OrderScreen
+import com.ibsystem.temifoodorder.presentation.screen.order.OrderViewModel
 import com.ibsystem.temifoodorder.presentation.screen.splash.SplashScreen
 
 @Composable
-fun RootNavigationGraph(navController: NavHostController) {
+fun RootNavigationGraph(navController: NavHostController, viewModel: OrderViewModel) {
     NavHost(
         navController = navController,
         route = Graph.ROOT,
@@ -25,7 +28,8 @@ fun RootNavigationGraph(navController: NavHostController) {
         }
 
         composable(route = Graph.MAIN) {
-            MainScreen()
+            //MainScreen()
+            OrderScreen(viewModel = viewModel)
         }
     }
 }

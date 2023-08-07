@@ -42,6 +42,9 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     val orderList = data.data
                     _orderList.value = orderList
                 }
+                else if(data is ApiResult.Error) {
+                    Log.e("API",data.message!!)
+                }
             }
         }
     }

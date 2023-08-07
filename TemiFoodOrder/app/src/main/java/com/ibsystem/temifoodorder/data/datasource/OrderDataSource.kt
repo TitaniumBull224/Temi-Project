@@ -30,7 +30,7 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
                      }
 
                  val orders = queryRes.decodeList<OrderModelItem>()
-//                 println(orders.toString())
+                 println(orders.toString())
                  emit(ApiResult.Success(orders))
              }
              catch (e: Exception) {
