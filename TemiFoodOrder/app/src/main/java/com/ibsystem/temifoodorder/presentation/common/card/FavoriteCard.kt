@@ -34,10 +34,10 @@ fun FavoriteCard(
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Image(
-                painter = painterResource(id = productItem.image),
-                contentDescription = stringResource(id = R.string.image_product)
-            )
+//            Image(
+//                painter = painterResource(id = productItem.prodImage),
+//                contentDescription = stringResource(id = R.string.image_product)
+//            )
 
             Spacer(modifier = Modifier.padding(start = DIMENS_16dp))
 
@@ -47,7 +47,7 @@ fun FavoriteCard(
                     .align(Alignment.CenterVertically)
             ) {
                 Text(
-                    text = productItem.name,
+                    text = productItem.prodName!!,
                     fontFamily = GilroyFontFamily,
                     fontWeight = FontWeight.Bold,
                     color = Black,
@@ -60,7 +60,7 @@ fun FavoriteCard(
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Text(
-                    text = "${productItem.price}",
+                    text = "${productItem.prodPrice}",
                     fontFamily = GilroyFontFamily,
                     fontWeight = FontWeight.Bold,
                     color = Black,
@@ -86,11 +86,13 @@ fun FavoriteCard(
 fun FavoriteCardPreview() {
     FavoriteCard(
         productItem = ProductItem(
-            id = "1",
-            name = "Organic Bananas",
-            description = "",
-            image = R.drawable.product10,
-            price = 4.99
+            catId = "aishhvaisuhg",
+            prodAvail = true,
+            prodDesc = "god damn",
+            prodId = "foauhvauhuahg",
+            prodImage = "https://burpple-2.imgix.net/foods/18701ea9eb80bcd299c1559365_original.",
+            prodPrice = 598,
+            prodName = "焼肉"
         )
     )
 }

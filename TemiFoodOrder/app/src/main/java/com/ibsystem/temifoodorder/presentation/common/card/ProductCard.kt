@@ -38,7 +38,7 @@ fun ProductCard(
             .padding(DIMENS_12dp)
             .width(DIMENS_174dp)
             .clickable {
-                navController.navigate(Screen.Details.passProductId(productId = productItem.id))
+                navController.navigate(Screen.Details.passProductId(productId = productItem.prodId!!))
             }
     ) {
         Column(
@@ -46,19 +46,19 @@ fun ProductCard(
                 .fillMaxWidth()
                 .padding(DIMENS_12dp)
         ) {
-            Image(
-                painter = painterResource(id = productItem.image),
-                contentDescription = stringResource(R.string.image_product),
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .fillMaxWidth()
-                    .height(DIMENS_80dp)
-            )
+//            Image(
+//                painter = painterResource(id = productItem.prodImage!!),
+//                contentDescription = stringResource(R.string.image_product),
+//                modifier = Modifier
+//                    .align(Alignment.CenterHorizontally)
+//                    .fillMaxWidth()
+//                    .height(DIMENS_80dp)
+//            )
 
             Spacer(modifier = Modifier.height(DIMENS_24dp))
 
             Text(
-                text = productItem.name,
+                text = productItem.prodName!!,
                 fontFamily = GilroyFontFamily,
                 fontWeight = FontWeight.Bold,
                 color = Black,
@@ -72,7 +72,7 @@ fun ProductCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "$${productItem.price}",
+                    text = "$${productItem.prodPrice}",
                     fontFamily = GilroyFontFamily,
                     fontWeight = FontWeight.Bold,
                     color = Black,
@@ -108,11 +108,13 @@ fun ProductCard(
 fun ItemProductPreview() {
     ProductCard(
         productItem = ProductItem(
-            id = "1",
-            name = "Organic Bananas",
-            description = "",
-            image = R.drawable.product10,
-            price = 4.99
+            catId = "aishhvaisuhg",
+            prodAvail = true,
+            prodDesc = "god damn",
+            prodId = "foauhvauhuahg",
+            prodImage = "https://burpple-2.imgix.net/foods/18701ea9eb80bcd299c1559365_original.",
+            prodPrice = 598,
+            prodName = "焼肉"
         ),
         navController = rememberNavController(),
         onClickToCart = {}

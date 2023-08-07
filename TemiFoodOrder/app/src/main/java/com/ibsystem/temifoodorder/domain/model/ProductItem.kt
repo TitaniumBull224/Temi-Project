@@ -11,11 +11,11 @@ data class ProductItem(
     @SerialName("prod_avail")
     val prodAvail: Boolean?,
     @SerialName("prod_desc")
-    val prodDesc: Any?,
+    val prodDesc: String?,
     @SerialName("prod_id")
     val prodId: String?,
     @SerialName("prod_image")
-    val prodImage: Any?,
+    val prodImage: String?,
     @SerialName("prod_name")
     val prodName: String?,
     @SerialName("prod_price")

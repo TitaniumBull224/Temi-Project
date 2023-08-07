@@ -61,13 +61,13 @@ fun ContentCart(
                 .fillMaxWidth()
                 .padding(top = DIMENS_8dp)
         ) {
-            Image(
-                modifier = Modifier
-                    .size(width = DIMENS_64dp, height = DIMENS_64dp)
-                    .padding(start = DIMENS_8dp),
-                painter = painterResource(id = productItem.image),
-                contentDescription = stringResource(id = R.string.image_product)
-            )
+//            Image(
+//                modifier = Modifier
+//                    .size(width = DIMENS_64dp, height = DIMENS_64dp)
+//                    .padding(start = DIMENS_8dp),
+//                painter = painterResource(id = productItem.image),
+//                contentDescription = stringResource(id = R.string.image_product)
+//            )
 
             Column(
                 modifier = Modifier
@@ -76,7 +76,7 @@ fun ContentCart(
                     .padding(start = DIMENS_16dp),
             ) {
                 Text(
-                    text = productItem.name,
+                    text = productItem.prodName!!,
                     fontFamily = GilroyFontFamily,
                     fontWeight = FontWeight.Bold,
                     color = Black,
@@ -87,7 +87,7 @@ fun ContentCart(
 
             Text(
                 modifier = Modifier.align(Alignment.CenterVertically),
-                text = "$${productItem.price}",
+                text = "$${productItem.prodPrice}",
                 fontFamily = GilroyFontFamily,
                 fontWeight = FontWeight.Bold,
                 color = Black,
@@ -115,11 +115,13 @@ fun ContentCart(
 fun ContentCartPreview() {
     ContentCart(
         productItem = ProductItem(
-            id = "1",
-            name = "Organic Bananas",
-            description = "Apples are nutritious. Apples may be good for weight loss. apples may be good for your heart. As part of a healtful and varied diet.",
-            image = R.drawable.product2,
-            price = 4.99
+            catId = "aishhvaisuhg",
+            prodAvail = true,
+            prodDesc = "god damn",
+            prodId = "foauhvauhuahg",
+            prodImage = "https://burpple-2.imgix.net/foods/18701ea9eb80bcd299c1559365_original.",
+            prodPrice = 598,
+            prodName = "焼肉"
         ),
         onClickDeleteCart = {}
     )

@@ -71,26 +71,35 @@ fun ListContentProductPreview() {
     ListContentProduct(
         title = "Exclusive Offer",
         products = listOf(
+//            ProductItem(
+//                id = "1",
+//                name = "Organic Bananas",
+//                description = "",
+//                image = R.drawable.product10,
+//                price = 4.99
+//            ),
+//            ProductItem(
+//                id = "2",
+//                name = "Organic Bananas",
+//                description = "",
+//                image = R.drawable.product10,
+//                price = 4.99
+//            ),
+//            ProductItem(
+//                id = "3",
+//                name = "Organic Bananas",
+//                description = "",
+//                image = R.drawable.product10,
+//                price = 4.99
+//            )
             ProductItem(
-                id = "1",
-                name = "Organic Bananas",
-                description = "",
-                image = R.drawable.product10,
-                price = 4.99
-            ),
-            ProductItem(
-                id = "2",
-                name = "Organic Bananas",
-                description = "",
-                image = R.drawable.product10,
-                price = 4.99
-            ),
-            ProductItem(
-                id = "3",
-                name = "Organic Bananas",
-                description = "",
-                image = R.drawable.product10,
-                price = 4.99
+                catId = "aishhvaisuhg",
+                prodAvail = true,
+                prodDesc = "god damn",
+                prodId = "foauhvauhuahg",
+                prodImage = "https://burpple-2.imgix.net/foods/18701ea9eb80bcd299c1559365_original.",
+                prodPrice = 598,
+                prodName = "焼肉"
             )
         ),
         navController = rememberNavController(),

@@ -12,7 +12,7 @@ import javax.inject.Singleton
 object InformationModule {
     @Provides
     @Singleton
-    fun provideTableInfo(tableID: String): TableModel {
+    fun provideTableInfo(): TableModel {
         return TableModel("1")
     }
 }

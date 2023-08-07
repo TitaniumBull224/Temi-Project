@@ -10,7 +10,7 @@ data class OrderModelItem(
     @SerialName("Order_Product")
     val orderProduct: List<OrderProduct?>?,
     @SerialName("Product")
-    val product: List<Product>?,
+    val product: List<ProductItem>?,
     @SerialName("status")
     val status: String?,
     @SerialName("table_id")
@@ -25,20 +25,3 @@ data class OrderProduct(
     val quantity: Int?
 )
 
-@Serializable
-data class Product(
-    @SerialName("cat_id")
-    val catId: String?,
-    @SerialName("prod_avail")
-    val prodAvail: Boolean?,
-    @SerialName("prod_desc")
-    val prodDesc: String?,
-    @SerialName("prod_id")
-    val prodId: String?,
-    @SerialName("prod_image")
-    val prodImage: String?,
-    @SerialName("prod_name")
-    val prodName: String?,
-    @SerialName("prod_price")
-    val prodPrice: Int?
-)

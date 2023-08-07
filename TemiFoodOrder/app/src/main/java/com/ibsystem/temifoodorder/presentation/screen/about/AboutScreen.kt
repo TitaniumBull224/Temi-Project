@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.ibsystem.temifoodorder.R
 import com.ibsystem.temifoodorder.presentation.common.card.ProfileCard
-import com.ibsystem.temifoodorder.presentation.common.content.ListContentAbout
+
 import com.ibsystem.temifoodorder.ui.theme.*
 
 @Composable
@@ -34,7 +34,7 @@ fun AboutScreen(
     ) {
         ProfileCard()
 
-        ListContentAbout()
+        //ListContentAbout()
 
         Spacer(modifier = Modifier.height(DIMENS_32dp))
 

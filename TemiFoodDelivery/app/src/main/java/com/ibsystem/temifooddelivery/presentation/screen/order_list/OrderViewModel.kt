@@ -67,6 +67,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     is PostgresAction.Select -> Log.i("Listener","Selected: ${it.record}")
                     is PostgresAction.Update -> {
                         Log.i("Listener", "Updated: ${it.oldRecord} with ${it.record}")
+                        updateOrderList(it.record["id"].toString().replace("\"", ""))
                     }
                     else -> Log.i("Listener","sighhh")
                 }
@@ -86,6 +87,29 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     Log.i("DSDSAD",res.toString())
                 }
             }
+        }
+    }
+
+    fun updateOrderList(id: String) {
+        viewModelScope.launch {
+            repository.getOrderDetailsByID(id = id).collectLatest { res ->
+                _uiState.update { res }
+                if (res is ApiResult.Success) {
+                    val orderIndex = _orderList.value.indexOfFirst { it.id == id }
+                    if (orderIndex != -1) {
+                        // Create a new list by updating the order status
+                        val updatedOrderList = _orderList.value.toMutableList()
+                        updatedOrderList[orderIndex] = res.data
+
+                        // Update the state flow with the updated order list
+                        _orderList.emit(updatedOrderList)
+                    }
+                } else {
+                    Log.i("DSDSAD",res.toString())
+                }
+
+            }
+
         }
     }
 
@@ -123,7 +147,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
             val id = _checkedOrderList.value.first()
             updateOrderStatus(id, "準備完了")
 
-            val tableID = findtOrderByID(id)!!.tableId!!
+            val tableID = findOrderByID(id)!!.tableId!!
             if (locationList.contains(tableID)) {
                 mRobot.askQuestion("行ってきます")
                 mRobot.goTo(location = tableID)
@@ -137,10 +161,10 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
         }
     }
 
-    fun findtOrderByID(ID: String): OrderModelItem? {
+    fun findOrderByID(ID: String): OrderModelItem? {
         val order = _orderList.value.firstOrNull { it.id == ID }
         if (order == null) {
-            Log.i("findtOrderByID", "No result")
+            Log.i("findOrderByID", "No result")
         }
 
         return order

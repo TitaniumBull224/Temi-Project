@@ -59,7 +59,7 @@ fun DetailScreen(
                     DetailButtonAddCart(
                         productItem = it,
                         onClickToCart = { productItem ->
-                            mContext.showToastShort("Success Add To Cart ${productItem.name}")
+                            mContext.showToastShort("Success Add To Cart ${productItem.prodName}")
                             // TODO: Add select Cart
                         }
                     )
@@ -80,11 +80,11 @@ fun DetailContentImageHeader(
             .blur(DIMENS_1dp)
             .fillMaxWidth(),
     ) {
-        Image(
-            painter = painterResource(id = productItem.image),
-            contentDescription = stringResource(id = R.string.image_product),
-            modifier = Modifier.height(DIMENS_353dp)
-        )
+//        Image(
+//            painter = painterResource(id = productItem.prodImage),
+//            contentDescription = stringResource(id = R.string.image_product),
+//            modifier = Modifier.height(DIMENS_353dp)
+//        )
     }
 }
 
@@ -103,7 +103,7 @@ fun DetailContentDescription(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = productItem.name,
+                    text = productItem.prodName!!,
                     fontFamily = GilroyFontFamily,
                     fontWeight = FontWeight.Bold,
                     color = Black,
@@ -121,7 +121,7 @@ fun DetailContentDescription(
         Spacer(modifier = Modifier.height(DIMENS_8dp))
 
         Text(
-            text = "$${productItem.price}",
+            text = "$${productItem.prodPrice}",
             fontFamily = GilroyFontFamily,
             fontWeight = FontWeight.Bold,
             color = Black,
@@ -142,7 +142,7 @@ fun DetailContentDescription(
         Spacer(modifier = Modifier.height(DIMENS_8dp))
 
         Text(
-            text = productItem.description,
+            text = productItem.prodDesc!!,
             fontFamily = GilroyFontFamily,
             fontWeight = FontWeight.Medium,
             color = GraySecondTextColor,
@@ -252,11 +252,13 @@ fun DetailButtonAddCart(
 fun DetailScreenImageHeaderPreview() {
     DetailContentImageHeader(
         ProductItem(
-            id = "1",
-            name = "Organic Bananas",
-            description = "Apples are nutritious. Apples may be good for weight loss. apples may be good for your heart. As part of a healtful and varied diet.",
-            image = R.drawable.product2,
-            price = 4.99
+            catId = "aishhvaisuhg",
+            prodAvail = true,
+            prodDesc = "god damn",
+            prodId = "foauhvauhuahg",
+            prodImage = "https://burpple-2.imgix.net/foods/18701ea9eb80bcd299c1559365_original.",
+            prodPrice = 598,
+            prodName = "焼肉"
         )
     )
 }

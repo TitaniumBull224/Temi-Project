@@ -3,9 +3,12 @@ package com.ibsystem.temifooddelivery.data.repository
 import com.ibsystem.temifooddelivery.data.datasource.ApiResult
 import com.ibsystem.temifooddelivery.data.datasource.OrderDataSource
 import com.ibsystem.temifoodorder.domain.model.OrderModelItem
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import io.github.jan.supabase.realtime.PostgresAction
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+
 
 interface OrderRepository {
     fun getAllOrders(tableID: String): Flow<ApiResult<List<OrderModelItem>>>

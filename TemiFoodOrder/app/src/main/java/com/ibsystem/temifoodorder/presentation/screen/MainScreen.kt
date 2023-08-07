@@ -31,7 +31,7 @@ fun MainScreen(
         Column(
             modifier = Modifier.padding(it)
         ) {
-            MainNavGraph(navController = navController)
+            //MainNavGraph(navController = navController)
         }
     }
 

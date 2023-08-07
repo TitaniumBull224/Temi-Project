@@ -7,38 +7,44 @@ import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.ibsystem.temifoodorder.navigation.screen.BottomNavItemScreen
 import com.ibsystem.temifoodorder.navigation.screen.Screen
-import com.ibsystem.temifoodorder.presentation.screen.about.AboutScreen
-import com.ibsystem.temifoodorder.presentation.screen.cart.CartScreen
+//import com.ibsystem.temifoodorder.presentation.screen.about.AboutScreen
+//import com.ibsystem.temifoodorder.presentation.screen.cart.CartScreen
 import com.ibsystem.temifoodorder.presentation.screen.detail.DetailScreen
-import com.ibsystem.temifoodorder.presentation.screen.explore.ExploreScreen
-import com.ibsystem.temifoodorder.presentation.screen.home.HomeScreen
+//import com.ibsystem.temifoodorder.presentation.screen.explore.ExploreScreen
+//import com.ibsystem.temifoodorder.presentation.screen.home.HomeScreen
+import com.ibsystem.temifoodorder.presentation.screen.order.OrderScreen
+import com.ibsystem.temifoodorder.presentation.screen.order.OrderViewModel
 import com.ibsystem.temifoodorder.presentation.screen.search.SearchScreen
 import com.ibsystem.temifoodorder.utils.Constants.PRODUCT_ARGUMENT_KEY
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MainNavGraph(navController: NavHostController) {
+fun MainNavGraph(navController: NavHostController, viewModel: OrderViewModel) {
     NavHost(
         navController = navController,
         route = Graph.MAIN,
         startDestination = BottomNavItemScreen.Home.route
     ) {
+//        composable(route = BottomNavItemScreen.Home.route) {
+//            HomeScreen(navController = navController)
+//        }
+//        composable(route = BottomNavItemScreen.Explore.route) {
+//            ExploreScreen()
+//        }
+//        composable(route = BottomNavItemScreen.Cart.route) {
+//            CartScreen()
+//        }
+//        composable(route = BottomNavItemScreen.About.route) {
+//            AboutScreen()
+//        }
+//
+//        searchNavGraph()
+//
+//        detailsNavGraph()
+
         composable(route = BottomNavItemScreen.Home.route) {
-            HomeScreen(navController = navController)
+            OrderScreen(viewModel = viewModel)
         }
-        composable(route = BottomNavItemScreen.Explore.route) {
-            ExploreScreen()
-        }
-        composable(route = BottomNavItemScreen.Cart.route) {
-            CartScreen()
-        }
-        composable(route = BottomNavItemScreen.About.route) {
-            AboutScreen()
-        }
-
-        searchNavGraph()
-
-        detailsNavGraph()
     }
 }
 
