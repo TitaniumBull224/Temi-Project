@@ -240,14 +240,15 @@ fun ProductList(products: List<Product>, prodQuantity: List<OrderProduct?>) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ProductCard(product = product, quantity = prodQuantity[index]!!.quantity!!)
-                    Divider(
-                        color = GraySecondTextColor,
-                        modifier = Modifier
-                            .height(1.dp)
-                            .fillMaxHeight()
-                            .fillMaxWidth()
-                    )
+
                 }
+                Divider(
+                    color = GraySecondTextColor,
+                    modifier = Modifier
+                        .height(1.dp)
+                        .fillMaxHeight()
+                        .fillMaxWidth()
+                )
             }
         }
     }

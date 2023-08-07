@@ -62,13 +62,14 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, OnGoToLocationSt
     override fun onRobotReady(isReady: Boolean) {
         if (isReady) {
             Log.i(TAG, "Robot: OnRobotReady")
-            try {
-                val activityInfo = packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA)
-                mRobot.onStart(activityInfo)
-                mRobot.hideTopBar()
-            } catch (e: PackageManager.NameNotFoundException) {
-                e.printStackTrace()
-            }
+//            try {
+//                val activityInfo = packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA)
+//                mRobot.onStart(activityInfo)
+//
+//            } catch (e: PackageManager.NameNotFoundException) {
+//                e.printStackTrace()
+//            }
+            mRobot.hideTopBar()
         }
     }
 
