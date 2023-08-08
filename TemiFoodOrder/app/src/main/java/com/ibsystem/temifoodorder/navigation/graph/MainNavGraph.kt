@@ -10,6 +10,7 @@ import com.ibsystem.temifoodorder.navigation.screen.Screen
 //import com.ibsystem.temifoodorder.presentation.screen.about.AboutScreen
 //import com.ibsystem.temifoodorder.presentation.screen.cart.CartScreen
 import com.ibsystem.temifoodorder.presentation.screen.detail.DetailScreen
+import com.ibsystem.temifoodorder.presentation.screen.home.HomeScreen
 //import com.ibsystem.temifoodorder.presentation.screen.explore.ExploreScreen
 //import com.ibsystem.temifoodorder.presentation.screen.home.HomeScreen
 import com.ibsystem.temifoodorder.presentation.screen.order.OrderScreen
@@ -19,15 +20,15 @@ import com.ibsystem.temifoodorder.utils.Constants.PRODUCT_ARGUMENT_KEY
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MainNavGraph(navController: NavHostController, viewModel: OrderViewModel) {
+fun MainNavGraph(navController: NavHostController, /*viewModel: OrderViewModel*/) {
     NavHost(
         navController = navController,
         route = Graph.MAIN,
         startDestination = BottomNavItemScreen.Home.route
     ) {
-//        composable(route = BottomNavItemScreen.Home.route) {
-//            HomeScreen(navController = navController)
-//        }
+        composable(route = BottomNavItemScreen.Home.route) {
+            HomeScreen(navController = navController)
+        }
 //        composable(route = BottomNavItemScreen.Explore.route) {
 //            ExploreScreen()
 //        }
@@ -42,9 +43,9 @@ fun MainNavGraph(navController: NavHostController, viewModel: OrderViewModel) {
 //
 //        detailsNavGraph()
 
-        composable(route = BottomNavItemScreen.Home.route) {
-            OrderScreen(viewModel = viewModel)
-        }
+//        composable(route = BottomNavItemScreen.Home.route) {
+//            OrderScreen(viewModel = viewModel)
+//        }
     }
 }
 

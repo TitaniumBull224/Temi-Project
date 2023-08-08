@@ -6,6 +6,9 @@ package com.ibsystem.temifoodorder.module
 import com.ibsystem.temifooddelivery.data.datasource.OrderDataSource
 import com.ibsystem.temifooddelivery.data.repository.OrderRepository
 import com.ibsystem.temifooddelivery.data.repository.OrderRepositoryImpl
+import com.ibsystem.temifoodorder.data.datasource.ProductDataSource
+import com.ibsystem.temifoodorder.data.repository.ProductRepository
+import com.ibsystem.temifoodorder.data.repository.ProductRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,5 +46,17 @@ object NetworkModule {
     @Singleton
     fun provideOrderRepository(dataSource: OrderDataSource): OrderRepository {
         return OrderRepositoryImpl(dataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductDataSource(client: SupabaseClient): ProductDataSource {
+        return ProductDataSource(client)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductRepository(dataSource: ProductDataSource): ProductRepository {
+        return ProductRepositoryImpl(dataSource)
     }
 }

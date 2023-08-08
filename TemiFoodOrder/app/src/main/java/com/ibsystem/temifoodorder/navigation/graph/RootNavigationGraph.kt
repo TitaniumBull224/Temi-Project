@@ -28,8 +28,8 @@ fun RootNavigationGraph(navController: NavHostController, viewModel: OrderViewMo
         }
 
         composable(route = Graph.MAIN) {
-            //MainScreen()
-            OrderScreen(viewModel = viewModel)
+            MainScreen()
+            //OrderScreen(viewModel = viewModel)
         }
     }
 }
