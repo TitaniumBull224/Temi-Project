@@ -23,7 +23,6 @@ import com.robotemi.sdk.listeners.OnRobotReadyListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-@Suppress("DEPRECATION")
 class MainActivity : ComponentActivity(), OnRobotReadyListener, OnGoToLocationStatusChangedListener {
     private val TAG = MainActivity::class.java.simpleName
     private val mRobot = Robot.getInstance()

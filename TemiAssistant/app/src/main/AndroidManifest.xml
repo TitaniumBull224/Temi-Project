@@ -20,10 +20,12 @@
         android:windowSoftInputMode="adjustPan"
         android:supportsRtl="true"
         android:theme="@style/SkillTheme"
+        android:name=".MyApplication"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:theme="@style/Theme.TemiAssistant"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

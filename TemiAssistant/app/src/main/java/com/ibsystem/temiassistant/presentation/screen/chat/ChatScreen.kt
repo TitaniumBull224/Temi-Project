@@ -39,17 +39,18 @@ import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
-import com.ibsystem.temiassistant.MainActivity
 import com.ibsystem.temiassistant.R
 import com.ibsystem.temiassistant.domain.model.Message
 import com.ibsystem.temiassistant.domain.model.MessageBody
-import com.ibsystem.temiassistant.presentation.component.TopBarSection
-import com.ibsystem.temiassistant.ui.theme.TextWhite
+import com.ibsystem.temiassistant.presentation.common.component.GifImage
+import com.ibsystem.temiassistant.presentation.common.component.TopBarSection
+import com.ibsystem.temiassistant.ui.theme.White
+import com.robotemi.sdk.Robot
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ChatScreen(navController: NavController, viewModel: ChatScreenViewModel) {
+fun ChatScreen(navController: NavController, viewModel: ChatViewModel) {
     val windowInsets = rememberInsetsPaddingValues(
         insets = LocalWindowInsets.current.systemBars,
         applyBottom = false
@@ -68,6 +69,11 @@ fun ChatScreen(navController: NavController, viewModel: ChatScreenViewModel) {
         val showDialog by viewModel.convertShowDialog.collectAsState()
 
         viewModel.changeConnectivityState(activeNetwork != null)
+
+        GifImage(
+            modifier = Modifier.fillMaxSize(),
+            gif = R.drawable.lantern
+        )
 
         Box(
             modifier = Modifier
@@ -111,7 +117,7 @@ fun ChatScreen(navController: NavController, viewModel: ChatScreenViewModel) {
 @Composable
 fun ChatSection(
     modifier: Modifier = Modifier,
-    viewModel: ChatScreenViewModel
+    viewModel: ChatViewModel
 ) {
     val messages: List<Message> by viewModel.messageList.observeAsState(emptyList())
     val listState = rememberLazyListState()
@@ -162,9 +168,9 @@ fun ChatSection(
 
 
 @Composable
-fun MessageSection(viewModel: ChatScreenViewModel) {
+fun MessageSection(viewModel: ChatViewModel) {
     val context = LocalContext.current
-    val mRobot = (context as MainActivity).mRobot
+    val mRobot = Robot.getInstance()
     val message = remember { mutableStateOf("") }
     val suggestions = remember { mutableStateListOf(*viewModel.generateSuggestions(message.value, 3).toTypedArray()) }
     val conversationStage by viewModel.conversationStage.collectAsState()
@@ -306,7 +312,7 @@ fun MessageItem(
             ) {
                 Text(
                     text = messageText,
-                    color = TextWhite,
+                    color = White,
                     modifier = Modifier
                         .let {
                             when (imageUrl) {
@@ -339,7 +345,7 @@ fun MessageItem(
 
 @Composable
 fun InputAmountOfMoneyDialog(
-    viewModel: ChatScreenViewModel,
+    viewModel: ChatViewModel,
     showDialog: Boolean,
     onDismiss: () -> Unit
 ) {
@@ -358,7 +364,7 @@ fun InputAmountOfMoneyDialog(
 
 @Composable
 fun InputAmountOfMoney(
-    viewModel: ChatScreenViewModel,
+    viewModel: ChatViewModel,
     onDismiss: () -> Unit
 ) {
     var inputAmount by rememberSaveable { mutableStateOf("") }

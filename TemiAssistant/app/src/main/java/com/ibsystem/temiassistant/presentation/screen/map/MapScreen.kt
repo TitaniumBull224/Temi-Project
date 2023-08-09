@@ -27,13 +27,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ibsystem.temiassistant.R
-import com.ibsystem.temiassistant.presentation.component.TopBarSection
+import com.ibsystem.temiassistant.presentation.common.component.TopBarSection
 import com.ibsystem.temiassistant.ui.theme.Crimson
 import com.robotemi.sdk.navigation.model.Position
 import kotlin.math.roundToInt
 
 @Composable
-fun MapScreen(navController: NavController, viewModel: MapScreenViewModel) {
+fun MapScreen(navController: NavController, viewModel: MapViewModel) {
     viewModel.loadMapData()
     val mapDataModel = viewModel.mapDataModel
 

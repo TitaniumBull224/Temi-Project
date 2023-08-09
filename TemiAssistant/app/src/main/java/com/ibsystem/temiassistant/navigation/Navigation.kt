@@ -4,19 +4,24 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.ibsystem.temiassistant.presentation.screen.MainScreen
 import com.ibsystem.temiassistant.presentation.screen.chat.ChatScreen
-import com.ibsystem.temiassistant.presentation.screen.chat.ChatScreenViewModel
+import com.ibsystem.temiassistant.presentation.screen.chat.ChatViewModel
 import com.ibsystem.temiassistant.presentation.screen.map.MapScreen
-import com.ibsystem.temiassistant.presentation.screen.map.MapScreenViewModel
+import com.ibsystem.temiassistant.presentation.screen.map.MapViewModel
 import com.ibsystem.temiassistant.presentation.screen.settings.SettingsScreen
+import com.ibsystem.temiassistant.presentation.screen.customer.CustomerScreen
+import com.ibsystem.temiassistant.presentation.screen.order_list.OrderListScreen
+import com.ibsystem.temiassistant.presentation.screen.order_list.OrderViewModel
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun Navigation(navController: NavHostController, chatViewModel: ChatScreenViewModel, mapViewModel: MapScreenViewModel){
+fun Navigation(navController: NavHostController, chatViewModel: ChatViewModel, mapViewModel: MapViewModel, orderViewModel: OrderViewModel){
     NavHost(
         navController = navController,
         startDestination = Screen.MainScreen.route
@@ -35,6 +40,25 @@ fun Navigation(navController: NavHostController, chatViewModel: ChatScreenViewMo
 //        }
         composable(route = Screen.SettingsScreen.route) {
             SettingsScreen(navController = navController)
+        }
+
+        composable(route = Screen.OrderListScreen.route) {
+            OrderListScreen(navController = navController, viewModel = orderViewModel)
+        }
+        composable(
+            route = Screen.CustomerScreen.route + "/{orderID}",
+            arguments = listOf(
+                navArgument("orderID") {
+                    nullable = true
+                    type = NavType.StringType
+                }
+            )
+        ) { entry ->
+            CustomerScreen(
+                navController = navController,
+                orderID = entry.arguments?.getString("orderID")!!,
+                viewModel = orderViewModel
+            )
         }
     }
 }

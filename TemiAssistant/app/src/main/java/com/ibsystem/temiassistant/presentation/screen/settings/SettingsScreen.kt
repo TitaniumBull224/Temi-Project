@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -44,13 +45,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.ibsystem.temiassistant.R
-import com.ibsystem.temiassistant.presentation.component.TopBarSection
+import com.ibsystem.temiassistant.presentation.common.component.TopBarSection
 import com.ibsystem.temiassistant.ui.theme.Blue
 import com.ibsystem.temiassistant.ui.theme.Transparent
 
 @Composable
 fun SettingsScreen(navController: NavController) {
-    val viewModel = SettingsScreenViewModel.getInstance()
+    val viewModel = SettingsViewModel.getInstance()
     Scaffold(
         topBar = {
             TopBarSection(

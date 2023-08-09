@@ -12,6 +12,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.annotation.CheckResult
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
@@ -23,15 +24,18 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.ibsystem.temiassistant.navigation.Navigation
-import com.ibsystem.temiassistant.presentation.screen.chat.ChatScreenViewModel
+import com.ibsystem.temiassistant.presentation.screen.chat.ChatViewModel
 import com.ibsystem.temiassistant.domain.model.MessageBody
-import com.ibsystem.temiassistant.presentation.screen.map.MapScreenViewModel
-import com.ibsystem.temiassistant.presentation.screen.settings.SettingsScreenViewModel
+import com.ibsystem.temiassistant.presentation.screen.map.MapViewModel
+import com.ibsystem.temiassistant.presentation.screen.order_list.OrderViewModel
+import com.ibsystem.temiassistant.presentation.screen.settings.SettingsViewModel
 import com.ibsystem.temiassistant.ui.theme.ComposeUiTempletesTheme
 import com.robotemi.sdk.Robot
 import com.robotemi.sdk.listeners.OnConversationStatusChangedListener
 import com.robotemi.sdk.listeners.OnDetectionDataChangedListener
 import com.robotemi.sdk.listeners.OnDetectionStateChangedListener
+import com.robotemi.sdk.listeners.OnGoToLocationStatusChangedListener
+import com.robotemi.sdk.listeners.OnLocationsUpdatedListener
 import com.robotemi.sdk.listeners.OnRobotReadyListener
 import com.robotemi.sdk.listeners.OnUserInteractionChangedListener
 import com.robotemi.sdk.map.OnLoadMapStatusChangedListener
@@ -39,41 +43,39 @@ import com.robotemi.sdk.model.DetectionData
 import com.robotemi.sdk.navigation.listener.OnCurrentPositionChangedListener
 import com.robotemi.sdk.navigation.model.Position
 import com.robotemi.sdk.permission.Permission
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-
-@Suppress("DEPRECATION", "OPT_IN_IS_NOT_ENABLED")
+@AndroidEntryPoint
+@Suppress("DEPRECATION")
 class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListener, // Robot.NlpListener,
     OnConversationStatusChangedListener, OnCurrentPositionChangedListener,
     OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener,
-    OnLoadMapStatusChangedListener {
+    OnLoadMapStatusChangedListener, OnGoToLocationStatusChangedListener {
     private val TAG = MainActivity::class.java.simpleName
-    lateinit var mRobot: Robot
+    private val mRobot = Robot.getInstance() // Create mRobot before any of viewModel
     private lateinit var fusedLocationListener: FusedLocationProviderClient
 
-    private lateinit var chatViewModel: ChatScreenViewModel
-    private lateinit var mapViewModel: MapScreenViewModel
-    private lateinit var settingsViewModel: SettingsScreenViewModel
+    private val chatViewModel by viewModels<ChatViewModel>()
+    private val mapViewModel by viewModels<MapViewModel>()
+    private val orderViewModel by viewModels<OrderViewModel>()
+    private val settingsViewModel = SettingsViewModel.getInstance()
+
 
     @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mRobot = Robot.getInstance() // Create mRobot before any of viewModel
+
         fusedLocationListener = LocationServices.getFusedLocationProviderClient(this)
         getCurrentLocation()
-        chatViewModel = ChatScreenViewModel()
-        mapViewModel = MapScreenViewModel()
-        settingsViewModel = SettingsScreenViewModel.getInstance()
-
-
 
         setContent {
             ComposeUiTempletesTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     val navController = rememberNavController()
-                    Navigation(navController, chatViewModel, mapViewModel)
+                    Navigation(navController, chatViewModel, mapViewModel, orderViewModel)
                 }
             }
         }
@@ -90,6 +92,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.addOnDetectionDataChangedListener(this)
         mRobot.addOnUserInteractionChangedListener(this)
         mRobot.addOnLoadMapStatusChangedListener(this)
+        mRobot.addOnGoToLocationStatusChangedListener(this)
     }
 
     override fun onStop() {
@@ -106,6 +109,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.removeOnDetectionDataChangedListener(this)
         mRobot.removeOnUserInteractionChangedListener(this)
         mRobot.removeOnLoadMapStatusChangedListener(this)
+        mRobot.removeOnGoToLocationStatusChangedListener(this)
     }
 
     override fun onRobotReady(isReady: Boolean) {
@@ -189,6 +193,17 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         Log.i(TAG, "load map status: $status, requestId: $requestId")
     }
 
+    override fun onGoToLocationStatusChanged(
+        location: String,
+        status: String,
+        descriptionId: Int,
+        description: String
+    ) {
+        if (status == OnGoToLocationStatusChangedListener.COMPLETE) {
+            mRobot.askQuestion(if (location == HOME_BASE_LOCATION) "ただいま" else "お待たせしました！")
+        }
+    }
+
     // PERMISSION CHECK
     @CheckResult
     private fun requestPermissionIfNeeded(permission: Permission, requestCode: Int): Boolean {
@@ -203,7 +218,7 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 //        const val ACTION_HOME_WELCOME = "home.welcome"
 //        const val ACTION_HOME_DANCE = "home.dance"
 //        const val ACTION_HOME_SLEEP = "home.sleep"
-//        const val HOME_BASE_LOCATION = "home base"
+        const val HOME_BASE_LOCATION = "ホームベース"
 
         // Storage Permissions
         private const val REQUEST_EXTERNAL_STORAGE = 1

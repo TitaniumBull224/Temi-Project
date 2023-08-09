@@ -8,11 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.ibsystem.temiassistant.R
-import com.ibsystem.temiassistant.presentation.component.TopBarSection
-import com.ibsystem.temiassistant.presentation.screen.map.MapScreenViewModel
+import com.ibsystem.temiassistant.presentation.common.component.TopBarSection
+import com.ibsystem.temiassistant.presentation.screen.map.MapViewModel
 
 @Composable
-fun MotionScreen(navController: NavController, viewModel: MapScreenViewModel) {
+fun MotionScreen(navController: NavController, viewModel: MapViewModel) {
     viewModel.loadMapData()
     val mapDataModel = viewModel.mapDataModel
 

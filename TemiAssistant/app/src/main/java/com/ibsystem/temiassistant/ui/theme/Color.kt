@@ -2,7 +2,7 @@ package com.ibsystem.temiassistant.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val TextWhite = Color(0xFFF5F8F7)
+val White = Color(0xFFF5F8F7)
 val Gray900 = Color(0xFF212121)
 val Transparent = Color(0x00000000)
 
@@ -69,5 +69,11 @@ val SaddleBrown = Color(0xFF8B4513)
 
 // Grays
 val Black = Color(0xFF000000)
+val GrayBackground = Color(0xFFF2F3F2)
+val GrayBackgroundSecond = Color(0xFFEBEBEB)
+val GrayTextColor = Color(0xFFFCFCFC)
+val GraySecondTextColor = Color(0xFF7C7C7C)
+val GrayThirdTextColor = Color(0xFF4C4F4D)
+val GrayBorderStroke = Color(0xFFE2E2E2)
 
 

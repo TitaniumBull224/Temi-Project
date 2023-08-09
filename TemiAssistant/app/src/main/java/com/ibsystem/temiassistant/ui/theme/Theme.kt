@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 
 private val LightColorPalette = lightColors(
     primary = Blue,
-    surface = TextWhite,
+    surface = White,
     onSurface = Gray900,
     background = Color.White,
     onBackground = Gray900
