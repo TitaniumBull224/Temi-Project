@@ -14,19 +14,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import com.ibsystem.temifoodorder.R
+import com.ibsystem.temifoodorder.domain.model.OrderProduct
 import com.ibsystem.temifoodorder.domain.model.ProductItem
 import com.ibsystem.temifoodorder.ui.theme.*
 
 @Composable
 fun ListContentCart(
     modifier: Modifier = Modifier,
-    cartProducts: List<ProductItem>,
-    onClickDeleteCart: (ProductItem) -> Unit
+    cartProducts: Map<ProductItem, OrderProduct>,
+    //onClickDeleteCart: (ProductItem) -> Unit
 ) {
     if (cartProducts.isNotEmpty()) {
         LazyColumn(
@@ -34,11 +39,14 @@ fun ListContentCart(
             contentPadding = PaddingValues(top = DIMENS_32dp),
             verticalArrangement = Arrangement.spacedBy(DIMENS_8dp)
         ) {
-            items(cartProducts) { items ->
-                ContentCart(productItem = items,
-                    onClickDeleteCart = { productItem ->
-                        onClickDeleteCart.invoke(productItem)
-                    }
+            items(cartProducts.toList()) { (productItem, orderProduct) ->
+                ContentCart(
+                    modifier = modifier,
+                    productItem = productItem,
+                    orderProduct = orderProduct
+//                    onClickDeleteCart = {
+//                        onClickDeleteCart.invoke(productItem)
+//                    }
                 )
             }
         }
@@ -47,11 +55,15 @@ fun ListContentCart(
     }
 }
 
+
+
+
 @Composable
 fun ContentCart(
     modifier: Modifier = Modifier,
     productItem: ProductItem,
-    onClickDeleteCart: (ProductItem) -> Unit
+    orderProduct: OrderProduct
+    //onClickDeleteCart: (ProductItem) -> Unit
 ) {
     Column {
         Divider(modifier = Modifier.height(DIMENS_1dp), color = GrayBorderStroke)
@@ -68,6 +80,14 @@ fun ContentCart(
 //                painter = painterResource(id = productItem.image),
 //                contentDescription = stringResource(id = R.string.image_product)
 //            )
+            Image(
+                painter = rememberImagePainter(productItem.prodImage),
+                contentDescription = "ProductCard",
+                modifier = Modifier
+                    .size(width = DIMENS_64dp, height = DIMENS_64dp)
+                    .padding(start = DIMENS_8dp),
+                contentScale = ContentScale.Crop
+            )
 
             Column(
                 modifier = Modifier
@@ -99,13 +119,36 @@ fun ContentCart(
                     .align(Alignment.CenterVertically)
                     .padding(start = DIMENS_16dp, end = DIMENS_16dp)
                     .clickable {
-                        onClickDeleteCart.invoke(productItem)
+                        //onClickDeleteCart.invoke(productItem)
                     },
                 imageVector = Icons.Default.Delete,
                 contentDescription = stringResource(R.string.image_delete),
                 colorFilter = ColorFilter.tint(color = Color.DarkGray)
             )
 
+        }
+
+        Divider(
+            color = GraySecondTextColor,
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxHeight()
+                .fillMaxWidth()
+        )
+
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = DIMENS_8dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            Text(
+                text = "数 x${orderProduct.quantity}",
+                fontFamily = GilroyFontFamily,
+                fontWeight = FontWeight.Bold,
+                color = Black,
+                fontSize = TEXT_SIZE_18sp,
+            )
         }
     }
 }
@@ -123,12 +166,13 @@ fun ContentCartPreview() {
             prodPrice = 598,
             prodName = "焼肉"
         ),
-        onClickDeleteCart = {}
+        orderProduct = OrderProduct(quantity = 1)
+        //onClickDeleteCart = {}
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ListContentCartPreview() {
-    ListContentCart(cartProducts = emptyList(), onClickDeleteCart = {})
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun ListContentCartPreview() {
+//    ListContentCart(cartProducts = emptyList(), onClickDeleteCart = {})
+//}

@@ -1,8 +1,8 @@
 package com.ibsystem.temifoodorder.data.datasource
 
-import com.ibsystem.temifooddelivery.data.datasource.ApiResult
-import com.ibsystem.temifoodorder.domain.model.OrderModelItem
+
 import com.ibsystem.temifoodorder.domain.model.ProductItem
+import com.ibsystem.temifoodorder.utils.ApiResult
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
@@ -32,4 +32,8 @@ class ProductDataSource @Inject constructor(private val supabaseClient: Supabase
 
         }
     }
+
+//    suspend fun closeConnection() {
+//        supabaseClient.close()
+//    }
 }

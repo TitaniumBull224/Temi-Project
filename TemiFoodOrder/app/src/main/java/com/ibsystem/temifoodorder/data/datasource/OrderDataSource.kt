@@ -1,11 +1,15 @@
 package com.ibsystem.temifooddelivery.data.datasource
 
 import android.util.Log
-import com.ibsystem.temifoodorder.domain.model.OrderModelItem
+import com.ibsystem.temifoodorder.domain.model.InsertParam
+import com.ibsystem.temifoodorder.domain.model.OrderItem
+import com.ibsystem.temifoodorder.domain.model.OrderDetailItem
+import com.ibsystem.temifoodorder.utils.ApiResult
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.query.Order
+import io.github.jan.supabase.postgrest.rpc
 import io.github.jan.supabase.realtime.PostgresAction
 import io.github.jan.supabase.realtime.createChannel
 import io.github.jan.supabase.realtime.postgresChangeFlow
@@ -15,7 +19,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseClient) {
-     fun getAllOrders(tableID: String): Flow<ApiResult<List<OrderModelItem>>> {
+     fun getAllOrders(tableID: String): Flow<ApiResult<List<OrderDetailItem>>> {
          return flow {
              emit(ApiResult.Loading)
              try {
@@ -29,7 +33,7 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
                          eq(column = "table_id", value = tableID)
                      }
 
-                 val orders = queryRes.decodeList<OrderModelItem>()
+                 val orders = queryRes.decodeList<OrderDetailItem>()
                  println(orders.toString())
                  emit(ApiResult.Success(orders))
              }
@@ -40,19 +44,47 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
          }
     }
 
-    suspend fun listenToOrdersChange(): Flow<PostgresAction> {
-                val channel = supabaseClient.realtime.createChannel("OrderChanged")
-                val changeFlow = channel.postgresChangeFlow<PostgresAction>(schema = "public") {
-                    table = "Order"
-                }
-                supabaseClient.realtime.connect()
-                channel.join()
+    fun insertNewOrder(orderItem: OrderItem): Flow<ApiResult<List<OrderItem>>> {
+        return flow {
+            emit(ApiResult.Loading)
+            try {
+                val newOrders = supabaseClient.postgrest.from("Order").insert(orderItem).decodeList<OrderItem>()
+                emit(ApiResult.Success(newOrders))
+            }
+            catch (e: Exception) {
+                emit(ApiResult.Error(e.message))
+            }
 
-                return changeFlow
+        }
+    }
+
+    fun addNewOrderProductDetails(insertParam: InsertParam): Flow<ApiResult<Unit>> {
+        return flow {
+            emit(ApiResult.Loading)
+            try {
+                supabaseClient.postgrest.rpc("new_order_added", insertParam)
+                emit(ApiResult.Success(Unit))
+            }
+            catch (e: Exception) {
+                Log.e("OrderDataSource", e.message!!)
+                emit(ApiResult.Error(e.message))
+            }
+        }
+    }
+
+    suspend fun listenToOrdersChange(): Flow<PostgresAction> {
+        val channel = supabaseClient.realtime.createChannel("OrderChanged")
+        val changeFlow = channel.postgresChangeFlow<PostgresAction>(schema = "public") {
+                    table = "Order"
+        }
+        supabaseClient.realtime.connect()
+        channel.join()
+
+        return changeFlow
     }
 
 
-    fun getOrderDetailsByID(id: String): Flow<ApiResult<OrderModelItem>> {
+    fun getOrderDetailsByID(id: String): Flow<ApiResult<OrderDetailItem>> {
         return flow {
             emit(ApiResult.Loading)
             try {
@@ -65,7 +97,7 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
                         eq("id", id)
                     }
 
-                val order = queryRes.decodeSingle<OrderModelItem>()
+                val order = queryRes.decodeSingle<OrderDetailItem>()
                 emit(ApiResult.Success(order))
             }
             catch (e: Exception) {
@@ -93,49 +125,7 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
         }
     }
 
-//    suspend fun listenToOrdersChange() {
-//        coroutineScope {
-//            kotlin.runCatching {
-//                supabaseClient.realtime.connect()
-//
-//                supabaseClient.postgresChangeFlow<PostgresAction>("public") {
-//                    table = "messages"
-//                }.onEach {
-//                    when(it) {
-//                        is PostgresAction.Delete -> messages.value = messages.value.filter { message -> message.id != it.oldRecord["id"]!!.jsonPrimitive.int }
-//                        is PostgresAction.Insert -> messages.value = messages.value + it.decodeRecord<Message>()
-//                        is PostgresAction.Select -> error("Select should not be possible")
-//                        is PostgresAction.Update -> error("Update should not be possible")
-//                    }
-//                }
-//
-//                realtimeChannel.join()
-//
-//            }.onFailure {
-//                it.printStackTrace()
-//            }
-//        }
-//
-//        val channel = supabaseClient.realtime.createChannel("OrderChanged")
-//        val changeFlow = channel.postgresChangeFlow<PostgresAction>(schema = "public") {
-//            table = "Orders"
-//        }
-//
-//        //in a new coroutine (or use Flow.onEach().launchIn(scope)):
-//        changeFlow.collect {
-//
-//        }
-//
-//        supabaseClient.realtime.connect()
-//        channel.join()
-//    }
-//}
 
 
 }
 
-sealed class ApiResult<out R> {
-    data class Success<out R>(val data: R): ApiResult<R>()
-    data class Error(val message: String?): ApiResult<Nothing>()
-    object Loading: ApiResult<Nothing>()
-}

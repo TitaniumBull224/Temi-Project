@@ -1,8 +1,6 @@
 package com.ibsystem.temifoodorder.presentation.screen.order
 
 import android.annotation.SuppressLint
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,7 +18,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -42,8 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.ibsystem.temifoodorder.domain.model.OrderModelItem
+import com.ibsystem.temifoodorder.domain.model.OrderDetailItem
 import com.ibsystem.temifoodorder.domain.model.ProductItem
 import com.ibsystem.temifoodorder.ui.theme.Black
 import com.ibsystem.temifoodorder.ui.theme.DIMENS_16dp
@@ -68,7 +64,7 @@ val column5Weight = .1f
 fun ListOrder(
     modifier: Modifier = Modifier,
     title: String,
-    orders: List<OrderModelItem>,
+    orders: List<OrderDetailItem>,
     viewModel: OrderViewModel,
 //    navController: NavController,
 //    onClickToCart: (ProductItem) -> Unit

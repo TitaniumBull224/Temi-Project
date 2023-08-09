@@ -7,6 +7,8 @@ import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.ibsystem.temifoodorder.navigation.screen.BottomNavItemScreen
 import com.ibsystem.temifoodorder.navigation.screen.Screen
+import com.ibsystem.temifoodorder.presentation.screen.about.AboutScreen
+import com.ibsystem.temifoodorder.presentation.screen.cart.CartScreen
 //import com.ibsystem.temifoodorder.presentation.screen.about.AboutScreen
 //import com.ibsystem.temifoodorder.presentation.screen.cart.CartScreen
 import com.ibsystem.temifoodorder.presentation.screen.detail.DetailScreen
@@ -20,7 +22,7 @@ import com.ibsystem.temifoodorder.utils.Constants.PRODUCT_ARGUMENT_KEY
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MainNavGraph(navController: NavHostController, /*viewModel: OrderViewModel*/) {
+fun MainNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         route = Graph.MAIN,
@@ -29,23 +31,25 @@ fun MainNavGraph(navController: NavHostController, /*viewModel: OrderViewModel*/
         composable(route = BottomNavItemScreen.Home.route) {
             HomeScreen(navController = navController)
         }
+
+//        composable(route = BottomNavItemScreen.Home.route) {
+//            OrderScreen()
+//        }
 //        composable(route = BottomNavItemScreen.Explore.route) {
 //            ExploreScreen()
 //        }
-//        composable(route = BottomNavItemScreen.Cart.route) {
-//            CartScreen()
-//        }
-//        composable(route = BottomNavItemScreen.About.route) {
-//            AboutScreen()
-//        }
-//
-//        searchNavGraph()
-//
-//        detailsNavGraph()
+        composable(route = BottomNavItemScreen.Cart.route) {
+            CartScreen()
+        }
+        composable(route = BottomNavItemScreen.About.route) {
+            //AboutScreen()
+            OrderScreen()
+        }
 
-//        composable(route = BottomNavItemScreen.Home.route) {
-//            OrderScreen(viewModel = viewModel)
-//        }
+        searchNavGraph()
+
+        detailsNavGraph()
+
     }
 }
 

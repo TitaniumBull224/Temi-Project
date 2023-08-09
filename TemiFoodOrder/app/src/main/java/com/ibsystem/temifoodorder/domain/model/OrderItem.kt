@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OrderModelItem(
+data class OrderDetailItem(
     @SerialName("id")
     val id: String?,
     @SerialName("Order_Product")
@@ -23,5 +23,15 @@ data class OrderModelItem(
 data class OrderProduct(
     @SerialName("quantity")
     val quantity: Int?
+)
+
+@Serializable
+data class OrderItem(
+    @SerialName("id")
+    val id: String? = null,
+    @SerialName("status")
+    val status: String = "保留中",
+    @SerialName("table_id")
+    val tableId: String?,
 )
 

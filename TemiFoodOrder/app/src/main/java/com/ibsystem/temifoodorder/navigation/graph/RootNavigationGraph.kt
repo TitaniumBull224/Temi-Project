@@ -13,7 +13,8 @@ import com.ibsystem.temifoodorder.presentation.screen.order.OrderViewModel
 import com.ibsystem.temifoodorder.presentation.screen.splash.SplashScreen
 
 @Composable
-fun RootNavigationGraph(navController: NavHostController, viewModel: OrderViewModel) {
+fun RootNavigationGraph(navController: NavHostController
+                        /*, viewModel: OrderViewModel*/) {
     NavHost(
         navController = navController,
         route = Graph.ROOT,
@@ -29,7 +30,7 @@ fun RootNavigationGraph(navController: NavHostController, viewModel: OrderViewMo
 
         composable(route = Graph.MAIN) {
             MainScreen()
-            //OrderScreen(viewModel = viewModel)
+            //OrderScreen()
         }
     }
 }
