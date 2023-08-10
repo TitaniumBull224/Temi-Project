@@ -25,9 +25,6 @@ fun OrderScreen(
     modifier: Modifier = Modifier,
     viewModel: OrderViewModel = hiltViewModel()
 ) {
-//    viewModel.getAllOrders()
-//    viewModel.listenToOrdersChange()
-    Log.e("OrderSCRN", viewModel.hashCode().toString())
     val uiState = viewModel.uiState.collectAsState()
     val orderList = viewModel.orderList.collectAsState()
     Scaffold(modifier = modifier.fillMaxSize()) {

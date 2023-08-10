@@ -10,22 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.compose.rememberNavController
-import com.ibsystem.temifoodorder.navigation.graph.MainNavGraph
 import dagger.hilt.android.AndroidEntryPoint
-
 import com.ibsystem.temifoodorder.presentation.screen.MainScreen
-import com.ibsystem.temifoodorder.presentation.screen.cart.CartViewModel
-import com.ibsystem.temifoodorder.presentation.screen.home.HomeViewModel
-import com.ibsystem.temifoodorder.presentation.screen.order.OrderViewModel
 import com.ibsystem.temifoodorder.ui.theme.GroceriesAppTheme
-import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.jan.supabase.postgrest.query.Order
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

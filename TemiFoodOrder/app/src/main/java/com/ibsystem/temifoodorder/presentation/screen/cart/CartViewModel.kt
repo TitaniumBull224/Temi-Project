@@ -80,6 +80,7 @@ class CartViewModel @Inject constructor(
                             )
                         }
                     }
+                    deleteCart()
                 }
                 else if(data is ApiResult.Error) {
                     Log.e("API",data.message!!)

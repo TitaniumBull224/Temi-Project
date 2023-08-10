@@ -171,19 +171,20 @@ fun ListOrder(
                     )
                     TableCell(text = order.time!!, weight = column3Weight)
                     StatusCell(text = order.status!!, weight = column4Weight)
-                    CheckBoxCell(
-                        weight = column5Weight,
-                        checked = checkedState[index],
-                        enabled = order.status == "保留中",
-                        onCheckedChange = { checked ->
-                            checkedState[index] = checked
-                            if (checked) {
-                                checkedRowIds.add(order.id!!) // Add the checked row ID to the list
-                            } else {
-                                checkedRowIds.remove(order.id!!) // Remove the unchecked row ID from the list
-                            }
-                        }
-                    )
+                    TableCell(text = "", weight = column5Weight)
+//                    CheckBoxCell(
+//                        weight = column5Weight,
+//                        checked = checkedState[index],
+//                        enabled = order.status == "保留中",
+//                        onCheckedChange = { checked ->
+//                            checkedState[index] = checked
+//                            if (checked) {
+//                                checkedRowIds.add(order.id!!) // Add the checked row ID to the list
+//                            } else {
+//                                checkedRowIds.remove(order.id!!) // Remove the unchecked row ID from the list
+//                            }
+//                        }
+//                    )
                 }
                 Divider(
                     color = GraySecondTextColor,
