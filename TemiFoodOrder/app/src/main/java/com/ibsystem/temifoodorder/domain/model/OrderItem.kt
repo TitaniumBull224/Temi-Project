@@ -29,8 +29,10 @@ data class OrderProduct(
 data class OrderItem(
     @SerialName("id")
     val id: String? = null,
+    @SerialName("time")
+    val time: String? = null,
     @SerialName("status")
-    val status: String = "保留中",
+    val status: String?,
     @SerialName("table_id")
     val tableId: String?,
 )

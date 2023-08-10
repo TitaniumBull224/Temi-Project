@@ -18,7 +18,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
 import com.ibsystem.temifoodorder.navigation.graph.MainNavGraph
 import dagger.hilt.android.AndroidEntryPoint
-import com.ibsystem.temifoodorder.navigation.graph.RootNavigationGraph
+
+import com.ibsystem.temifoodorder.presentation.screen.MainScreen
+import com.ibsystem.temifoodorder.presentation.screen.cart.CartViewModel
+import com.ibsystem.temifoodorder.presentation.screen.home.HomeViewModel
 import com.ibsystem.temifoodorder.presentation.screen.order.OrderViewModel
 import com.ibsystem.temifoodorder.ui.theme.GroceriesAppTheme
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +30,9 @@ import io.github.jan.supabase.postgrest.query.Order
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+//    private val orderViewModel by viewModels<OrderViewModel>()
+//    private val cartViewModel by viewModels<CartViewModel>()
+//    private val homeViewModel by viewModels<HomeViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -35,7 +41,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    RootNavigationGraph(navController = rememberNavController())
+                    //RootNavigationGraph(navController = rememberNavController())
+                    MainScreen()
                 }
             }
 

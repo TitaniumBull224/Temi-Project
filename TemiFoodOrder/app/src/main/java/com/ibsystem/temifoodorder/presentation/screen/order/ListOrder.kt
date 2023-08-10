@@ -65,7 +65,7 @@ fun ListOrder(
     modifier: Modifier = Modifier,
     title: String,
     orders: List<OrderDetailItem>,
-    viewModel: OrderViewModel,
+//    viewModel: OrderViewModel,
 //    navController: NavController,
 //    onClickToCart: (ProductItem) -> Unit
 ) {
@@ -77,7 +77,7 @@ fun ListOrder(
     val checkedRowIds = remember { mutableStateListOf<String>() }
     checkedRowIds.clear()
 
-    val context = LocalContext.current
+
 
     Column(
         modifier = modifier.fillMaxWidth(),

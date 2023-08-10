@@ -44,7 +44,7 @@ fun OrderScreen(
                 is ApiResult.Success -> {
                     val orders = orderList.value as? List<OrderDetailItem>
                     if (orders != null) {
-                        ListOrder(title = "オーダーリスト", orders = orders, viewModel = viewModel)
+                        ListOrder(title = "オーダーリスト", orders = orders)
                     }
                 }
             }

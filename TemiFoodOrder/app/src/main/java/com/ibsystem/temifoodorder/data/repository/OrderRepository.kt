@@ -4,8 +4,10 @@ import com.ibsystem.temifooddelivery.data.datasource.OrderDataSource
 import com.ibsystem.temifoodorder.domain.model.InsertParam
 import com.ibsystem.temifoodorder.domain.model.OrderItem
 import com.ibsystem.temifoodorder.domain.model.OrderDetailItem
+import com.ibsystem.temifoodorder.domain.model.ProductItem
 import com.ibsystem.temifoodorder.utils.ApiResult
 import io.github.jan.supabase.realtime.PostgresAction
+import io.github.jan.supabase.realtime.Realtime
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -16,6 +18,9 @@ interface OrderRepository {
     fun getOrderDetailsByID(id: String): Flow<ApiResult<OrderDetailItem>>
     fun updateOrderStatus(id: String, newStatus: String): Flow<ApiResult<Unit>>
     fun addNewOrderProductDetails(insertParam: InsertParam): Flow<ApiResult<Unit>>
+    fun getAllProducts(): Flow<ApiResult<List<ProductItem>>>
+
+    fun getRealtimeStatus(): Realtime.Status
     suspend fun listenToOrdersChange(): Flow<PostgresAction>
 }
 
@@ -44,5 +49,12 @@ class OrderRepositoryImpl @Inject constructor(
 
     override suspend fun listenToOrdersChange(): Flow<PostgresAction> {
         return dataSource.listenToOrdersChange()
+    }
+    override fun getAllProducts(): Flow<ApiResult<List<ProductItem>>> {
+        return dataSource.getAllProducts()
+    }
+
+    override fun getRealtimeStatus(): Realtime.Status {
+        return dataSource.getRealtimeStatus()
     }
 }

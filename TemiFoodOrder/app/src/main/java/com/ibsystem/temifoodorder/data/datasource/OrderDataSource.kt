@@ -4,6 +4,7 @@ import android.util.Log
 import com.ibsystem.temifoodorder.domain.model.InsertParam
 import com.ibsystem.temifoodorder.domain.model.OrderItem
 import com.ibsystem.temifoodorder.domain.model.OrderDetailItem
+import com.ibsystem.temifoodorder.domain.model.ProductItem
 import com.ibsystem.temifoodorder.utils.ApiResult
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
@@ -11,10 +12,12 @@ import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.query.Order
 import io.github.jan.supabase.postgrest.rpc
 import io.github.jan.supabase.realtime.PostgresAction
+import io.github.jan.supabase.realtime.Realtime
 import io.github.jan.supabase.realtime.createChannel
 import io.github.jan.supabase.realtime.postgresChangeFlow
 import io.github.jan.supabase.realtime.realtime
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -62,7 +65,7 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
         return flow {
             emit(ApiResult.Loading)
             try {
-                supabaseClient.postgrest.rpc("new_order_added", insertParam)
+                supabaseClient.postgrest.from("Order_Product").insert(insertParam)
                 emit(ApiResult.Success(Unit))
             }
             catch (e: Exception) {
@@ -72,15 +75,19 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
         }
     }
 
-    suspend fun listenToOrdersChange(): Flow<PostgresAction> {
-        val channel = supabaseClient.realtime.createChannel("OrderChanged")
-        val changeFlow = channel.postgresChangeFlow<PostgresAction>(schema = "public") {
-                    table = "Order"
-        }
-        supabaseClient.realtime.connect()
-        channel.join()
+    fun getRealtimeStatus(): Realtime.Status {
+        return supabaseClient.realtime.status.value
+    }
 
-        return changeFlow
+    suspend fun listenToOrdersChange(): Flow<PostgresAction> {
+            val channel = supabaseClient.realtime.createChannel("OrderChanged")
+            val changeFlow = channel.postgresChangeFlow<PostgresAction>(schema = "public") {
+                table = "Order"
+            }
+
+            supabaseClient.realtime.connect()
+            channel.join()
+            return changeFlow
     }
 
 
@@ -122,6 +129,27 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
             catch (e: Exception) {
                 emit(ApiResult.Error(e.message))
             }
+        }
+    }
+
+    fun getAllProducts(): Flow<ApiResult<List<ProductItem>>> {
+        return flow {
+            emit(ApiResult.Loading)
+            try {
+                val queryRes = supabaseClient.postgrest.from("Product")
+                    .select(columns = Columns.list(
+                        "*"
+                    )) {
+                    }
+
+                val products = queryRes.decodeList<ProductItem>()
+                println(products.toString())
+                emit(ApiResult.Success(products))
+            }
+            catch (e: Exception) {
+                emit(ApiResult.Error(e.message))
+            }
+
         }
     }
 

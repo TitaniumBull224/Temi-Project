@@ -1,6 +1,7 @@
 package com.ibsystem.temifoodorder.navigation.graph
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -9,10 +10,12 @@ import com.ibsystem.temifoodorder.navigation.screen.BottomNavItemScreen
 import com.ibsystem.temifoodorder.navigation.screen.Screen
 import com.ibsystem.temifoodorder.presentation.screen.about.AboutScreen
 import com.ibsystem.temifoodorder.presentation.screen.cart.CartScreen
+import com.ibsystem.temifoodorder.presentation.screen.cart.CartViewModel
 //import com.ibsystem.temifoodorder.presentation.screen.about.AboutScreen
 //import com.ibsystem.temifoodorder.presentation.screen.cart.CartScreen
 import com.ibsystem.temifoodorder.presentation.screen.detail.DetailScreen
 import com.ibsystem.temifoodorder.presentation.screen.home.HomeScreen
+import com.ibsystem.temifoodorder.presentation.screen.home.HomeViewModel
 //import com.ibsystem.temifoodorder.presentation.screen.explore.ExploreScreen
 //import com.ibsystem.temifoodorder.presentation.screen.home.HomeScreen
 import com.ibsystem.temifoodorder.presentation.screen.order.OrderScreen
@@ -22,14 +25,17 @@ import com.ibsystem.temifoodorder.utils.Constants.PRODUCT_ARGUMENT_KEY
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MainNavGraph(navController: NavHostController) {
+fun MainNavGraph(navController: NavHostController,
+                 orderViewModel: OrderViewModel = hiltViewModel(),
+                 cartViewModel: CartViewModel = hiltViewModel(),
+                 homeViewModel: HomeViewModel = hiltViewModel()) {
     NavHost(
         navController = navController,
         route = Graph.MAIN,
         startDestination = BottomNavItemScreen.Home.route
     ) {
         composable(route = BottomNavItemScreen.Home.route) {
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController,homeViewModel = homeViewModel, cartViewModel = cartViewModel)
         }
 
 //        composable(route = BottomNavItemScreen.Home.route) {
@@ -39,11 +45,11 @@ fun MainNavGraph(navController: NavHostController) {
 //            ExploreScreen()
 //        }
         composable(route = BottomNavItemScreen.Cart.route) {
-            CartScreen()
+            CartScreen(cartViewModel = cartViewModel)
         }
         composable(route = BottomNavItemScreen.About.route) {
             //AboutScreen()
-            OrderScreen()
+            OrderScreen(viewModel = orderViewModel)
         }
 
         searchNavGraph()

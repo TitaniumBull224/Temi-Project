@@ -16,9 +16,5 @@ class ProductRepositoryImpl @Inject constructor(private val productDataSource: P
         return productDataSource.getAllProducts()
     }
 
-//    override suspend fun closeConnection() {
-//        productDataSource.closeConnection()
-//    }
-
 
 }

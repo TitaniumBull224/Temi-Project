@@ -23,7 +23,7 @@ fun BottomBar(
 ) {
     val navigationItems = listOf(
         BottomNavItemScreen.Home,
-        BottomNavItemScreen.Explore,
+//        BottomNavItemScreen.Explore,
         BottomNavItemScreen.Cart,
         BottomNavItemScreen.About
     )

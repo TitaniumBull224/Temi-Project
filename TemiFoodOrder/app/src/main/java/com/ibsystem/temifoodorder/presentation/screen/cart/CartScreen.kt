@@ -32,8 +32,6 @@ fun CartScreen(
 
     val productCartList by cartViewModel.productCartList.collectAsState()
 
-    println(productCartList.toString())
-
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -59,7 +57,7 @@ fun CartScreen(
 
         Button(onClick = {
             cartViewModel.insertNewOrder(productCartList = productCartList)
-
+            print("ORDEREED")
         }) {
             Text(text = "SEND ORDER")
         }

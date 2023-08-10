@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -37,23 +38,24 @@ class CartViewModel @Inject constructor(
         productItem: ProductItem,
         orderProduct: OrderProduct = OrderProduct(quantity = 1)
     ) {
-        val currentCart = _productCartList.value.toMutableMap()
-        val existingProduct = currentCart[productItem]
+        viewModelScope.launch {
+            val currentCart = _productCartList.value.toMutableMap()
+            val existingProduct = currentCart[productItem]
 
-        if (existingProduct != null) {
-            println("sighhhhhh")
-            val updatedProduct = existingProduct.copy(quantity = existingProduct.quantity!! + 1)
-            currentCart[productItem] = updatedProduct
-        } else {
-            println("why meeeee")
-            currentCart.put(productItem, orderProduct)
-            println(productItem.toString())
+            if (existingProduct != null) {
+                println("sighhhhhh")
+                val updatedProduct = existingProduct.copy(quantity = existingProduct.quantity!! + 1)
+                currentCart[productItem] = updatedProduct
+            } else {
+                currentCart[productItem] = orderProduct
+                println("CART: ${currentCart.toString()}")
+            }
+
+            _productCartList.update { currentCart.toMap() }
+            println("SIGH"+productCartList.value.toString())
         }
 
-        _productCartList.value = currentCart
     }
-
-
 
 
 
@@ -65,12 +67,18 @@ class CartViewModel @Inject constructor(
 
     fun insertNewOrder(tableID: String = tableModel.tableID, productCartList: Map<ProductItem, OrderProduct>) {
         viewModelScope.launch {
-            orderRepository.insertNewOrder(OrderItem(tableId = tableID)).collectLatest {
+            orderRepository.insertNewOrder(OrderItem(tableId = tableID, status = "保留中")).collectLatest {
                     data ->
                 if(data is ApiResult.Success) {
                     Log.i("NewOrder", "DONE")
                     data.data.forEach{
-                            orderItem -> addNewOrderProductDetails(orderID = orderItem.id!!, productCartList = productCartList)
+                            orderItem ->
+                        run {
+                            addNewOrderProductDetails(
+                                orderID = orderItem.id!!,
+                                productCartList = productCartList
+                            )
+                        }
                     }
                 }
                 else if(data is ApiResult.Error) {
@@ -86,7 +94,16 @@ class CartViewModel @Inject constructor(
                     (productItem, orderProduct) ->
                 orderRepository.addNewOrderProductDetails(
                     InsertParam(orderID = orderID, prodID = productItem.prodId!!, quantity = orderProduct.quantity!!.toString())
-                )
+                ).collect{data ->
+                    if(data is ApiResult.Success) {
+                        Log.i("ORDERDETAILS", "DONE")
+                }
+                    else
+                    {
+                        Log.i("ORDERDETAILS","NOTDONE")
+                    }
+                }
+
             }
         }
     }

@@ -13,6 +13,7 @@ import com.ibsystem.temifoodorder.domain.model.TableModel
 import com.ibsystem.temifoodorder.utils.ApiResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.realtime.PostgresAction
+import io.github.jan.supabase.realtime.Realtime
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,14 +35,18 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
         get() = _orderList
 
 
+
     init {
         getAllOrders()
-        listenToOrdersChange()
+        if(repository.getRealtimeStatus() == Realtime.Status.DISCONNECTED) {
+            listenToOrdersChange()
+        }
     }
+
 
     fun getAllOrders() {
         viewModelScope.launch {
-            repository.getAllOrders(tableModel.tableID).collectLatest {
+            repository.getAllOrders(tableModel.tableID).collect {
                     data -> _uiState.update { data }
                 if(data is ApiResult.Success) {
                     val orderList = data.data
@@ -52,6 +57,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                 }
             }
         }
+        //listenToOrdersChange()
     }
 
     fun listenToOrdersChange() {
@@ -88,7 +94,6 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
             }
         }
     }
-
 
 
     fun updateOrderStatus(id: String, newStatus: String) {

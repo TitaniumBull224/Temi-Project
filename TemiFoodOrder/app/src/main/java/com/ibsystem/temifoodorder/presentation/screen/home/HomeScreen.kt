@@ -39,8 +39,8 @@ import com.ibsystem.temifoodorder.utils.showToastShort
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    homeViewModel: HomeViewModel = hiltViewModel(),
-    cartViewModel: CartViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel,
+    cartViewModel: CartViewModel
 ) {
     val mContext = LocalContext.current
     val searchQuery by homeViewModel.searchQuery
@@ -70,7 +70,7 @@ fun HomeScreen(
                 navController = navController,
                 onClickToCart = { productItem ->
                     clickToCart(mContext, productItem, cartViewModel)
-//                    cartViewModel.addCart(productItem = productItem)
+                    //cartViewModel.addCart(productItem = productItem)
                 }
             )
 

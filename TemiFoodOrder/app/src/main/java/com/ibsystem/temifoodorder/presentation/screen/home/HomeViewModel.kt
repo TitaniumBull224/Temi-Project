@@ -35,6 +35,8 @@ class HomeViewModel @Inject constructor(private val productRepository: ProductRe
 
 
 
+
+
     init {
         getAllProducts()
     }
@@ -50,6 +52,8 @@ class HomeViewModel @Inject constructor(private val productRepository: ProductRe
             }
         }
     }
+
+
 
 //    override fun onCleared() {
 //        viewModelScope.launch { productRepository.closeConnection() }
