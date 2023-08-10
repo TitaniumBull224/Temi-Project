@@ -75,7 +75,7 @@ fun ListContentProduct(
 @Composable
 fun ListContentProductPreview() {
     ListContentProduct(
-        title = "Exclusive Offer",
+        title = "商品",
         products = listOf(
 //            ProductItem(
 //                id = "1",

@@ -62,8 +62,6 @@ fun ListOrder(
     checkedState.clear()
     checkedState.addAll(List(orders.size) { false })
 
-    val checkedRowIds = remember { mutableStateListOf<String>() }
-    checkedRowIds.clear()
 
     val context = LocalContext.current
 
@@ -196,18 +194,7 @@ fun ListOrder(
                     verticalAlignment = Alignment.CenterVertically
 
                 ) {
-                    Button(
-                        onClick = {
-                            if (viewModel.checkedOrderList.value.isNotEmpty()) {
-                                viewModel.processCheckedRow(navController)
-                            } else {
-                                Toast.makeText(context, "オーダーを選んでください", Toast.LENGTH_SHORT).show()
-                            }
-                        },
-                        modifier = Modifier.padding(DIMENS_16dp)
-                    ) {
-                        Text(text = "準備完了", color = White)
-                    }
+
                 }
             }
         }
