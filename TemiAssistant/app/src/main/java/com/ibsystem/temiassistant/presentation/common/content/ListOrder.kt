@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -26,17 +27,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.ibsystem.temiassistant.R
 import com.ibsystem.temiassistant.domain.model.OrderModelItem
 import com.ibsystem.temiassistant.domain.model.OrderProduct
 import com.ibsystem.temiassistant.domain.model.Product
 import com.ibsystem.temiassistant.presentation.common.card.ProductCard
+import com.ibsystem.temiassistant.presentation.common.component.ButtonGradient
 import com.ibsystem.temiassistant.presentation.common.component.TextGradient
 import com.ibsystem.temiassistant.presentation.screen.order_list.OrderViewModel
 import com.ibsystem.temiassistant.ui.theme.*
@@ -93,14 +92,26 @@ fun ListOrder(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TableCell(text = "", weight = column1Weight)
-            TableCell(
+//            TableCell(
+//                text = "テーブル",
+//                weight = column2Weight,
+//                alignment = TextAlign.Left,
+//                title = true
+//            )
+//            TableCell(text = "時間", weight = column3Weight, title = true)
+//            TableCell(text = "状況", weight = column4Weight, title = true)
+            TextGradient(
                 text = "テーブル",
-                weight = column2Weight,
-                alignment = TextAlign.Left,
-                title = true
+                modifier = Modifier.weight(column2Weight)
             )
-            TableCell(text = "時間", weight = column3Weight, title = true)
-            TableCell(text = "状況", weight = column4Weight, title = true)
+            TextGradient(
+                text = "時間",
+                modifier = Modifier.weight(column3Weight)
+            )
+            TextGradient(
+                text = "状況",
+                modifier = Modifier.weight(column4Weight)
+            )
             TableCell(
                 text = "",
                 weight = column5Weight,
@@ -109,9 +120,9 @@ fun ListOrder(
             )
         }
         Divider(
-            color = GraySecondTextColor,
+            color = Gray,
             modifier = Modifier
-                .height(1.dp)
+                .height(DIMENS_1dp)
                 .fillMaxHeight()
                 .fillMaxWidth()
         )
@@ -144,20 +155,29 @@ fun ListOrder(
                     IconButton(
                         onClick = { isRowExpanded.value = !isRowExpanded.value },
                         modifier = Modifier
-                            .padding(10.dp)
+                            .padding(DIMENS_10dp)
                             .weight(column1Weight)
                     ) {
                         Icon(
                             imageVector = if (isRowExpanded.value) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = White
                         )
                     }
-                    TableCell(
+//                    TableCell(
+//                        text = "#" + order.tableId!!,
+//                        weight = column2Weight,
+//                        alignment = TextAlign.Left
+//                    )
+//                    TableCell(text = formattedDate, weight = column3Weight)
+                    TextGradient(
                         text = "#" + order.tableId!!,
-                        weight = column2Weight,
-                        alignment = TextAlign.Left
+                        modifier = Modifier.weight(column2Weight)
                     )
-                    TableCell(text = formattedDate, weight = column3Weight)
+                    TextGradient(
+                        text = formattedDate,
+                        modifier = Modifier.weight(column3Weight)
+                    )
                     StatusCell(text = order.status!!, weight = column4Weight)
                     CheckBoxCell(
                         weight = column5Weight,
@@ -174,9 +194,9 @@ fun ListOrder(
                     )
                 }
                 Divider(
-                    color = GraySecondTextColor,
+                    color = Gray,
                     modifier = Modifier
-                        .height(1.dp)
+                        .height(DIMENS_1dp)
                         .fillMaxHeight()
                         .fillMaxWidth()
                 )
@@ -196,18 +216,28 @@ fun ListOrder(
                     verticalAlignment = Alignment.CenterVertically
 
                 ) {
-                    Button(
+//                    Button(
+//                        onClick = {
+//                            if (viewModel.checkedOrderList.value.isNotEmpty()) {
+//                                viewModel.processCheckedRow(navController)
+//                            } else {
+//                                Toast.makeText(context, "オーダーを選んでください", Toast.LENGTH_SHORT).show()
+//                            }
+//                        },
+//                        modifier = Modifier.padding(DIMENS_16dp)
+//                    ) {
+//                        Text(text = "準備完了", color = White)
+//                    }
+                    ButtonGradient(
+                        name = "準備完了",
                         onClick = {
                             if (viewModel.checkedOrderList.value.isNotEmpty()) {
                                 viewModel.processCheckedRow(navController)
                             } else {
                                 Toast.makeText(context, "オーダーを選んでください", Toast.LENGTH_SHORT).show()
                             }
-                        },
-                        modifier = Modifier.padding(DIMENS_16dp)
-                    ) {
-                        Text(text = "準備完了", color = White)
-                    }
+                        }
+                    )
                 }
             }
         }
@@ -243,9 +273,9 @@ fun ProductList(products: List<Product>, prodQuantity: List<OrderProduct?>) {
 
                 }
                 Divider(
-                    color = GraySecondTextColor,
+                    color = Gray,
                     modifier = Modifier
-                        .height(1.dp)
+                        .height(DIMENS_1dp)
                         .fillMaxHeight()
                         .fillMaxWidth()
                 )
@@ -261,19 +291,19 @@ fun RowScope.TableCell(
     alignment: TextAlign = TextAlign.Center,
     title: Boolean = false
 ) {
-//    Text(
-//        text = text,
-//        Modifier
-//            .weight(weight)
-//            .padding(10.dp),
-//        fontWeight = if (title) FontWeight.Bold else FontWeight.Normal,
-//        textAlign = alignment,
-//        color = Black
-//    )
-    TextGradient(
-        modifier = Modifier.weight(weight),
-        text = text
+    Text(
+        text = text,
+        Modifier
+            .weight(weight)
+            .padding(DIMENS_10dp),
+        fontWeight = if (title) FontWeight.Bold else FontWeight.Normal,
+        textAlign = alignment,
+        color = Black
     )
+//    TextGradient(
+//        modifier = Modifier.weight(weight),
+//        text = text
+//    )
 }
 
 @Composable
@@ -284,29 +314,35 @@ fun RowScope.StatusCell(
 ) {
 
     val color = when (text) {
-        "保留中" -> Color(0xFFFF9C00)
-        "準備完了" -> Color(0xFF0090FF)
-        "提供済み" -> Color(0xFF00BCD4)
-        "完了" -> Color(0xFF1CFF00)
-        else -> Color(0xffffcccf)
+        "保留中" -> DarkOrange
+        "準備完了" -> DarkBlue
+        "提供済み" -> Teal
+        "完了" -> DarkGreen
+        else -> DeepPink
     }
     val textColor = when (text) {
-        "保留中" -> Color(0xFFFFFFFF) //Pending
-        "準備完了" -> Color(0xFFFFFFFF) //Prepared
-        "提供済み" -> Color(0xFFFFFFFF) //Served
-        "完了" -> Color(0xFFFFFFFF) //Paid
-        else -> Color(0xffca1e17)
+        "保留中" -> White //Pending
+        "準備完了" -> White //Prepared
+        "提供済み" -> White //Served
+        "完了" -> White //Paid
+        else -> Crimson // similar to Color(0xffca1e17)
     }
 
-    Text(
-        text = text,
-        Modifier
-            .weight(weight)
-            .padding(12.dp)
-            .background(color, shape = RoundedCornerShape(50.dp)),
-        textAlign = alignment,
-        color = textColor
-    )
+    Box(
+        modifier = Modifier
+            .weight(weight),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            textAlign = alignment,
+            color = textColor,
+            modifier = Modifier
+                .background(color, shape = RoundedCornerShape(DIMENS_50dp))
+                .padding(DIMENS_12dp)
+        )
+    }
+
 }
 
 @Composable
@@ -320,15 +356,19 @@ fun RowScope.CheckBoxCell(
         Checkbox(
             checked = checked,
             onCheckedChange = onCheckedChange,
+            colors = CheckboxDefaults.colors(
+                checkedColor = Maroon,
+                uncheckedColor = White
+            ),
             modifier = Modifier
                 .weight(weight)
-                .padding(10.dp)
+                .padding(DIMENS_10dp)
         )
     } else {
         Box(
             modifier = Modifier
                 .weight(weight)
-                .padding(10.dp)
+                .padding(DIMENS_10dp)
         ) {}
 
     }

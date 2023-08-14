@@ -1,5 +1,7 @@
 package com.ibsystem.temiassistant.presentation.common.component
 
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,31 +25,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ibsystem.temiassistant.R
+import com.ibsystem.temiassistant.ui.theme.Black
+import com.ibsystem.temiassistant.ui.theme.DIMENS_40dp
+import com.ibsystem.temiassistant.ui.theme.DIMENS_4dp
+import com.ibsystem.temiassistant.ui.theme.DIMENS_64dp
+import com.ibsystem.temiassistant.ui.theme.DIMENS_8dp
+import com.ibsystem.temiassistant.ui.theme.Maroon
+import com.ibsystem.temiassistant.ui.theme.TEXT_SIZE_12sp
 
+@Suppress("DEPRECATION")
 @Composable
 fun TopBarSection(
     username: String,
-    profile: Painter,
-    isOnline: Boolean,
+    profile: Painter = painterResource(id = R.drawable.ic_temi),
     onBack: () -> Unit
 ) {
+    val context = LocalContext.current
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val isOnline = connectivityManager.activeNetworkInfo != null
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp),
-        backgroundColor = Color(0xFFFAFAFA),
-        elevation = 4.dp
+            .height(DIMENS_64dp),
+        backgroundColor = Black,
+        elevation = DIMENS_4dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 8.dp),
+                .padding(horizontal = DIMENS_8dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
@@ -55,41 +68,42 @@ fun TopBarSection(
             ){
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Back"
+                    contentDescription = "Back",
+                    tint = Maroon
                 )
             }
 
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(DIMENS_8dp))
 
             Image(
                 painter = profile,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(42.dp)
+                    .size(DIMENS_40dp)
                     .clip(CircleShape)
             )
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(DIMENS_8dp))
 
             Column {
-                Text(text = username, fontWeight = FontWeight.SemiBold)
+                Text(text = username, fontWeight = FontWeight.SemiBold, color = Color.Red)
                 Text(
                     text = if (isOnline) "Online" else "Offline",
-                    fontSize = 12.sp
+                    fontSize = TEXT_SIZE_12sp,
+                    color = Maroon
                 )
             }
         }
     }
 }
 
+
 @Preview
 @Composable
 fun TopBarSectionPreview() {
     TopBarSection(
         username = "FUWAMOCO",
-        profile = painterResource(id = R.drawable.ic_final_icon),
-        isOnline = true,
         onBack = {}
     )
 }

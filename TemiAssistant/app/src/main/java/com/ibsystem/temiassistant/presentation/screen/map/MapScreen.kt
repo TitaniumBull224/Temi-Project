@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ibsystem.temiassistant.R
+import com.ibsystem.temiassistant.presentation.common.component.GifImage
 import com.ibsystem.temiassistant.presentation.common.component.TopBarSection
 import com.ibsystem.temiassistant.ui.theme.Crimson
 import com.robotemi.sdk.navigation.model.Position
@@ -36,6 +37,11 @@ import kotlin.math.roundToInt
 fun MapScreen(navController: NavController, viewModel: MapViewModel) {
     viewModel.loadMapData()
     val mapDataModel = viewModel.mapDataModel
+
+    GifImage(
+        modifier = Modifier.fillMaxSize(),
+        gif = R.drawable.lantern
+    )
 
     Box(
         modifier = Modifier
@@ -47,8 +53,6 @@ fun MapScreen(navController: NavController, viewModel: MapViewModel) {
         ) {
             TopBarSection(
                 username = "Map",
-                profile = painterResource(id = R.drawable.ic_final_icon),
-                isOnline = true,
                 onBack = { navController.navigateUp() }
             )
 

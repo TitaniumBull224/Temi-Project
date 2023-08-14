@@ -16,6 +16,7 @@ import androidx.navigation.NavController
 import com.ibsystem.temiassistant.R
 import com.ibsystem.temiassistant.domain.model.OrderModelItem
 import com.ibsystem.temiassistant.data.datasource.ApiResult
+import com.ibsystem.temiassistant.navigation.Screen
 import com.ibsystem.temiassistant.presentation.common.component.GifImage
 import com.ibsystem.temiassistant.presentation.common.content.ListOrder
 import com.ibsystem.temiassistant.presentation.common.component.TopBarSection
@@ -37,9 +38,7 @@ fun OrderListScreen(
         topBar = {
             TopBarSection(
                 username = "Order",
-                profile = painterResource(id = R.drawable.ic_final_icon),
-                isOnline = true,
-                onBack = { navController.navigateUp() }
+                onBack = { navController.navigate(Screen.MainScreen.route) }
             )
         },
         content = {
