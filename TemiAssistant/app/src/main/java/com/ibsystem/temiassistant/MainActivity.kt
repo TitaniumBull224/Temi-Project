@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -18,6 +19,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController

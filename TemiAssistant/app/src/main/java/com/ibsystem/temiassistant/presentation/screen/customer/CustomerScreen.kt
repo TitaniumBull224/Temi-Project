@@ -19,7 +19,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,24 +29,14 @@ import com.ibsystem.temiassistant.navigation.Screen
 import com.ibsystem.temiassistant.presentation.common.card.ProductCard
 import com.ibsystem.temiassistant.presentation.common.component.GifImage
 import com.ibsystem.temiassistant.presentation.common.component.TextGradient
-import com.ibsystem.temiassistant.presentation.common.content.TableCell
-import com.ibsystem.temiassistant.presentation.common.content.column1Weight
-import com.ibsystem.temiassistant.presentation.common.content.column2Weight
-import com.ibsystem.temiassistant.presentation.common.content.column3Weight
-import com.ibsystem.temiassistant.presentation.common.content.column4Weight
-import com.ibsystem.temiassistant.presentation.common.content.column5Weight
 import com.ibsystem.temiassistant.presentation.screen.order_list.OrderViewModel
 import com.ibsystem.temiassistant.ui.theme.Black
 import com.ibsystem.temiassistant.ui.theme.DIMENS_16dp
 import com.ibsystem.temiassistant.ui.theme.DIMENS_24dp
-import com.ibsystem.temiassistant.ui.theme.DIMENS_2dp
 import com.ibsystem.temiassistant.ui.theme.DIMENS_4dp
-import com.ibsystem.temiassistant.ui.theme.DIMENS_8dp
 import com.ibsystem.temiassistant.ui.theme.GilroyFontFamily
-import com.ibsystem.temiassistant.ui.theme.GraySecondTextColor
 import com.ibsystem.temiassistant.ui.theme.TEXT_SIZE_16sp
 import com.ibsystem.temiassistant.ui.theme.TEXT_SIZE_18sp
-import com.ibsystem.temiassistant.ui.theme.TEXT_SIZE_24sp
 import com.ibsystem.temiassistant.ui.theme.White
 import com.ibsystem.temiassistant.utils.reformatDate
 

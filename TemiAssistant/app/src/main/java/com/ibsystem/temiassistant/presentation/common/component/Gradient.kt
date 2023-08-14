@@ -14,14 +14,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import com.ibsystem.temiassistant.ui.theme.Chocolate
 import com.ibsystem.temiassistant.ui.theme.Crimson
 import com.ibsystem.temiassistant.ui.theme.DIMENS_16dp
+import com.ibsystem.temiassistant.ui.theme.DIMENS_1dp
+import com.ibsystem.temiassistant.ui.theme.DIMENS_25dp
 import com.ibsystem.temiassistant.ui.theme.DIMENS_32dp
 import com.ibsystem.temiassistant.ui.theme.DIMENS_64dp
+import com.ibsystem.temiassistant.ui.theme.DIMENS_6dp
 import com.ibsystem.temiassistant.ui.theme.DIMENS_8dp
 import com.ibsystem.temiassistant.ui.theme.DarkBlue
 import com.ibsystem.temiassistant.ui.theme.DarkOrange
 import com.ibsystem.temiassistant.ui.theme.GilroyFontFamily
+import com.ibsystem.temiassistant.ui.theme.Maroon
 import com.ibsystem.temiassistant.ui.theme.Purple
 import com.ibsystem.temiassistant.ui.theme.TEXT_SIZE_24sp
 import com.ibsystem.temiassistant.ui.theme.White
@@ -31,7 +36,7 @@ fun ButtonGradient(
     modifier: Modifier = Modifier,
     name: String,
     onClick: () -> Unit,
-    gradientColors: List<Color> = listOf(Crimson, DarkOrange),
+    gradientColors: List<Color> = listOf(Maroon, Chocolate),
     roundedCornerShape: RoundedCornerShape = RoundedCornerShape(topEnd = DIMENS_32dp, bottomStart = DIMENS_32dp)
 ) {
     Box(
@@ -58,17 +63,18 @@ fun ButtonGradient(
 fun TextGradient(
     modifier: Modifier = Modifier,
     text: String,
-    gradientColors: List<Color> = listOf(Crimson, DarkOrange),
-    roundedCornerShape: RoundedCornerShape = RoundedCornerShape(topEnd = DIMENS_32dp, bottomStart = DIMENS_32dp)
+    gradientColors: List<Color> = listOf(Maroon, Chocolate),
+    roundedCornerShape: RoundedCornerShape = RoundedCornerShape(topStart = DIMENS_25dp, topEnd = DIMENS_32dp, bottomStart = DIMENS_25dp)
 ) {
     Box(
         modifier = modifier
             .background(
-                brush = Brush.horizontalGradient(colors = gradientColors),
+                brush = Brush.verticalGradient(colors = gradientColors),
                 shape = roundedCornerShape
             )
             .clip(roundedCornerShape)
-            .padding(PaddingValues(horizontal = DIMENS_16dp, vertical = DIMENS_8dp)),
+//            .padding(PaddingValues(horizontal = DIMENS_16dp, vertical = DIMENS_8dp))
+            .padding(horizontal = DIMENS_6dp, vertical = DIMENS_1dp),
         contentAlignment = Alignment.Center
     ) {
         Text(

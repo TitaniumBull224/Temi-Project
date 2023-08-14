@@ -26,8 +26,6 @@ fun MotionScreen(navController: NavController, viewModel: MapViewModel) {
         ) {
             TopBarSection(
                 username = "Map",
-                profile = painterResource(id = R.drawable.ic_final_icon),
-                isOnline = true,
                 onBack = { navController.navigateUp() }
             )
 

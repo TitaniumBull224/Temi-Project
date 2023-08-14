@@ -1,6 +1,8 @@
 package com.ibsystem.temiassistant.presentation.screen.settings
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.robotemi.sdk.Robot
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,8 +23,8 @@ class SettingsViewModel : ViewModel() {
     private val _intPreference: MutableStateFlow<Int> = MutableStateFlow(0)
     var intPreference = _intPreference.asStateFlow()
 
-    val SPEAKER_SWITCH = 0
-    val DETECTION_SWITCH = 1
+    private val _connectivityState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val connectivityState = _connectivityState.asStateFlow()
 
 
 
@@ -47,6 +49,9 @@ class SettingsViewModel : ViewModel() {
     fun checkTextInput(text: String) = text.isNotEmpty()
 
     companion object {
+        const val SPEAKER_SWITCH = 0
+        const val DETECTION_SWITCH = 1
+
         private var instance: SettingsViewModel? = null
 
         fun getInstance(): SettingsViewModel {

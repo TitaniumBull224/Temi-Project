@@ -24,15 +24,12 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
@@ -44,6 +41,20 @@ import com.ibsystem.temiassistant.domain.model.Message
 import com.ibsystem.temiassistant.domain.model.MessageBody
 import com.ibsystem.temiassistant.presentation.common.component.GifImage
 import com.ibsystem.temiassistant.presentation.common.component.TopBarSection
+import com.ibsystem.temiassistant.ui.theme.Black
+import com.ibsystem.temiassistant.ui.theme.Crimson
+import com.ibsystem.temiassistant.ui.theme.DIMENS_10dp
+import com.ibsystem.temiassistant.ui.theme.DIMENS_16dp
+import com.ibsystem.temiassistant.ui.theme.DIMENS_1dp
+import com.ibsystem.temiassistant.ui.theme.DIMENS_200dp
+import com.ibsystem.temiassistant.ui.theme.DIMENS_25dp
+import com.ibsystem.temiassistant.ui.theme.DIMENS_6dp
+import com.ibsystem.temiassistant.ui.theme.DIMENS_8dp
+import com.ibsystem.temiassistant.ui.theme.DarkRed
+import com.ibsystem.temiassistant.ui.theme.Gray
+import com.ibsystem.temiassistant.ui.theme.Maroon
+import com.ibsystem.temiassistant.ui.theme.Red
+import com.ibsystem.temiassistant.ui.theme.TEXT_SIZE_12sp
 import com.ibsystem.temiassistant.ui.theme.White
 import com.robotemi.sdk.Robot
 import kotlinx.coroutines.launch
@@ -93,14 +104,10 @@ fun ChatScreen(navController: NavController, viewModel: ChatViewModel) {
                     .padding(windowInsets),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                viewModel.connectivityState.value?.let {
-                    TopBarSection(
-                        username = "Chatbot",
-                        profile = painterResource(id = R.drawable.ic_final_icon),
-                        isOnline = it,
-                        onBack = { navController.navigateUp() }
-                    )
-                }
+                TopBarSection(
+                    username = "Chatbot",
+                    onBack = { navController.navigateUp() }
+                )
                 ChatSection(Modifier.weight(1f), viewModel)
                 MessageSection(viewModel)
             }
@@ -134,15 +141,15 @@ fun ChatSection(
         state = listState,
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(DIMENS_16dp),
     ) {
-        item { Text(text = "Session ID:" + viewModel.getSessionID(), color = Color.Gray) }
+        item { Text(text = "Session ID:" + viewModel.getSessionID(), color = Gray) }
         item {
             Box(
                 Modifier
                     .fillMaxWidth()
-                    .height(1.dp)
-                    .background(Color.Gray)
+                    .height(DIMENS_1dp)
+                    .background(Gray)
             )
         }
         items(messages) { message ->
@@ -152,15 +159,15 @@ fun ChatSection(
                 time = message.time,
                 imageUrl = message.imageUrl,
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(DIMENS_8dp))
         }
 
         item {
             Box(
                 Modifier
                     .fillMaxWidth()
-                    .height(1.dp)
-                    .background(Color.Gray)
+                    .height(DIMENS_1dp)
+                    .background(Gray)
             )
         }
     }
@@ -189,22 +196,22 @@ fun MessageSection(viewModel: ChatViewModel) {
             horizontalArrangement = Arrangement.End,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(DIMENS_8dp)
         ) {
             suggestions.forEach { suggestion ->
                 Text(
                     text = suggestion,
-                    color = Color.White,
+                    color = White,
                     modifier = Modifier
                         .background(
-                            MaterialTheme.colors.primary,
-                            shape = RoundedCornerShape(16.dp)
+                            Gray,
+                            shape = RoundedCornerShape(DIMENS_16dp)
                         )
                         .padding(
-                            top = 8.dp,
-                            bottom = 8.dp,
-                            start = 16.dp,
-                            end = 16.dp
+                            top = DIMENS_8dp,
+                            bottom = DIMENS_8dp,
+                            start = DIMENS_16dp,
+                            end = DIMENS_16dp
                         )
                         .clickable {
                             if (viewModel.connectivityState.value == true) {
@@ -213,7 +220,7 @@ fun MessageSection(viewModel: ChatViewModel) {
                                 Toast.makeText(context, "回線不調！", Toast.LENGTH_LONG).show()
                             }
                         }
-                        .padding(start = 8.dp, end = 8.dp)
+                        .padding(start = DIMENS_8dp, end = DIMENS_8dp)
                 )
             }
         }
@@ -221,36 +228,44 @@ fun MessageSection(viewModel: ChatViewModel) {
         Card(
             modifier = Modifier
                 .fillMaxWidth(),
-            backgroundColor = Color.White,
-            elevation = 10.dp
+            backgroundColor = Gray,
+            elevation = DIMENS_10dp
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(6.dp)
+                modifier = Modifier.padding(DIMENS_6dp)
             ) {
-                IconButton(onClick = {
-                    viewModel.clearMessage()
-                    viewModel.newSessionID()
-                }) {
+                IconButton(
+                    onClick = {
+                        viewModel.clearMessage()
+                        viewModel.newSessionID()
+                    }
+                ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = "Clear Messages"
+                        contentDescription = "Clear Messages",
+                        tint = Maroon
                     )
                 }
                 OutlinedTextField(
                     placeholder = {
-                        Text("Message..")
+                        Text(
+                            modifier = Modifier.padding(horizontal = DIMENS_8dp),
+                            text = "メッセージ",
+                            fontSize = TEXT_SIZE_12sp,
+                            color = White
+                        )
                     },
                     value = message.value,
                     onValueChange = {
                         message.value = it
                     },
-                    shape = RoundedCornerShape(25.dp),
+                    shape = RoundedCornerShape(DIMENS_25dp),
                     trailingIcon = {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_send),
                             contentDescription = null,
-                            tint = MaterialTheme.colors.primary,
+                            tint = Maroon,
                             modifier = Modifier.clickable {
                                 if (viewModel.connectivityState.value == true) {
                                     viewModel.messageToWit(MessageBody(message.value))
@@ -261,14 +276,21 @@ fun MessageSection(viewModel: ChatViewModel) {
                             }
                         )
                     },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = White,
+                        cursorColor = DarkRed,
+                        focusedBorderColor = Maroon,
+                        unfocusedBorderColor = Crimson
+                    ),
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 6.dp),
+                        .padding(end = DIMENS_6dp),
                 )
                 IconButton(onClick = { mRobot.askQuestion("刮目せよ！吾輩の名はテミだ！") }) {
                     Icon(
                         imageVector = Icons.Default.Mic,
-                        contentDescription = "Voice Input"
+                        contentDescription = "Voice Input",
+                        tint = Maroon
                     )
                 }
             }
@@ -290,14 +312,14 @@ fun MessageItem(
         Box(
             modifier = Modifier
                 .background(
-                    if (isOut) MaterialTheme.colors.primary else Color(0xFF616161),
-                    shape = RoundedCornerShape(16.dp)
+                    if (isOut) MaterialTheme.colors.primary else Gray,
+                    shape = RoundedCornerShape(DIMENS_16dp)
                 )
                 .padding(
-                    top = 8.dp,
-                    bottom = 8.dp,
-                    start = 16.dp,
-                    end = 16.dp
+                    top = DIMENS_8dp,
+                    bottom = DIMENS_8dp,
+                    start = DIMENS_16dp,
+                    end = DIMENS_16dp
                 )
                 .let {
                     when (imageUrl) {
@@ -327,8 +349,8 @@ fun MessageItem(
                         painter = rememberImagePainter(imageUrl),
                         contentDescription = "Image",
                         modifier = Modifier
-                            .width(200.dp)
-                            .height(200.dp),
+                            .width(DIMENS_200dp)
+                            .height(DIMENS_200dp),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -337,8 +359,9 @@ fun MessageItem(
 
         Text(
             text = time,
-            fontSize = 12.sp,
-            modifier = Modifier.padding(start = 8.dp)
+            fontSize = TEXT_SIZE_12sp,
+            modifier = Modifier.padding(start = DIMENS_8dp),
+            color = White
         )
     }
 }
@@ -353,8 +376,8 @@ fun InputAmountOfMoneyDialog(
         Dialog(onDismissRequest = onDismiss) {
             Surface(
                 shape = MaterialTheme.shapes.medium,
-                color = Color.White,
-                modifier = Modifier.padding(16.dp)
+                color = Gray,
+                modifier = Modifier.padding(DIMENS_16dp)
             ) {
                 InputAmountOfMoney(viewModel, onDismiss)
             }
@@ -380,7 +403,7 @@ fun InputAmountOfMoney(
     var showToDropdown by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(DIMENS_16dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -450,7 +473,7 @@ fun InputAmountOfMoney(
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(DIMENS_16dp))
 
         TextField(
             value = inputAmount,
@@ -461,7 +484,7 @@ fun InputAmountOfMoney(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(DIMENS_16dp))
 
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -474,13 +497,24 @@ fun InputAmountOfMoney(
                         onDismiss()
                     }
                 },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Black,
+                    contentColor = Red
+                )
             ) {
                 Text("確認")
             }
-            Button(onClick = onDismiss) {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Black,
+                    contentColor = Red
+                )
+            ) {
                 Text("閉じる")
             }
         }
+
     }
 }
 
