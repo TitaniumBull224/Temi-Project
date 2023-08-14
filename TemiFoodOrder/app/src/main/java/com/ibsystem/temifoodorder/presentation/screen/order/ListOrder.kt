@@ -45,6 +45,7 @@ import com.ibsystem.temifoodorder.ui.theme.DIMENS_8dp
 import com.ibsystem.temifoodorder.ui.theme.GilroyFontFamily
 import com.ibsystem.temifoodorder.ui.theme.GraySecondTextColor
 import com.ibsystem.temifoodorder.ui.theme.TEXT_SIZE_24sp
+import com.ibsystem.temifoodorder.utils.reformatDate
 import kotlinx.coroutines.launch
 
 val column1Weight = .1f
@@ -120,7 +121,7 @@ fun ListOrder(
                         alignment = TextAlign.Left,
                         title = true
                     )
-                    TableCell(text = "デート", weight = column3Weight, title = true)
+                    TableCell(text = "時間", weight = column3Weight, title = true)
                     TableCell(text = "状況", weight = column4Weight, title = true)
                 }
                 Divider(
@@ -135,6 +136,7 @@ fun ListOrder(
             itemsIndexed(orders) { index, order ->
                 val isRowExpanded = remember { mutableStateOf(false) }
 
+                val formattedDate = reformatDate(order.time!!)
 
                 Row(
                     Modifier.fillMaxWidth(),
@@ -157,7 +159,7 @@ fun ListOrder(
                         weight = column2Weight,
                         alignment = TextAlign.Left
                     )
-                    TableCell(text = order.time!!, weight = column3Weight)
+                    TableCell(text = formattedDate!!, weight = column3Weight)
                     StatusCell(text = order.status!!, weight = column4Weight)
 //                    CheckBoxCell(
 //                        weight = column5Weight,

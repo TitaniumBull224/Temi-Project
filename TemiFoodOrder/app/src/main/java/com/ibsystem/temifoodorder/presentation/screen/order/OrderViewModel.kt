@@ -82,6 +82,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     is PostgresAction.Select -> Log.i("Listener","Selected: ${it.record}")
                     is PostgresAction.Update -> {
                         Log.i("Listener", "Updated: ${it.oldRecord} with ${it.record}")
+                        updateOrderList(it.record["id"].toString().replace("\"", ""))
                     }
                     else -> Log.i("Listener","Error")
                 }

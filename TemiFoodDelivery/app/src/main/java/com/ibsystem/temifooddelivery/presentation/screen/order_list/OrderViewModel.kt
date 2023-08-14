@@ -69,7 +69,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                         Log.i("Listener", "Updated: ${it.oldRecord} with ${it.record}")
                         updateOrderList(it.record["id"].toString().replace("\"", ""))
                     }
-                    else -> Log.i("Listener","sighhh")
+                    else -> Log.i("Listener","????")
                 }
             }
         }
@@ -84,7 +84,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                 if (res is ApiResult.Success) {
                     _orderList.value = _orderList.value + res.data
                 } else {
-                    Log.i("DSDSAD",res.toString())
+                    Log.i("Orders",res.toString())
                 }
             }
         }

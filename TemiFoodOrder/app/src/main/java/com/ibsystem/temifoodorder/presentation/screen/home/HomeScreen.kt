@@ -125,7 +125,7 @@ fun HeaderLocationHome(
 }
 
 fun clickToCart(context: Context, productItem: ProductItem, orderViewModel: OrderViewModel) {
-    context.showToastShort("Success Add To Cart ${productItem.prodName}")
+    context.showToastShort("${productItem.prodName}追加しました！")
     orderViewModel.addCart(productItem = productItem)
     // TODO: Do something with addCart on Home
 }
