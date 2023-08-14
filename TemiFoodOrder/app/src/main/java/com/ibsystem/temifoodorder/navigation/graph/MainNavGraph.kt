@@ -8,9 +8,7 @@ import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.ibsystem.temifoodorder.navigation.screen.BottomNavItemScreen
 import com.ibsystem.temifoodorder.navigation.screen.Screen
-import com.ibsystem.temifoodorder.presentation.screen.about.AboutScreen
 import com.ibsystem.temifoodorder.presentation.screen.cart.CartScreen
-import com.ibsystem.temifoodorder.presentation.screen.cart.CartViewModel
 //import com.ibsystem.temifoodorder.presentation.screen.about.AboutScreen
 //import com.ibsystem.temifoodorder.presentation.screen.cart.CartScreen
 import com.ibsystem.temifoodorder.presentation.screen.detail.DetailScreen
@@ -27,7 +25,6 @@ import com.ibsystem.temifoodorder.utils.Constants.PRODUCT_ARGUMENT_KEY
 @Composable
 fun MainNavGraph(navController: NavHostController,
                  orderViewModel: OrderViewModel = hiltViewModel(),
-                 cartViewModel: CartViewModel = hiltViewModel(),
                  homeViewModel: HomeViewModel = hiltViewModel()) {
     NavHost(
         navController = navController,
@@ -35,7 +32,7 @@ fun MainNavGraph(navController: NavHostController,
         startDestination = BottomNavItemScreen.Home.route
     ) {
         composable(route = BottomNavItemScreen.Home.route) {
-            HomeScreen(navController = navController,homeViewModel = homeViewModel, cartViewModel = cartViewModel)
+            HomeScreen(navController = navController,homeViewModel = homeViewModel, orderViewModel = orderViewModel)
         }
 
 //        composable(route = BottomNavItemScreen.Home.route) {
@@ -45,7 +42,7 @@ fun MainNavGraph(navController: NavHostController,
 //            ExploreScreen()
 //        }
         composable(route = BottomNavItemScreen.Cart.route) {
-            CartScreen(cartViewModel = cartViewModel)
+            CartScreen(orderViewModel = orderViewModel)
         }
         composable(route = BottomNavItemScreen.About.route) {
             //AboutScreen()

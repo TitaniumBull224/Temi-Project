@@ -10,7 +10,7 @@
     <string name="welcome_to_store">Welcome to \n our store</string>
     <string name="desc_welcome">Ger your groceries in as fast as one hour</string>
     <string name="get_started">Get Started</string>
-    <string name="search_store">Search Store</string>
+    <string name="search_store">検索</string>
     <string name="search_category">Search Category</string>
     <string name="image_slider">Image Slider</string>
     <string name="image_product">Image Product</string>
@@ -26,8 +26,8 @@
     <string name="shop">Shop</string>
     <string name="image_location">Image Location</string>
     <string name="sample_country">Japan</string>
-    <string name="see_all">See All</string>
-    <string name="exclusive_offer">Exclusive Offer</string>
+    <string name="see_all">もっと見る</string>
+    <string name="exclusive_offer">新しい商品</string>
     <string name="best_selling">Best Selling</string>
     <string name="find_products">Find Products</string>
     <string name="image_profile">Image Profile</string>

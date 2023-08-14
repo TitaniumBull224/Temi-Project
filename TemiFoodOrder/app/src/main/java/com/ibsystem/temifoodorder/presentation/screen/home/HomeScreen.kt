@@ -20,7 +20,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.ibsystem.temifoodorder.R
@@ -29,7 +28,6 @@ import com.ibsystem.temifoodorder.navigation.screen.Screen
 import com.ibsystem.temifoodorder.presentation.common.content.ListContentProduct
 import com.ibsystem.temifoodorder.presentation.component.SearchViewBar
 import com.ibsystem.temifoodorder.presentation.component.SliderBanner
-import com.ibsystem.temifoodorder.presentation.screen.cart.CartViewModel
 import com.ibsystem.temifoodorder.presentation.screen.order.OrderViewModel
 import com.ibsystem.temifoodorder.ui.theme.*
 import com.ibsystem.temifoodorder.utils.showToastShort
@@ -40,7 +38,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     homeViewModel: HomeViewModel,
-    cartViewModel: CartViewModel
+    orderViewModel: OrderViewModel
 ) {
     val mContext = LocalContext.current
     val searchQuery by homeViewModel.searchQuery
@@ -69,8 +67,7 @@ fun HomeScreen(
                 products = allProducts,
                 navController = navController,
                 onClickToCart = { productItem ->
-                    clickToCart(mContext, productItem, cartViewModel)
-                    //cartViewModel.addCart(productItem = productItem)
+                    clickToCart(mContext, productItem, orderViewModel)
                 }
             )
 
@@ -127,9 +124,9 @@ fun HeaderLocationHome(
     }
 }
 
-fun clickToCart(context: Context, productItem: ProductItem, cartViewModel: CartViewModel) {
+fun clickToCart(context: Context, productItem: ProductItem, orderViewModel: OrderViewModel) {
     context.showToastShort("Success Add To Cart ${productItem.prodName}")
-    cartViewModel.addCart(productItem = productItem)
+    orderViewModel.addCart(productItem = productItem)
     // TODO: Do something with addCart on Home
 }
 

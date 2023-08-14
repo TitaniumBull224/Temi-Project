@@ -40,7 +40,7 @@ fun ProductCard(
             .padding(DIMENS_12dp)
             .width(DIMENS_174dp)
             .clickable {
-                navController.navigate(Screen.Details.passProductId(productId = productItem.prodId!!))
+                //navController.navigate(Screen.Details.passProductId(productId = productItem.prodId!!))
             }
     ) {
         Column(

@@ -122,12 +122,6 @@ fun ListOrder(
                     )
                     TableCell(text = "デート", weight = column3Weight, title = true)
                     TableCell(text = "状況", weight = column4Weight, title = true)
-                    TableCell(
-                        text = "",
-                        weight = column5Weight,
-                        alignment = TextAlign.Right,
-                        title = true
-                    )
                 }
                 Divider(
                     color = GraySecondTextColor,
@@ -165,7 +159,6 @@ fun ListOrder(
                     )
                     TableCell(text = order.time!!, weight = column3Weight)
                     StatusCell(text = order.status!!, weight = column4Weight)
-                    TableCell(text = "", weight = column5Weight)
 //                    CheckBoxCell(
 //                        weight = column5Weight,
 //                        checked = checkedState[index],

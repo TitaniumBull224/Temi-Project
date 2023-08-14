@@ -14,6 +14,8 @@ import com.ibsystem.temifoodorder.utils.ApiResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.realtime.PostgresAction
 import io.github.jan.supabase.realtime.Realtime
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,6 +36,9 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
     val orderList: StateFlow<List<OrderDetailItem>>
         get() = _orderList
 
+    private val _productCartList = MutableStateFlow<Map<ProductItem, OrderProduct>>(emptyMap())
+    val productCartList = _productCartList.asStateFlow()
+
 
 
     init {
@@ -44,7 +49,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
     }
 
 
-    fun getAllOrders() {
+    private fun getAllOrders() {
         viewModelScope.launch {
             repository.getAllOrders(tableModel.tableID).collect {
                     data -> _uiState.update { data }
@@ -60,21 +65,25 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
         //listenToOrdersChange()
     }
 
-    fun listenToOrdersChange() {
+    private fun listenToOrdersChange() {
         viewModelScope.launch {
-            repository.listenToOrdersChange().collect {
+            repository.listenToChange(channelName = "OrderChanged", tableName = "Order").collect {
                 when (it) {
                     is PostgresAction.Delete -> Log.i("Listener","Deleted: ${it.oldRecord}")
                     is PostgresAction.Insert -> {
                         Log.i("Listener", "Inserted: ${it.record["id"]}")
-                        addNewOrders(getOrderID(it))
+                        val orderId = getOrderID(it)
+//                        addNewOrderProductDetails(orderId, productCartList.value)
+//                        deleteCart()
+                        addNewOrders(orderId)
+                        updateOrderList(it.record["id"].toString().replace("\"", ""))
 
                     }
                     is PostgresAction.Select -> Log.i("Listener","Selected: ${it.record}")
                     is PostgresAction.Update -> {
                         Log.i("Listener", "Updated: ${it.oldRecord} with ${it.record}")
                     }
-                    else -> Log.i("Listener","sighhh")
+                    else -> Log.i("Listener","Error")
                 }
             }
         }
@@ -96,20 +105,26 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
     }
 
 
-    fun updateOrderStatus(id: String, newStatus: String) {
+    private fun updateOrderList(id: String) {
         viewModelScope.launch {
-            repository.updateOrderStatus(id, newStatus).collectLatest { res ->
+            repository.getOrderDetailsByID(id = id).collectLatest { res ->
                 _uiState.update { res }
-                val orderIndex = _orderList.value.indexOfFirst { it.id == id }
-                if (orderIndex != -1) {
-                    // Create a new list by updating the order status
-                    val updatedOrderList = _orderList.value.toMutableList()
-                    updatedOrderList[orderIndex] = updatedOrderList[orderIndex].copy(status = newStatus)
+                if (res is ApiResult.Success) {
+                    val orderIndex = _orderList.value.indexOfFirst { it.id == id }
+                    if (orderIndex != -1) {
+                        // Create a new list by updating the order status
+                        val updatedOrderList = _orderList.value.toMutableList()
+                        updatedOrderList[orderIndex] = res.data
 
-                    // Update the state flow with the updated order list
-                    _orderList.emit(updatedOrderList)
+                        // Update the state flow with the updated order list
+                        _orderList.emit(updatedOrderList)
+                    }
+                } else {
+                    Log.i("DSDSAD",res.toString())
                 }
+
             }
+
         }
     }
 
@@ -122,32 +137,74 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
         return order
     }
 
-//    fun addCart(
-//        productItem: ProductItem,
-//        orderProduct: OrderProduct = OrderProduct(quantity = 1)
-//    ) {
-//        viewModelScope.launch {
-//            _productCartList.update { cart ->
-//                val updatedCart = cart.toMutableMap()
-//                val existingOrderProduct = updatedCart[productItem]
-//
-//                if (existingOrderProduct != null) {
-//                    val existingQuantity = existingOrderProduct.quantity
-//                    val updatedQuantity = existingQuantity!!.plus(orderProduct.quantity!!)
-//                    updatedCart[productItem] = existingOrderProduct.copy(quantity = updatedQuantity)
-//                } else {
-//                    updatedCart[productItem] = orderProduct
-//                }
-//
-//                updatedCart.toMap() // Convert back to immutable map before returning
-//            }
-//        }
-//    }
-//
-//
-//
-//    fun deleteCart() {
-//        _productCartList.value = emptyMap()
-//    }
+    fun addCart(
+        productItem: ProductItem,
+        orderProduct: OrderProduct = OrderProduct(quantity = 1)
+    ) {
+        viewModelScope.launch {
+            val currentCart = _productCartList.value.toMutableMap()
+            val existingProduct = currentCart[productItem]
 
+            if (existingProduct != null) {
+                val updatedProduct = existingProduct.copy(quantity = existingProduct.quantity!! + 1)
+                currentCart[productItem] = updatedProduct
+            } else {
+                currentCart[productItem] = orderProduct
+                println("CART: ${currentCart.toString()}")
+            }
+
+            _productCartList.update { currentCart.toMap() }
+            println("SIGH"+productCartList.value.toString())
+        }
+
+    }
+
+
+
+    fun deleteCart() {
+        _productCartList.value = emptyMap()
+    }
+
+
+
+    fun insertNewOrder(tableID: String = tableModel.tableID, productCartList: Map<ProductItem, OrderProduct>) {
+        viewModelScope.launch {
+            repository.insertNewOrder(OrderItem(tableId = tableID, status = "保留中")).collect {
+                    data ->
+                if(data is ApiResult.Success) {
+                    Log.i("NewOrder", "DONE")
+                    data.data.forEach{
+                            orderItem ->
+                        addNewOrderProductDetails(
+                            orderID = orderItem.id!!,
+                            productCartList = productCartList
+                        )
+                    }
+                    deleteCart()
+                }
+                else if(data is ApiResult.Error) {
+                    Log.e("API",data.message!!)
+                }
+            }
+        }
+    }
+
+    private suspend fun addNewOrderProductDetails(orderID: String, productCartList: Map<ProductItem, OrderProduct>) {
+        coroutineScope { // Use a CoroutineScope to manage launched coroutines
+            productCartList.forEach { (productItem, orderProduct) ->
+                launch {
+                    repository.addNewOrderProductDetails(
+                        InsertParam(orderID = orderID, prodID = productItem.prodId!!, quantity = orderProduct.quantity!!.toString())
+                    ).collect { data ->
+                        if (data is ApiResult.Success) {
+                            Log.i("ORDERDETAILS", "DONE")
+                        } else if (data is ApiResult.Error) {
+                            Log.e("API DETAILS", data.message!!)
+                        }
+                    }
+                }
+            }
+        }
+        // Now that all addNewOrderProductDetails calls are awaited, you can proceed with the subsequent functions
+    }
 }

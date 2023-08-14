@@ -79,15 +79,15 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
         return supabaseClient.realtime.status.value
     }
 
-    suspend fun listenToOrdersChange(): Flow<PostgresAction> {
-            val channel = supabaseClient.realtime.createChannel("OrderChanged")
-            val changeFlow = channel.postgresChangeFlow<PostgresAction>(schema = "public") {
-                table = "Order"
-            }
+    suspend fun listenToChange(channelName: String ,tableName: String): Flow<PostgresAction> {
+        val channel = supabaseClient.realtime.createChannel(channelName)
+        val changeFlow = channel.postgresChangeFlow<PostgresAction>(schema = "public") {
+                table = tableName
+        }
 
-            supabaseClient.realtime.connect()
-            channel.join()
-            return changeFlow
+        supabaseClient.realtime.connect()
+        channel.join()
+        return changeFlow
     }
 
 
@@ -124,7 +124,6 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
                 }
 
                 emit(ApiResult.Success(Unit))
-                Log.i("UpdatePLS","123446454775675")
             }
             catch (e: Exception) {
                 emit(ApiResult.Error(e.message))

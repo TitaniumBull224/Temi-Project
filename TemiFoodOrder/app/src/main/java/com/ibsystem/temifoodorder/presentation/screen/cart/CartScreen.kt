@@ -33,11 +33,10 @@ import com.ibsystem.temifoodorder.ui.theme.TEXT_SIZE_18sp
 @Composable
 fun CartScreen(
     modifier: Modifier = Modifier,
-    cartViewModel: CartViewModel = hiltViewModel()
+    orderViewModel: OrderViewModel = hiltViewModel()
 ) {
-//    Log.e("CartSCRN", orderViewModel.hashCode().toString())
 
-    val productCartList by cartViewModel.productCartList.collectAsState()
+    val productCartList by orderViewModel.productCartList.collectAsState()
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -67,7 +66,7 @@ fun CartScreen(
             shape = RoundedCornerShape(DIMENS_14dp),
             contentPadding = PaddingValues(DIMENS_10dp),
             onClick = {
-            cartViewModel.insertNewOrder(productCartList = productCartList)
+            orderViewModel.insertNewOrder(productCartList = productCartList)
         }) {
             Text(text = "注文", color = Color.White,)
         }

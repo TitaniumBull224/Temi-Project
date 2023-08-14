@@ -21,6 +21,7 @@ import com.ibsystem.temifoodorder.domain.model.ProductItem
 import com.ibsystem.temifoodorder.presentation.common.card.OrderProductCard
 import com.ibsystem.temifoodorder.ui.theme.Black
 import com.ibsystem.temifoodorder.ui.theme.DIMENS_16dp
+import com.ibsystem.temifoodorder.ui.theme.DIMENS_1dp
 import com.ibsystem.temifoodorder.ui.theme.DIMENS_4dp
 import com.ibsystem.temifoodorder.ui.theme.DIMENS_8dp
 import com.ibsystem.temifoodorder.ui.theme.GilroyFontFamily

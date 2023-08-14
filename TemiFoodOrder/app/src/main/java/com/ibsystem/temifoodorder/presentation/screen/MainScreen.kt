@@ -7,14 +7,10 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ibsystem.temifoodorder.navigation.graph.MainNavGraph
 import com.ibsystem.temifoodorder.presentation.component.BottomBar
-import com.ibsystem.temifoodorder.presentation.screen.cart.CartViewModel
-import com.ibsystem.temifoodorder.presentation.screen.home.HomeViewModel
-import com.ibsystem.temifoodorder.presentation.screen.order.OrderViewModel
 import com.ibsystem.temifoodorder.ui.theme.DIMENS_16dp
 import com.ibsystem.temifoodorder.ui.theme.DIMENS_32dp
 

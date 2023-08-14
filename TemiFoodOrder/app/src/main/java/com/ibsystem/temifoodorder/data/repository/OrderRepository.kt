@@ -21,7 +21,7 @@ interface OrderRepository {
     fun getAllProducts(): Flow<ApiResult<List<ProductItem>>>
 
     fun getRealtimeStatus(): Realtime.Status
-    suspend fun listenToOrdersChange(): Flow<PostgresAction>
+    suspend fun listenToChange(channelName: String ,tableName: String): Flow<PostgresAction>
 }
 
 class OrderRepositoryImpl @Inject constructor(
@@ -47,8 +47,8 @@ class OrderRepositoryImpl @Inject constructor(
         return dataSource.addNewOrderProductDetails(insertParam)
     }
 
-    override suspend fun listenToOrdersChange(): Flow<PostgresAction> {
-        return dataSource.listenToOrdersChange()
+    override suspend fun listenToChange(channelName: String ,tableName: String): Flow<PostgresAction> {
+        return dataSource.listenToChange(channelName, tableName)
     }
     override fun getAllProducts(): Flow<ApiResult<List<ProductItem>>> {
         return dataSource.getAllProducts()
