@@ -115,7 +115,7 @@ fun ProductCard(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = if (quantity > 1) "x$quantity" else "",
+                        text =  "x$quantity",
                         fontFamily = GilroyFontFamily,
                         fontWeight = FontWeight.Bold,
                         color = Black,
