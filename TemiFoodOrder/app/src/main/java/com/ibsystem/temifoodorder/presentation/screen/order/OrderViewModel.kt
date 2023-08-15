@@ -39,6 +39,12 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
     private val _productCartList = MutableStateFlow<Map<ProductItem, OrderProduct>>(emptyMap())
     val productCartList = _productCartList.asStateFlow()
 
+    private val _numOfProd = MutableStateFlow<Int>(0)
+    val numOfProd: StateFlow<Int>
+        get() = _numOfProd
+
+    private var _postedProd: Int = 0
+
 
 
     init {
@@ -73,11 +79,12 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     is PostgresAction.Insert -> {
                         Log.i("Listener", "Inserted: ${it.record["id"]}")
                         val orderId = getOrderID(it)
-//                        addNewOrderProductDetails(orderId, productCartList.value)
-//                        deleteCart()
-                        addNewOrders(orderId)
-                        updateOrderList(it.record["id"].toString().replace("\"", ""))
-
+                        addNewOrderProductDetails(orderId, productCartList.value)
+                        if(productCartList.value.size == _postedProd) {
+                            addNewOrders(orderId)
+                            deleteCart()
+                            updateOrderList(it.record["id"].toString().replace("\"", ""))
+                        }
                     }
                     is PostgresAction.Select -> Log.i("Listener","Selected: ${it.record}")
                     is PostgresAction.Update -> {
@@ -129,14 +136,6 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
         }
     }
 
-    fun findOrderByID(ID: String): OrderDetailItem? {
-        val order = _orderList.value.firstOrNull { it.id == ID }
-        if (order == null) {
-            Log.i("findOrderByID", "No result")
-        }
-
-        return order
-    }
 
     fun addCart(
         productItem: ProductItem,
@@ -155,6 +154,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
             }
 
             _productCartList.update { currentCart.toMap() }
+            _numOfProd.update { currentCart.size }
             println("SIGH"+productCartList.value.toString())
         }
 
@@ -164,13 +164,15 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
 
     fun deleteCart() {
         _productCartList.value = emptyMap()
+        _postedProd = 0
+        _numOfProd.update { 0 }
     }
 
 
 
     fun insertNewOrder(tableID: String = tableModel.tableID, productCartList: Map<ProductItem, OrderProduct>) {
         viewModelScope.launch {
-            repository.insertNewOrder(OrderItem(tableId = tableID, status = "保留中")).collect {
+            repository.insertNewOrder(OrderItem(tableId = tableID, status = "保留中", total_item = productCartList.size)).collect {
                     data ->
                 if(data is ApiResult.Success) {
                     Log.i("NewOrder", "DONE")
@@ -181,7 +183,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                             productCartList = productCartList
                         )
                     }
-                    deleteCart()
+
                 }
                 else if(data is ApiResult.Error) {
                     Log.e("API",data.message!!)
@@ -198,6 +200,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                         InsertParam(orderID = orderID, prodID = productItem.prodId!!, quantity = orderProduct.quantity!!.toString())
                     ).collect { data ->
                         if (data is ApiResult.Success) {
+                            _postedProd++
                             Log.i("ORDERDETAILS", "DONE")
                         } else if (data is ApiResult.Error) {
                             Log.e("API DETAILS", data.message!!)

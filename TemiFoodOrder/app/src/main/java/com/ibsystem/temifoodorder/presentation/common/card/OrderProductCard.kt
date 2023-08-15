@@ -98,7 +98,7 @@ fun OrderProductCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = product.prodPrice.toString() + "¥",
+                    text = "¥"+product.prodPrice.toString() ,
                     fontFamily = GilroyFontFamily,
                     fontWeight = FontWeight.Bold,
                     color = Black,

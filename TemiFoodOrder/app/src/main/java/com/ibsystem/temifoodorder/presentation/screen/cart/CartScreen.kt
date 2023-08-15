@@ -87,11 +87,7 @@ fun CartScreen(
             }
         }
 
-
     }
-
-
-
 }
 
 

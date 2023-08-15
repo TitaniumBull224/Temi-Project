@@ -16,7 +16,9 @@ data class OrderDetailItem(
     @SerialName("table_id")
     val tableId: String?,
     @SerialName("time")
-    val time: String?
+    val time: String?,
+    @SerialName("total_item")
+    val total_item : Int?
 )
 
 @Serializable
@@ -35,5 +37,7 @@ data class OrderItem(
     val status: String?,
     @SerialName("table_id")
     val tableId: String?,
+    @SerialName("total_item")
+    val total_item : Int?
 )
 
