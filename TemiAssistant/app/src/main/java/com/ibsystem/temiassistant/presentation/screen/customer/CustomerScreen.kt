@@ -74,40 +74,17 @@ fun CustomerScreen(
                     Column(
                         horizontalAlignment = Alignment.Start
                     ) {
-//                        Text(
-//                            text = "注文詳細",
-//                            fontFamily = GilroyFontFamily,
-//                            fontWeight = FontWeight.SemiBold,
-//                            fontSize = TEXT_SIZE_24sp,
-//                            color = Black
-//                        )
                         TextGradient(text = "注文詳細")
 
                         Spacer(modifier = Modifier.height(DIMENS_24dp))
 
                         TextGradient(text = "${order.tableId}")
-
-//                        Text(
-//                            text = "テーブル：${order.tableId}",
-//                            fontFamily = GilroyFontFamily,
-//                            fontWeight = FontWeight.SemiBold,
-//                            fontSize = TEXT_SIZE_18sp,
-//                            color = Black
-//
-//                        )
                     }
 
                     Column(
                         horizontalAlignment = Alignment.End,
                         verticalArrangement = Arrangement.Top
                     ) {
-//                        Text(
-//                            text = "時間：$formattedDate",
-//                            fontFamily = GilroyFontFamily,
-//                            fontWeight = FontWeight.Light,
-//                            fontSize = TEXT_SIZE_16sp,
-//                            color = Black
-//                        )
                         TextGradient(text = "時間：$formattedDate")
                     }
                 }
@@ -181,13 +158,6 @@ fun something() {
                 Column(
                     horizontalAlignment = Alignment.Start
                 ) {
-//                    Text(
-//                        text = "注文詳細",
-//                        fontFamily = GilroyFontFamily,
-//                        fontWeight = FontWeight.SemiBold,
-//                        fontSize = TEXT_SIZE_24sp,
-//                        color = Black
-//                    )
                     TextGradient(text = "注文詳細")
 
                     Spacer(modifier = Modifier.height(DIMENS_24dp))
@@ -214,9 +184,6 @@ fun something() {
                         color = Black
                     )
                 }
-
-
-
             }
         }
     }

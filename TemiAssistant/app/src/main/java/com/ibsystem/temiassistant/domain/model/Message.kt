@@ -57,21 +57,3 @@ data class Speech(
     val q: String?,
     val voice: String?,
 )
-
-//@JsonClass(generateAdapter = true)
-//data class Name (
-//    val body: String,
-//    val confidence: Double,
-//    val end: Long,
-//    val entities: Entities,
-//    val id: String,
-//    val name: String,
-//    val role: String,
-//    val start: Long,
-//    val type: String,
-//    val value: String
-//)
-
-
-
-typealias Entities = JsonObject

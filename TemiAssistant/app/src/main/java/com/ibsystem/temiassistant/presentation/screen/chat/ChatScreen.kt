@@ -1,4 +1,4 @@
-@file:Suppress("OPT_IN_IS_NOT_ENABLED", "DEPRECATION")
+@file:Suppress("DEPRECATION")
 
 package com.ibsystem.temiassistant.presentation.screen.chat
 

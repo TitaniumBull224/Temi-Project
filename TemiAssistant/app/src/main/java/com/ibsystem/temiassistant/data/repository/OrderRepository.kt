@@ -4,6 +4,7 @@ import com.ibsystem.temiassistant.data.datasource.ApiResult
 import com.ibsystem.temiassistant.data.datasource.OrderDataSource
 import com.ibsystem.temiassistant.domain.model.OrderModelItem
 import io.github.jan.supabase.realtime.PostgresAction
+import io.github.jan.supabase.realtime.Realtime
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -12,6 +13,7 @@ interface OrderRepository {
     fun getOrderDetailsByID(id: String): Flow<ApiResult<OrderModelItem>>
     fun updateOrderStatus(id: String, newStatus: String): Flow<ApiResult<Unit>>
     suspend fun listenToOrdersChange(): Flow<PostgresAction>
+    fun getRealtimeStatus(): Realtime.Status
 
 }
 
@@ -34,6 +36,7 @@ class OrderRepositoryImpl @Inject constructor(
         return dataSource.listenToOrdersChange()
     }
 
-
-
+    override fun getRealtimeStatus(): Realtime.Status {
+        return dataSource.getRealtimeStatus()
+    }
 }

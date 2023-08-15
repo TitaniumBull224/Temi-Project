@@ -31,7 +31,7 @@ fun OrderListScreen(
     val uiState = viewModel.uiState.collectAsState()
     val orderList = viewModel.orderList.collectAsState()
 
-    Log.i("SIGH", orderList.toString())
+    Log.i("OrderListScreen", orderList.toString())
 
     Scaffold(
         modifier = modifier.fillMaxSize(),

@@ -20,7 +20,7 @@ val Maroon = Color(0xFF800000)
 
 // Oranges
 val Orange = Color(0xFFFFA500)
-val DarkOrange = Color(0xFFFF8C00)
+val DarkOrange = Color(0xFFD63D00)
 val Coral = Color(0xFFFF7F50)
 val Tomato = Color(0xFFFF6347)
 val OrangeRed = Color(0xFFFF4500)
@@ -29,6 +29,7 @@ val DarkGoldenrod = Color(0xFFB8860B)
 val Chocolate = Color(0xFFD2691E)
 val Peru = Color(0xFFCD853F)
 val DarkKhaki = Color(0xFFBDB76B)
+
 
 // Yellows
 val Yellow = Color(0xFFFFFF00)
@@ -57,7 +58,7 @@ val Blue = Color(0xFF0000FF)
 val LightBlue = Color(0xFFADD8E6)
 val DarkBlue = Color(0xFF00008B)
 val Navy = Color(0xFF000080)
-val SkyBlue = Color(0xFF87CEEB)
+val SkyBlue = Color(0xFF4E7CF1)
 
 // Purples
 val Purple = Color(0xFF800080)

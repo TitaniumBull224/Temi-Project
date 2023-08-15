@@ -1,12 +1,10 @@
 package com.ibsystem.temiassistant
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -14,12 +12,10 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.annotation.CheckResult
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
@@ -37,21 +33,19 @@ import com.robotemi.sdk.listeners.OnConversationStatusChangedListener
 import com.robotemi.sdk.listeners.OnDetectionDataChangedListener
 import com.robotemi.sdk.listeners.OnDetectionStateChangedListener
 import com.robotemi.sdk.listeners.OnGoToLocationStatusChangedListener
-import com.robotemi.sdk.listeners.OnLocationsUpdatedListener
 import com.robotemi.sdk.listeners.OnRobotReadyListener
 import com.robotemi.sdk.listeners.OnUserInteractionChangedListener
 import com.robotemi.sdk.map.OnLoadMapStatusChangedListener
 import com.robotemi.sdk.model.DetectionData
 import com.robotemi.sdk.navigation.listener.OnCurrentPositionChangedListener
 import com.robotemi.sdk.navigation.model.Position
-import com.robotemi.sdk.permission.Permission
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 @Suppress("DEPRECATION")
-class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListener, // Robot.NlpListener,
+class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListener,
     OnConversationStatusChangedListener, OnCurrentPositionChangedListener,
     OnDetectionStateChangedListener, OnDetectionDataChangedListener, OnUserInteractionChangedListener,
     OnLoadMapStatusChangedListener, OnGoToLocationStatusChangedListener {
@@ -74,7 +68,6 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
 
         setContent {
             ComposeUiTempletesTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     val navController = rememberNavController()
                     Navigation(navController, chatViewModel, mapViewModel, orderViewModel)
@@ -131,7 +124,6 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         mRobot.finishConversation() // stop ASR listener
         chatViewModel.messageToWit(MessageBody(asrResult))
         Log.i(TAG, "ASR Result: $asrResult")
-        //　mRobot.startDefaultNlu(asrResult)
     }
 
     override fun onConversationStatusChanged(status: Int, text: String) {
@@ -152,8 +144,8 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
     override fun onCurrentPositionChanged(position: Position) {
         mapViewModel.setPosition(position)
         chatViewModel.setCurrentPosition(position)
-        val str = "Current Position: X: " + position.x + " Y: " + position.y
-        Log.i(TAG, str)
+//        val str = "Current Position: X: " + position.x + " Y: " + position.y
+//        Log.i(TAG, str)
     }
 
     override fun onDetectionStateChanged(state: Int) {
@@ -206,52 +198,10 @@ class MainActivity : ComponentActivity(), OnRobotReadyListener, Robot.AsrListene
         }
     }
 
-    // PERMISSION CHECK
-    @CheckResult
-    private fun requestPermissionIfNeeded(permission: Permission, requestCode: Int): Boolean {
-        if (mRobot.checkSelfPermission(permission) == Permission.GRANTED) {
-            return false
-        }
-        mRobot.requestPermissions(listOf(permission), requestCode)
-        return true
-    }
-
     companion object {
-//        const val ACTION_HOME_WELCOME = "home.welcome"
-//        const val ACTION_HOME_DANCE = "home.dance"
-//        const val ACTION_HOME_SLEEP = "home.sleep"
         const val HOME_BASE_LOCATION = "ホームベース"
 
-        // Storage Permissions
-        private const val REQUEST_EXTERNAL_STORAGE = 1
-//        private const val REQUEST_CODE_NORMAL = 0
-//        private const val REQUEST_CODE_FACE_START = 1
-//        private const val REQUEST_CODE_FACE_STOP = 2
-//        private const val REQUEST_CODE_MAP = 3
-//        private const val REQUEST_CODE_SEQUENCE_FETCH_ALL = 4
-//        private const val REQUEST_CODE_SEQUENCE_PLAY = 5
-//        private const val REQUEST_CODE_START_DETECTION_WITH_DISTANCE = 6
-//        private const val REQUEST_CODE_SEQUENCE_PLAY_WITHOUT_PLAYER = 7
-//        private const val REQUEST_CODE_GET_MAP_LIST = 8
-//        private const val REQUEST_CODE_GET_ALL_FLOORS = 9
-        private val PERMISSIONS_STORAGE = arrayOf(
-            android.Manifest.permission.READ_EXTERNAL_STORAGE,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
         private const val PERMISSION_REQUEST_ACCESS_LOCATION = 100
-
-        fun verifyStoragePermissions(activity: Activity?) {
-            // Check if we have write permission
-            val permission = ActivityCompat.checkSelfPermission(
-                activity!!,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-
-            )
-            if (permission != PackageManager.PERMISSION_GRANTED) {
-                // We don't have permission so prompt the user
-                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE)
-            }
-        }
     }
 
     // GET PHYSICAL LOCATION

@@ -17,18 +17,6 @@ class SettingsViewModel : ViewModel() {
     private val _isDetectionOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isDetectionOn = _isDetectionOn.asStateFlow()
 
-    private val _textPreference: MutableStateFlow<String> = MutableStateFlow("")
-    var textPreference = _textPreference.asStateFlow()
-
-    private val _intPreference: MutableStateFlow<Int> = MutableStateFlow(0)
-    var intPreference = _intPreference.asStateFlow()
-
-    private val _connectivityState: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val connectivityState = _connectivityState.asStateFlow()
-
-
-
-
     fun toggleSwitch(switch: Int){
         when(switch) {
             SPEAKER_SWITCH -> _isSpeakerOn.value = _isSpeakerOn.value.not()
@@ -39,14 +27,6 @@ class SettingsViewModel : ViewModel() {
             else -> Log.i("Settings", "ERROR TOGGLE NON EXIST")
         }
     }
-
-    fun saveText(finalText: String) {
-        _textPreference.value = finalText
-        // place to store text
-    }
-
-    // just checking, if it is not empty - but you can check anything
-    fun checkTextInput(text: String) = text.isNotEmpty()
 
     companion object {
         const val SPEAKER_SWITCH = 0

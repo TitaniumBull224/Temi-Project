@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Divider
@@ -27,6 +26,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -92,14 +93,6 @@ fun ListOrder(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TableCell(text = "", weight = column1Weight)
-//            TableCell(
-//                text = "テーブル",
-//                weight = column2Weight,
-//                alignment = TextAlign.Left,
-//                title = true
-//            )
-//            TableCell(text = "時間", weight = column3Weight, title = true)
-//            TableCell(text = "状況", weight = column4Weight, title = true)
             TextGradient(
                 text = "テーブル",
                 modifier = Modifier.weight(column2Weight)
@@ -164,12 +157,6 @@ fun ListOrder(
                             tint = White
                         )
                     }
-//                    TableCell(
-//                        text = "#" + order.tableId!!,
-//                        weight = column2Weight,
-//                        alignment = TextAlign.Left
-//                    )
-//                    TableCell(text = formattedDate, weight = column3Weight)
                     TextGradient(
                         text = "#" + order.tableId!!,
                         modifier = Modifier.weight(column2Weight)
@@ -216,18 +203,6 @@ fun ListOrder(
                     verticalAlignment = Alignment.CenterVertically
 
                 ) {
-//                    Button(
-//                        onClick = {
-//                            if (viewModel.checkedOrderList.value.isNotEmpty()) {
-//                                viewModel.processCheckedRow(navController)
-//                            } else {
-//                                Toast.makeText(context, "オーダーを選んでください", Toast.LENGTH_SHORT).show()
-//                            }
-//                        },
-//                        modifier = Modifier.padding(DIMENS_16dp)
-//                    ) {
-//                        Text(text = "準備完了", color = White)
-//                    }
                     ButtonGradient(
                         name = "準備完了",
                         onClick = {
@@ -300,25 +275,21 @@ fun RowScope.TableCell(
         textAlign = alignment,
         color = Black
     )
-//    TextGradient(
-//        modifier = Modifier.weight(weight),
-//        text = text
-//    )
 }
 
 @Composable
 fun RowScope.StatusCell(
     text: String,
     weight: Float,
-    alignment: TextAlign = TextAlign.Center,
+    roundedCornerShape: RoundedCornerShape = RoundedCornerShape(topStart = DIMENS_25dp, topEnd = DIMENS_32dp, bottomStart = DIMENS_25dp)
 ) {
 
     val color = when (text) {
-        "保留中" -> DarkOrange
-        "準備完了" -> DarkBlue
-        "提供済み" -> Teal
-        "完了" -> DarkGreen
-        else -> DeepPink
+        "保留中" -> listOf(DarkOrange, Orange)
+        "準備完了" -> listOf(DarkBlue, SkyBlue)
+        "提供済み" -> listOf(Teal, Turquoise)
+        "完了" -> listOf(DarkGreen, Green)
+        else -> listOf(DeepPink, HotPink)
     }
     val textColor = when (text) {
         "保留中" -> White //Pending
@@ -330,16 +301,21 @@ fun RowScope.StatusCell(
 
     Box(
         modifier = Modifier
-            .weight(weight),
+            .weight(weight)
+            .background(
+                brush = Brush.verticalGradient(colors = color),
+                shape = roundedCornerShape
+            )
+            .clip(roundedCornerShape)
+            .padding(horizontal = DIMENS_6dp, vertical = DIMENS_1dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
-            textAlign = alignment,
+            fontFamily = GilroyFontFamily,
+            fontSize = TEXT_SIZE_24sp,
             color = textColor,
-            modifier = Modifier
-                .background(color, shape = RoundedCornerShape(DIMENS_50dp))
-                .padding(DIMENS_12dp)
+            fontWeight = FontWeight.Bold
         )
     }
 
