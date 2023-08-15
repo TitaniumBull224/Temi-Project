@@ -43,7 +43,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
         listenToOrdersChange()
     }
 
-    fun getAllOrders() {
+    private fun getAllOrders() {
         viewModelScope.launch {
             repository.getAllOrders().collectLatest {
                 data -> _uiState.update { data }
@@ -55,7 +55,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
         }
     }
 
-    fun listenToOrdersChange() {
+    private fun listenToOrdersChange() {
         viewModelScope.launch {
             repository.listenToOrdersChange().collect {
                 when (it) {
@@ -78,7 +78,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
     private fun getOrderID(it: PostgresAction.Insert) =
         it.record["id"].toString().replace("\"", "")
 
-    fun addNewOrders(id: String) {
+    private fun addNewOrders(id: String) {
         viewModelScope.launch {
             repository.getOrderDetailsByID(id).collectLatest { res ->
                 if (res is ApiResult.Success) {
@@ -90,7 +90,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
         }
     }
 
-    fun updateOrderList(id: String) {
+    private fun updateOrderList(id: String) {
         viewModelScope.launch {
             repository.getOrderDetailsByID(id = id).collectLatest { res ->
                 _uiState.update { res }
