@@ -84,6 +84,10 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                                 addNewOrders(orderId)
                                 deleteCart()
                             }
+                            else {
+                                Log.e("HELP", it.record["total_item"].toString().replace("\"", ""))
+                                Log.e("HELP2", _numOfProd.value.toString())
+                            }
                         }
 
                     }
@@ -163,8 +167,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
 
     fun deleteCart() {
         _productCartList.value = emptyMap()
-        _postedProd = 0
-        _numOfProd.update { 0 }
+        _numOfProd.value = 0
     }
 
 
