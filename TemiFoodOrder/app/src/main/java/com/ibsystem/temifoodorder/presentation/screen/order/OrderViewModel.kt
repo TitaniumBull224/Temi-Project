@@ -80,7 +80,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                         Log.i("Listener", "Inserted: ${it.record["id"]}")
                         val orderId = getOrderID(it)
                         _numOfProd.collect {
-                            num -> if(num == productCartList.value.size) {
+                            num -> if(num.toString() == it.record["total_item"].toString().replace("\"", "")) {
                                 addNewOrders(orderId)
                                 deleteCart()
                             }
