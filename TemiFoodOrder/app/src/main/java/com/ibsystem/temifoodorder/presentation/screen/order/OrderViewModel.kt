@@ -3,7 +3,7 @@ package com.ibsystem.temifoodorder.presentation.screen.order
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ibsystem.temifooddelivery.data.repository.OrderRepository
+import com.ibsystem.temifoodorder.data.repository.OrderRepository
 import com.ibsystem.temifoodorder.domain.model.InsertParam
 import com.ibsystem.temifoodorder.domain.model.OrderItem
 import com.ibsystem.temifoodorder.domain.model.OrderDetailItem

@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ibsystem.temifooddelivery.data.repository.OrderRepository
+import com.ibsystem.temifoodorder.data.repository.OrderRepository
 import com.ibsystem.temifoodorder.data.repository.ProductRepository
 import com.ibsystem.temifoodorder.domain.model.OrderProduct
 import dagger.hilt.android.lifecycle.HiltViewModel

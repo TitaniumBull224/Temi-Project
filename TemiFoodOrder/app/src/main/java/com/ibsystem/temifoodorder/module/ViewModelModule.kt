@@ -1,6 +1,6 @@
 package com.ibsystem.temifoodorder.module
 
-import com.ibsystem.temifooddelivery.data.repository.OrderRepository
+import com.ibsystem.temifoodorder.data.repository.OrderRepository
 import com.ibsystem.temifoodorder.data.repository.ProductRepository
 import com.ibsystem.temifoodorder.domain.model.TableModel
 import com.ibsystem.temifoodorder.presentation.screen.home.HomeViewModel

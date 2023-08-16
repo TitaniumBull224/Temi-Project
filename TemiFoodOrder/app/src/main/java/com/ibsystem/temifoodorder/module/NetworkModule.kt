@@ -1,11 +1,8 @@
 package com.ibsystem.temifoodorder.module
-//
-//import com.ibsystem.temifoodorder.data.datasource.OrderDataSource
-//import com.ibsystem.temifoodorder.data.repository.OrderRepository
-//import com.ibsystem.temifoodorder.data.repository.OrderRepositoryImpl
-import com.ibsystem.temifooddelivery.data.datasource.OrderDataSource
-import com.ibsystem.temifooddelivery.data.repository.OrderRepository
-import com.ibsystem.temifooddelivery.data.repository.OrderRepositoryImpl
+
+import com.ibsystem.temifoodorder.data.datasource.OrderDataSource
+import com.ibsystem.temifoodorder.data.repository.OrderRepository
+import com.ibsystem.temifoodorder.data.repository.OrderRepositoryImpl
 import com.ibsystem.temifoodorder.data.datasource.ProductDataSource
 import com.ibsystem.temifoodorder.data.repository.ProductRepository
 import com.ibsystem.temifoodorder.data.repository.ProductRepositoryImpl

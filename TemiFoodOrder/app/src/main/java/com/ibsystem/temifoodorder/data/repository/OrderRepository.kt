@@ -1,6 +1,6 @@
-package com.ibsystem.temifooddelivery.data.repository
+package com.ibsystem.temifoodorder.data.repository
 
-import com.ibsystem.temifooddelivery.data.datasource.OrderDataSource
+import com.ibsystem.temifoodorder.data.datasource.OrderDataSource
 import com.ibsystem.temifoodorder.domain.model.InsertParam
 import com.ibsystem.temifoodorder.domain.model.OrderItem
 import com.ibsystem.temifoodorder.domain.model.OrderDetailItem
