@@ -79,12 +79,15 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     is PostgresAction.Insert -> {
                         Log.i("Listener", "Inserted: ${it.record["id"]}")
                         val orderId = getOrderID(it)
-                        addNewOrderProductDetails(orderId, productCartList.value)
-                        if(productCartList.value.size == _postedProd) {
-                            addNewOrders(orderId)
-                            deleteCart()
-                            updateOrderList(it.record["id"].toString().replace("\"", ""))
+                            if(productCartList.value.size == _postedProd && tableModel.tableID == it.record["table_id"].toString().replace("\"", "")) {
+                                addNewOrders(orderId)
+                                deleteCart()
+                                updateOrderList(it.record["id"].toString().replace("\"", ""))
+                            }
+                        else {
+                            print("DKSDJSFJFSDKF")
                         }
+
                     }
                     is PostgresAction.Select -> Log.i("Listener","Selected: ${it.record}")
                     is PostgresAction.Update -> {
