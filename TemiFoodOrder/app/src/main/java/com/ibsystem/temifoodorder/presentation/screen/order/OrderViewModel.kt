@@ -79,8 +79,13 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     is PostgresAction.Insert -> {
                         Log.i("Listener", "Inserted: ${it.record["id"]}")
                         val orderId = getOrderID(it)
-                        addNewOrders(orderId)
-                        deleteCart()
+                        _numOfProd.collect {
+                            num -> if(num == productCartList.value.size) {
+                                addNewOrders(orderId)
+                                deleteCart()
+                            }
+                        }
+
                     }
                     is PostgresAction.Select -> Log.i("Listener","Selected: ${it.record}")
                     is PostgresAction.Update -> {
@@ -195,7 +200,6 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     ).collect { data ->
                         if (data is ApiResult.Success) {
                             _numOfProd.value++
-                            Log.i("NUMOFPROD2", _numOfProd.value.toString())
                             Log.i("ORDERDETAILS", "DONE")
                         } else if (data is ApiResult.Error) {
                             Log.e("API DETAILS", data.message!!)
