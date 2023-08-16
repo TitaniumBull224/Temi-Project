@@ -13,6 +13,7 @@ import com.ibsystem.temiassistant.navigation.Screen
 import com.robotemi.sdk.Robot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.realtime.PostgresAction
+import io.github.jan.supabase.realtime.Realtime
 import io.github.jan.supabase.realtime.decodeRecord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,14 +41,16 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
 
     init {
         getAllOrders()
-        listenToOrdersChange()
+        if (repository.getRealtimeStatus() == Realtime.Status.DISCONNECTED) {
+            listenToOrdersChange()
+        }
     }
 
     private fun getAllOrders() {
         viewModelScope.launch {
             repository.getAllOrders().collectLatest {
                 data -> _uiState.update { data }
-                 if(data is ApiResult.Success) {
+                 if (data is ApiResult.Success) {
                      val orderList = data.data
                      _orderList.value = orderList
                  }
@@ -69,7 +72,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                         Log.i("Listener", "Updated: ${it.oldRecord} with ${it.record}")
                         updateOrderList(it.record["id"].toString().replace("\"", ""))
                     }
-                    else -> Log.i("Listener","sighhh")
+                    else -> Log.i("Listener","ERROR")
                 }
             }
         }
@@ -84,7 +87,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                 if (res is ApiResult.Success) {
                     _orderList.value = _orderList.value + res.data
                 } else {
-                    Log.i("DSDSAD",res.toString())
+                    Log.i("addNewOrders",res.toString())
                 }
             }
         }
@@ -105,7 +108,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                         _orderList.emit(updatedOrderList)
                     }
                 } else {
-                    Log.i("DSDSAD",res.toString())
+                    Log.i("updateOrderList", res.toString())
                 }
 
             }

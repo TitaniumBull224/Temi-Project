@@ -9,6 +9,7 @@ import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.query.FilterOperator
 import io.github.jan.supabase.postgrest.query.Order
 import io.github.jan.supabase.realtime.PostgresAction
+import io.github.jan.supabase.realtime.Realtime
 import io.github.jan.supabase.realtime.createChannel
 import io.github.jan.supabase.realtime.decodeRecord
 import io.github.jan.supabase.realtime.postgresChangeFlow
@@ -102,45 +103,9 @@ class OrderDataSource @Inject constructor(private val supabaseClient: SupabaseCl
         }
     }
 
-//    suspend fun listenToOrdersChange() {
-//        coroutineScope {
-//            kotlin.runCatching {
-//                supabaseClient.realtime.connect()
-//
-//                supabaseClient.postgresChangeFlow<PostgresAction>("public") {
-//                    table = "messages"
-//                }.onEach {
-//                    when(it) {
-//                        is PostgresAction.Delete -> messages.value = messages.value.filter { message -> message.id != it.oldRecord["id"]!!.jsonPrimitive.int }
-//                        is PostgresAction.Insert -> messages.value = messages.value + it.decodeRecord<Message>()
-//                        is PostgresAction.Select -> error("Select should not be possible")
-//                        is PostgresAction.Update -> error("Update should not be possible")
-//                    }
-//                }
-//
-//                realtimeChannel.join()
-//
-//            }.onFailure {
-//                it.printStackTrace()
-//            }
-//        }
-//
-//        val channel = supabaseClient.realtime.createChannel("OrderChanged")
-//        val changeFlow = channel.postgresChangeFlow<PostgresAction>(schema = "public") {
-//            table = "Orders"
-//        }
-//
-//        //in a new coroutine (or use Flow.onEach().launchIn(scope)):
-//        changeFlow.collect {
-//
-//        }
-//
-//        supabaseClient.realtime.connect()
-//        channel.join()
-//    }
-//}
-
-
+    fun getRealtimeStatus(): Realtime.Status {
+        return supabaseClient.realtime.status.value
+    }
 }
 
 sealed class ApiResult<out R> {

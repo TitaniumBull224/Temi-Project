@@ -32,9 +32,9 @@ fun Navigation(navController: NavHostController, chatViewModel: ChatViewModel, m
         composable(route = Screen.ChatScreen.route) {
             ChatScreen(navController = navController, viewModel = chatViewModel)
         }
-        composable(route = Screen.MapScreen.route) {
-            MapScreen(navController = navController, viewModel = mapViewModel)
-        }
+//        composable(route = Screen.MapScreen.route) {
+//            MapScreen(navController = navController, viewModel = mapViewModel)
+//        }
 //        composable(route = Screen.MotionScreen.route) {
 //            MotionScreen(navController = navController, viewModel = mapViewModel)
 //        }

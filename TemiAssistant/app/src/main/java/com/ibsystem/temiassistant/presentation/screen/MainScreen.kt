@@ -17,15 +17,6 @@ import com.ibsystem.temiassistant.presentation.common.component.ButtonGradient
 import com.ibsystem.temiassistant.ui.theme.DIMENS_16dp
 import com.ibsystem.temiassistant.ui.theme.DIMENS_32dp
 
-data class ScreenNames(
-    val name: String,
-    val route: String
-)
-
-val screens = listOf(
-    ScreenNames("Chat Screen", Screen.ChatScreen.route)
-)
-
 @ExperimentalMaterialApi
 @Composable
 fun MainScreen(navController: NavController) {
@@ -39,15 +30,6 @@ fun MainScreen(navController: NavController) {
             .fillMaxSize()
             .padding(16.dp)
     ){
-//        LazyColumn {
-//            items(screens){screen ->
-//                Item(name = screen.name){
-//                    navController.navigate(screen.route)
-//                }
-//                Spacer(modifier = Modifier.height(16.dp))
-//            }
-//        }
-
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(DIMENS_32dp, alignment = Alignment.CenterVertically),
@@ -63,35 +45,16 @@ fun MainScreen(navController: NavController) {
                 onClick = { navController.navigate(Screen.ChatScreen.route) }
             )
 
-            ButtonGradient(
-                name = "Map",
-                onClick = { navController.navigate(Screen.MapScreen.route) }
-            )
+//            ButtonGradient(
+//                name = "Map",
+//                onClick = { navController.navigate(Screen.MapScreen.route) }
+//            )
 
             ButtonGradient(
                 name = "Settings",
                 onClick = { navController.navigate(Screen.SettingsScreen.route) }
             )
         }
-    }
-}
-
-
-@ExperimentalMaterialApi
-@Composable
-fun Item(
-    name: String,
-    onclick: () -> Unit
-){
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.medium,
-        onClick = onclick
-    ) {
-        Text(
-            text = name,
-            modifier = Modifier.padding(DIMENS_16dp)
-        )
     }
 }
 

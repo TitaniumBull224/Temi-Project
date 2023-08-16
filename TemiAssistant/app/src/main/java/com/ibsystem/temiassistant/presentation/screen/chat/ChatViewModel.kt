@@ -173,14 +173,6 @@ class ChatViewModel: ViewModel() {
             } else {
                 robotResponse("Error: Code ${response.code()}")
             }
-
-//            if (response.code() == 200 && response.body() != null && response.body()!!.size > 0) {
-//                response.body()!!.forEach() { response_mess ->
-//                    addMessage(Message(MessageBody(response_mess.response.text), false))
-//                }
-//            }  else {
-//                addMessage(Message(MessageBody("Error: Code ${response.code()}"), false))
-//            }
         }
     }
 
