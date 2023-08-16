@@ -79,10 +79,15 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     is PostgresAction.Insert -> {
                         Log.i("Listener", "Inserted: ${it.record["id"]}")
                         val orderId = getOrderID(it)
-                            if(productCartList.value.size == _postedProd && tableModel.tableID == it.record["table_id"].toString().replace("\"", "")) {
-                                addNewOrders(orderId)
-                                deleteCart()
-                                updateOrderList(it.record["id"].toString().replace("\"", ""))
+                            if(tableModel.tableID == it.record["table_id"].toString().replace("\"", "")) {
+                                addNewOrderProductDetails(it.record["id"].toString().replace("\"", ""),_productCartList.value)
+                                _productCartList.collect {
+                                    data -> if(data.size == _postedProd) {
+                                        addNewOrders(orderId)
+                                        deleteCart()
+                                        updateOrderList(it.record["id"].toString().replace("\"", ""))
+                                    }
+                                }
                             }
                         else {
                             print("DKSDJSFJFSDKF")
@@ -179,13 +184,13 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     data ->
                 if(data is ApiResult.Success) {
                     Log.i("NewOrder", "DONE")
-                    data.data.forEach{
-                            orderItem ->
-                        addNewOrderProductDetails(
-                            orderID = orderItem.id!!,
-                            productCartList = productCartList
-                        )
-                    }
+//                    data.data.forEach{
+//                            orderItem ->
+//                        addNewOrderProductDetails(
+//                            orderID = orderItem.id!!,
+//                            productCartList = productCartList
+//                        )
+//                    }
 
                 }
                 else if(data is ApiResult.Error) {
