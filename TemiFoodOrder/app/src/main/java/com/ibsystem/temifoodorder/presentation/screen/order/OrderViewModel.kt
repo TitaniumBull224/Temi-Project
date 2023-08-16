@@ -68,7 +68,6 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                 }
             }
         }
-        //listenToOrdersChange()
     }
 
     private fun listenToOrdersChange() {
@@ -80,18 +79,20 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                         Log.i("Listener", "Inserted: ${it.record["id"]}")
                         if(it.record["table_id"].toString().replace("\"", "") == tableModel.tableID) {
                             val orderId = getOrderID(it)
-                            _numOfProd.collect {
-                                    num -> if(num.toString() == it.record["total_item"].toString().replace("\"", "")) {
-                                addNewOrders(orderId)
-                                deleteCart()
-                            }
-                            else {
-                                Log.e("HELP", it.record["total_item"].toString().replace("\"", ""))
-                                Log.e("HELP2", _numOfProd.value.toString())
-                            }
+                                _numOfProd.collect {
+                                        num ->
+                                    if(num.toString() == it.record["total_item"].toString().replace("\"", "")) {
+                                    addNewOrders(orderId)
+                                    deleteCart()
+                                }
+                                    else {
+                                        Log.e("HELP", it.record["total_item"].toString().replace("\"", ""))
+                                        Log.e("HELP2", _numOfProd.value.toString())
+                                    }
                             }
                         }
                     }
+
                     is PostgresAction.Select -> Log.i("Listener","Selected: ${it.record}")
                     is PostgresAction.Update -> {
                         Log.i("Listener", "Updated: ${it.oldRecord} with ${it.record}")
@@ -181,6 +182,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     Log.i("NewOrder", "DONE")
                     data.data.forEach{
                             orderItem ->
+                        Log.i("NewOrders", orderItem.toString())
                         addNewOrderProductDetails(
                             orderID = orderItem.id!!,
                             productCartList = productCartList
@@ -204,7 +206,6 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     ).collect { data ->
                         if (data is ApiResult.Success) {
                             _numOfProd.value++
-                            Log.i("ORDERDETAILS", "DONE")
                         } else if (data is ApiResult.Error) {
                             Log.e("API DETAILS", data.message!!)
                         }
@@ -214,4 +215,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
         }
         // Now that all addNewOrderProductDetails calls are awaited, you can proceed with the subsequent functions
     }
+
+
+
 }
