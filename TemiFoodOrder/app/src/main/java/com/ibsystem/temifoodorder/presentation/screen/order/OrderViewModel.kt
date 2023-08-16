@@ -78,9 +78,10 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     is PostgresAction.Delete -> Log.i("Listener", "Deleted: ${it.oldRecord}")
                     is PostgresAction.Insert -> {
                         Log.i("Listener", "Inserted: ${it.record["id"]}")
-                        val orderId = getOrderID(it)
-                        _numOfProd.collect {
-                            num -> if(num.toString() == it.record["total_item"].toString().replace("\"", "")) {
+                        if(it.record["table_id"].toString().replace("\"", "") == tableModel.tableID) {
+                            val orderId = getOrderID(it)
+                            _numOfProd.collect {
+                                    num -> if(num.toString() == it.record["total_item"].toString().replace("\"", "")) {
                                 addNewOrders(orderId)
                                 deleteCart()
                             }
@@ -88,8 +89,8 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                                 Log.e("HELP", it.record["total_item"].toString().replace("\"", ""))
                                 Log.e("HELP2", _numOfProd.value.toString())
                             }
+                            }
                         }
-
                     }
                     is PostgresAction.Select -> Log.i("Listener","Selected: ${it.record}")
                     is PostgresAction.Update -> {
