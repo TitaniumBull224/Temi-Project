@@ -75,24 +75,12 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
         viewModelScope.launch {
             repository.listenToChange(channelName = "OrderChanged", tableName = "Order").collect {
                 when (it) {
-                    is PostgresAction.Delete -> Log.i("Listener","Deleted: ${it.oldRecord}")
+                    is PostgresAction.Delete -> Log.i("Listener", "Deleted: ${it.oldRecord}")
                     is PostgresAction.Insert -> {
                         Log.i("Listener", "Inserted: ${it.record["id"]}")
                         val orderId = getOrderID(it)
-                            if(tableModel.tableID == it.record["table_id"].toString().replace("\"", "")) {
-                                addNewOrderProductDetails(it.record["id"].toString().replace("\"", ""),_productCartList.value)
-                                _productCartList.collect {
-                                    data -> if(data.size == _postedProd) {
-                                        addNewOrders(orderId)
-                                        deleteCart()
-                                        updateOrderList(it.record["id"].toString().replace("\"", ""))
-                                    }
-                                }
-                            }
-                        else {
-                            print("DKSDJSFJFSDKF")
-                        }
-
+                        addNewOrders(orderId)
+                        deleteCart()
                     }
                     is PostgresAction.Select -> Log.i("Listener","Selected: ${it.record}")
                     is PostgresAction.Update -> {
@@ -112,6 +100,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
         viewModelScope.launch {
             repository.getOrderDetailsByID(id).collectLatest { res ->
                 if (res is ApiResult.Success) {
+                    Log.i("???", "DOUBE")
                     _orderList.value = _orderList.value + res.data
                 } else {
                     Log.i("NewOrders",res.toString())
@@ -162,10 +151,8 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
             }
 
             _productCartList.update { currentCart.toMap() }
-            _numOfProd.update { currentCart.size }
             println("SIGH"+productCartList.value.toString())
         }
-
     }
 
 
@@ -184,13 +171,13 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                     data ->
                 if(data is ApiResult.Success) {
                     Log.i("NewOrder", "DONE")
-//                    data.data.forEach{
-//                            orderItem ->
-//                        addNewOrderProductDetails(
-//                            orderID = orderItem.id!!,
-//                            productCartList = productCartList
-//                        )
-//                    }
+                    data.data.forEach{
+                            orderItem ->
+                        addNewOrderProductDetails(
+                            orderID = orderItem.id!!,
+                            productCartList = productCartList
+                        )
+                    }
 
                 }
                 else if(data is ApiResult.Error) {
@@ -208,7 +195,8 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
                         InsertParam(orderID = orderID, prodID = productItem.prodId!!, quantity = orderProduct.quantity!!.toString())
                     ).collect { data ->
                         if (data is ApiResult.Success) {
-                            _postedProd++
+                            _numOfProd.value++
+                            Log.i("NUMOFPROD2", _numOfProd.value.toString())
                             Log.i("ORDERDETAILS", "DONE")
                         } else if (data is ApiResult.Error) {
                             Log.e("API DETAILS", data.message!!)
