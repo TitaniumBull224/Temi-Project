@@ -99,8 +99,7 @@ class OrderViewModel @Inject constructor (private val repository: OrderRepositor
     private fun addNewOrders(id: String) {
         viewModelScope.launch {
             repository.getOrderDetailsByID(id).collectLatest { res ->
-                if (res is ApiResult.Success) {
-                    Log.i("???", "DOUBE")
+                if (res is ApiResult.Success && res.data.tableId == tableModel.tableID) {
                     _orderList.value = _orderList.value + res.data
                 } else {
                     Log.i("NewOrders",res.toString())
