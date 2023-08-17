@@ -42,6 +42,7 @@ import com.ibsystem.temiassistant.domain.model.MessageBody
 import com.ibsystem.temiassistant.presentation.common.component.GifImage
 import com.ibsystem.temiassistant.presentation.common.component.TopBarSection
 import com.ibsystem.temiassistant.ui.theme.Black
+import com.ibsystem.temiassistant.ui.theme.Blue
 import com.ibsystem.temiassistant.ui.theme.Crimson
 import com.ibsystem.temiassistant.ui.theme.DIMENS_10dp
 import com.ibsystem.temiassistant.ui.theme.DIMENS_16dp
@@ -376,7 +377,7 @@ fun InputAmountOfMoneyDialog(
         Dialog(onDismissRequest = onDismiss) {
             Surface(
                 shape = MaterialTheme.shapes.medium,
-                color = Gray,
+                color = White,
                 modifier = Modifier.padding(DIMENS_16dp)
             ) {
                 InputAmountOfMoney(viewModel, onDismiss)
@@ -498,8 +499,8 @@ fun InputAmountOfMoney(
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Black,
-                    contentColor = Red
+                    backgroundColor = Blue,
+                    contentColor = White
                 )
             ) {
                 Text("確認")
@@ -507,8 +508,8 @@ fun InputAmountOfMoney(
             Button(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Black,
-                    contentColor = Red
+                    backgroundColor = Blue,
+                    contentColor = White
                 )
             ) {
                 Text("閉じる")
